@@ -1,0 +1,122 @@
+---
+title: '坐标系'
+description: '介绍墨水屏的 EMR 坐标系与像素坐标系，以及它们的区别与换算。'
+---
+
+Supernote 设备是墨水屏设备，和普通的 Android 设备有区别，它有一套坐标系：
+
+- **EMR 坐标系**：也叫数位板坐标系，由 EMR（Electro-Magnetic Resonance，电磁感应）手写系统在硬件层定义的、
+用于描述笔尖在感应平面上绝对位置的二维（及扩展维度）坐标空间。
+- **像素坐标系**：也叫屏幕坐标系，用于描述屏幕渲染（UI）上的像素位置
+
+这两套坐标系面向的硬件与业务不同，因此会并存；插件开发中经常需要在两者之间做换算。
+
+## EMR 坐标系（数位板/手写坐标系）
+
+**定义**
+
+- 坐标单位不是像素，而是数位板采样的 **硬件坐标单位**（可以理解为“更细的网格刻度”）
+- 通常精度更高：同一屏幕像素可能对应多个 EMR 坐标单位
+- 坐标轴方向/原点可能与屏幕坐标不同（不同设备/旋转方向可能不同），所以需要转换
+
+**特点**
+
+- 与手写数据强相关：笔划采样点、轮廓点、角度点等，通常在 EMR 坐标里更稳定、更适合存储与计算
+- 不直接等同于 UI 像素：不能把 EMR 坐标当成 px 直接拿去布局
+
+**常见使用场景**
+
+- 笔迹/元素的几何计算：移动、缩放
+- 与原生侧缓存的点数据访问器配合使用（大数据量点集更适合用 EMR 坐标表达）
+
+## 像素坐标系（屏幕坐标系）
+
+**定义**
+
+- 坐标单位是 **像素（px）**
+- 一般约定：**左上角为原点**，`x` 向右增加，`y` 向下增加
+- `width/height` 就是屏幕或页面的像素宽高（例如 A5X 常见 `1404×1872`，Manta 常见 `1920×2560`）
+
+**特点**
+
+- 与 UI 渲染强相关：布局、缩放、旋转、分页拼接都会改变“同一逻辑点”在像素空间的位置
+- 适合做 UI 交互：点击/拖拽位置、View 的布局矩形、截图像素等
+
+**常见使用场景**
+
+- 在 React Native 视图中绘制/定位元素（例如弹窗、按钮、选区框）
+- 根据用户触摸/点击位置做交互
+- 与接口返回的页面尺寸（像素）配合使用，例如 `PluginFileAPI.getPageSize(...)`
+
+
+
+## 为什么会有两种坐标系？
+
+简单来说，手写采样与屏幕渲染关注的对象不同：
+
+- 电磁笔（EMR）由数位板硬件采样，得到的是 **高精度手写坐标**。它不依赖 UI 渲染方式，也不随屏幕缩放/布局变化
+- 屏幕渲染由显示系统（Android/渲染引擎）驱动，使用的是 **像素坐标**。它会受到分辨率、旋转、分页拼接、缩放等显示策略影响
+
+为了同时满足“高精度手写采样”和“可视化渲染/交互”，系统通常保留两套坐标，并通过转换把它们关联起来。
+
+## 两者差异对比
+
+| 维度 | EMR 坐标系 | 像素坐标系 |
+| --- | --- | --- |
+| 数据来源 | 数位板/电磁笔采样 | 屏幕渲染/布局 |
+| 单位 | 硬件刻度（非 px） | 像素（px） |
+| 精度 | 通常更高 | 受屏幕分辨率限制 |
+| 是否适合存笔迹 | 更适合 | 不适合（会受显示策略影响） |
+| 是否适合做 UI | 不适合直接布局 | 最适合 |
+| 需要换算吗 | 与 UI 交互时需要 | 与笔迹/元素计算时需要 |
+
+## 如何在 SDK 中进行换算
+
+SDK 内置了 [`PointUtils`](/zh/api-reference/supernote-plugin/utils/point-utils) 来做两种坐标的互转（基于页面像素尺寸推导映射比例，并做轴向变换）。
+
+<Tip>
+如果你手上只有页面像素尺寸，直接把 `{ width, height }` 作为 `pageSize` 传入转换函数即可。
+</Tip>
+
+```ts wrap
+import { PluginFileAPI, PointUtils } from 'sn-plugin-lib';
+
+/**
+ * 将屏幕像素点转换为 EMR 坐标点。
+ */
+export async function pixelToEmr(notePath: string, page: number, pixelPoint: { x: number; y: number }) {
+  const res = await PluginFileAPI.getPageSize(notePath, page);
+  if (!res?.success || !res.result) {
+    throw new Error('获取页面像素尺寸失败');
+  }
+
+  return PointUtils.androidPoint2Emr(pixelPoint, res.result);
+}
+
+/**
+ * 将 EMR 坐标点转换为屏幕像素点。
+ */
+export async function emrToPixel(notePath: string, page: number, emrPoint: { x: number; y: number }) {
+  const res = await PluginFileAPI.getPageSize(notePath, page);
+  if (!res?.success || !res.result) {
+    throw new Error('获取页面像素尺寸失败');
+  }
+
+  return PointUtils.emrPoint2Android(emrPoint, res.result);
+}
+```
+
+## 映射范围与注意事项
+
+[`PointUtils`](/zh/api-reference/supernote-plugin/utils/point-utils) 内部会根据 `pageSize` 推导 EMR 的最大坐标范围（不同机型/横竖屏不同）。当前实现支持的常见映射如下（来自 SDK 内置常量与映射表）：
+
+| 页面像素尺寸（pageSize） | EMR 最大范围（maxX, maxY） |
+| --- | --- |
+| `1404×1872`（A5X 竖屏） | `15819×11864` |
+| `1872×1404`（A5X 横屏） | `11864×15819` |
+| `1920×2560`（Manta 竖屏） | `21632×16224` |
+| `2560×1920`（Manta 横屏） | `16224×21632` |
+
+<Note>
+如果传入的 `pageSize` 不在当前支持的映射表中，转换会抛出错误（unknown pageSize）。遇到这种情况优先确认你拿到的是“页面像素尺寸”（而不是某个缩放后的 View 尺寸），并检查是否存在分页拼接等特殊尺寸。
+</Note>

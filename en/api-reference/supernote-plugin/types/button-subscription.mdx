@@ -1,0 +1,16 @@
+---
+title: "ButtonSubscription"
+description: "Button event subscription type."
+---
+
+`ButtonSubscription` is returned after registering a button listener, and can be used to unsubscribe.
+
+```ts
+type ButtonSubscription = {
+  remove(): void;
+};
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `remove` | `() => void` | Unregister the button event listener |

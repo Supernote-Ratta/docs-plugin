@@ -1,0 +1,37 @@
+---
+title: "getMarkPages"
+description: "获取文档文件中的 mark 页码列表（表示该文档有多少个 mark 页码）。"
+---
+
+```ts wrap
+static getMarkPages(filePath: string): Promise<APIResponse<number[]>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `filePath` | `string` | 文档文件路径 |
+
+**返回**
+
+- [`APIResponse<number[]>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为 mark 页码数组
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取 mark 页码列表的示例。
+ */
+export async function exampleGetMarkPages() {
+  const filePath = '/storage/emulated/0/Note/demo.pdf';
+  const res = await PluginFileAPI.getMarkPages(filePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getMarkPages 调用失败');
+  }
+  return res.result;
+}
+```

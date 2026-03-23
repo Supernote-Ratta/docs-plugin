@@ -1,0 +1,30 @@
+---
+title: "getLastElement"
+description: "Get the last element of the current note page."
+---
+
+```ts wrap
+static getLastElement(): Promise<APIResponse<Element>>;
+```
+
+**Returns**
+
+- [`APIResponse<Element>`](/en/api-reference/supernote-plugin/types/api-response):
+element type: see [`Element`](/en/api-reference/supernote-plugin/types/trail)
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get the last element of the current note page.
+ */
+export async function exampleGetLastElement() {
+  const res = await PluginFileAPI.getLastElement();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLastElement call failed');
+  }
+  return res.result;
+}
+```

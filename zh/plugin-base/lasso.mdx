@@ -1,0 +1,141 @@
+---
+title: '套索（Lasso）'
+description: '介绍套索交互的工作流、数据模型与常用接口（获取/更新套索框与套索元素）。'
+---
+
+套索（Lasso）是笔记/文档中常用的圈选交互：用户用笔在页面上圈出一个区域后，系统会基于该区域计算选中的元素集合，并显示套索工具栏（Lasso Toolbar）。
+插件可以在套索工具栏上展示自己注册的按钮；用户点击按钮后进入插件界面，插件即可基于当前套索上下文读取与修改相关数据。
+
+## 交互流程
+
+1. 用户在页面上完成套索圈选
+2. 系统显示套索工具栏（可展示插件注册按钮）
+3. 用户点击插件按钮进入插件界面
+4. 插件读取套索区域与套索元素，并执行业务逻辑（例如修改套索中的文本框、标题、几何图形、五角星等）
+5. 插件可按需控制套索框显示/隐藏/移除
+
+## 数据模型
+
+套索选中的“元素列表”通过 [`PluginCommAPI.getLassoElements()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) 获取，返回值是 [`Element[]`](/zh/api-reference/supernote-plugin/types/trail)。
+
+- 通过 `Element.type` 区分元素类别（常量见 [`ElementType`](/zh/api-reference/supernote-plugin/types/trail#elementtype)）
+- 对于大体量点数据（例如角度点、轮廓点等），`Element` 字段会以访问器形式提供（[`ElementDataAccessor`](/zh/api-reference/supernote-plugin/types/trail-data-accessor)），避免一次性把大规模点集传到 RN 侧造成内存压力
+
+## 常用接口
+
+| 目标 | 接口 | 说明 |
+| --- | --- | --- |
+| 获取套索框位置 | [`getLassoRect()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect) | 返回套索框矩形（`Rect`） |
+| 创建套索选择 | [`lassoElements(rect)`](/zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | 通过矩形区域创建套索选择（像素坐标） |
+| 调整套索框大小 | [`resizeLassoRect(rect)`](/zh/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | 调整套索框矩形大小。当前仅支持等比例缩放 |
+| 获取套索元素列表 | [`getLassoElements()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | 返回 `Element[]`（成功时会补齐访问器字段） |
+| 控制套索框状态 | [`setLassoBoxState(state)`](/zh/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` 显示，`1` 隐藏，`2` 完全移除 |
+
+<Tip>
+套索框属于 UI 交互矩形，通常以“像素坐标系”表达；而元素点集（笔迹采样点）是 EMR 坐标系。
+需要做坐标系对齐时，先明确坐标系，再参考 [`坐标系`](/zh/plugin-base/coordinate-system) 做换算。
+</Tip>
+
+## 示例
+
+下面示例演示如何在插件界面中：
+
+- 获取套索框位置
+- 按“等比例缩放”规则更新套索框
+- 获取套索元素列表并按类型筛选
+- 控制套索框显示/隐藏/移除
+
+```ts wrap
+import { PluginCommAPI, PluginNoteAPI } from 'sn-plugin-lib';
+
+type Rect = { left: number; top: number; right: number; bottom: number };
+
+/**
+ * 获取当前套索框矩形。
+ */
+export async function fetchLassoRect(): Promise<Rect> {
+  const res = await PluginCommAPI.getLassoRect();
+  if (!res?.success || !res.result) {
+    throw new Error(res?.error?.message ?? '获取套索框失败');
+  }
+  return res.result as Rect;
+}
+
+/**
+ * 以中心点为基准，按等比例缩放生成新 Rect。
+ */
+export function scaleRectKeepAspect(rect: Rect, scale: number): Rect {
+  const width = rect.right - rect.left;
+  const height = rect.bottom - rect.top;
+  const cx = rect.left + width / 2;
+  const cy = rect.top + height / 2;
+  const newWidth = width * scale;
+  const newHeight = height * scale;
+
+  return {
+    left: cx - newWidth / 2,
+    top: cy - newHeight / 2,
+    right: cx + newWidth / 2,
+    bottom: cy + newHeight / 2,
+  };
+}
+
+/**
+ * 将套索框按等比例缩放并提交调整。
+ */
+export async function resizeLassoRectByScale(scale: number): Promise<boolean> {
+  const rect = await fetchLassoRect();
+  const nextRect = scaleRectKeepAspect(rect, scale);
+  const res = await PluginCommAPI.resizeLassoRect(nextRect);
+  return !!res?.success && !!res.result;
+}
+
+/**
+ * 获取套索元素并示例性地做按类型分流。
+ */
+export async function fetchLassoElementsAndDispatch(): Promise<void> {
+  const res = (await PluginCommAPI.getLassoElements()) as any;
+  if (!res?.success || !Array.isArray(res.result)) {
+    throw new Error(res?.error?.message ?? '获取套索元素失败');
+  }
+
+  const elements = res.result as any[];
+  for (const el of elements) {
+    if (el.type === 100) {
+      await PluginNoteAPI.modifyLassoTitle({ style: 1 });
+    } else if (el.type === 500 || el.type === 501 || el.type === 502) {
+      const textBox = el.textBox;
+      if (textBox) {
+        await PluginNoteAPI.modifyLassoText({ ...textBox, textContentFull: 'Updated by plugin' });
+      }
+    } else if (el.type === 700) {
+      const geometry = el.geometry;
+      if (geometry) {
+        await PluginCommAPI.modifyLassoGeometry(geometry);
+      }
+    } else if (el.type === 800) {
+      const fiveStar = el.fiveStar;
+      if (fiveStar?.points) {
+        void fiveStar.points;
+      }
+    }
+  }
+}
+
+/**
+ * 控制套索框显示状态。
+ * - 0: 显示
+ * - 1: 隐藏
+ * - 2: 完全移除
+ */
+export async function setLassoBoxState(state: 0 | 1 | 2): Promise<boolean> {
+  const res = await PluginCommAPI.setLassoBoxState(state);
+  return !!res?.success && !!res.result;
+}
+```
+
+## 常见约束与建议
+
+- `resizeLassoRect` 当前仅支持等比例缩放：建议先调用 `getLassoRect` 获取当前矩形，再基于中心点做等比缩放后提交调整
+- `getLassoElements` 返回的元素可能包含访问器字段：不要假设点集已完整在 JS 侧，必要时通过访问器按需取数
+- `setLassoBoxState(2)` 表示完全移除套索状态：通常用于“操作结束”场景，移除后用户侧套索工具栏会被关闭

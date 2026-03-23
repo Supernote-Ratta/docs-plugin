@@ -1,0 +1,19 @@
+---
+title: "LassoLink"
+description: "套索选区中的链接数据结构。"
+---
+
+<Note>
+`LassoLink.linkType` 表示“套索中读取到的链接类型”。不同写入接口对 `linkType` 的支持范围可能不同；例如 `insertTextLink` 与 `modifyLassoLink` 的参数校验当前只允许 `0..4`。
+</Note>
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `category` | `number` | 链接分类：`0` 文字链接，`1` 笔划链接 |
+| `style` | `number` | 链接样式：`0` 实下划线，`1` 实边框，`2` 虚边框 |
+| `linkType` | `number` | 链接类型：`0` 跳转到笔记页，`1` 笔记文件，`2` 文档，`3` 图片，`4` 网址，`6` 跳转到摘录 |
+| `destPath` | `string` | 目标路径/地址：当 `linkType === 4` 时填写 URL 地址，否则填写目标文件路径 |
+| `destPage` | `number` | 目标页码 |
+| `fullText` | `string` | 完整文本，仅文字链接有值 |
+| `showText` | `string` | 展示文本，仅文字链接有值 |
+| `italic` | `number` | 是否斜体：`0` 否，`1` 是 |

@@ -1,0 +1,37 @@
+---
+title: "getMarkPages"
+description: "Get the page indices that have mark pages in a DOC file."
+---
+
+```ts wrap
+static getMarkPages(filePath: string): Promise<APIResponse<number[]>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `filePath` | `string` | DOC file path |
+
+**Returns**
+
+- [`APIResponse<number[]>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the mark page index array
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get mark page indices.
+ */
+export async function exampleGetMarkPages() {
+ const filePath = '/storage/emulated/0/Note/demo.pdf';
+ const res = await PluginFileAPI.getMarkPages(filePath);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getMarkPages call failed');
+ }
+ return res.result;
+}
+```

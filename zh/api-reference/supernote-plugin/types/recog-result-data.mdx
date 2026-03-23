@@ -1,0 +1,29 @@
+---
+title: "RecogResultData"
+description: "元素识别结果数据结构。"
+---
+
+`RecogResultData` 通常作为 [`Element`](/zh/api-reference/supernote-plugin/types/trail)
+的 `recognizeResult` 字段返回，用于描述识别到的类别与关键点位置信息。
+
+## 用途说明
+
+这类数据可以理解为一份“识别输出摘要”，通常包含：
+
+- **识别类别**：`predict_name` 表示识别模型/规则认为该元素更像哪一类（默认 `others`）
+- **识别区域**：`up_left_point_*` 与 `down_right_point_*` 组成包围盒（bounding box），表示识别目标在页面上的范围
+- **关键点**：`key_point_*` 是一个代表性锚点（keypoint），用于后续交互或定位
+
+<Note>
+当前字段描述使用的是像素坐标，便于直接用于 UI 展示与交互定位。
+</Note>
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `predict_name` | `string` | 识别类别名称（默认 `others`） |
+| `up_left_point_x` | `number` | 左上角 X（像素坐标） |
+| `up_left_point_y` | `number` | 左上角 Y （像素坐标）|
+| `key_point_x` | `number` | 关键点 X（像素坐标） |
+| `key_point_y` | `number` | 关键点 Y （像素坐标）|
+| `down_right_point_x` | `number` | 右下角 X（像素坐标） |
+| `down_right_point_y` | `number` | 右下角 Y（像素坐标） |

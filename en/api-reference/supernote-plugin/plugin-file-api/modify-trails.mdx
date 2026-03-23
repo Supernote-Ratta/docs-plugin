@@ -1,0 +1,73 @@
+---
+title: "modifyElements"
+description: "Modify existing page elements (only existing elements can be modified)."
+---
+
+```ts wrap
+static modifyElements(NOTEPath: string, page: number, elements: Element[]): Promise<APIResponse<number[]>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE/DOC file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `elements` | [`Element[]`](/en/api-reference/supernote-plugin/types/trail) | Elements to modify (must already exist) |
+
+**Returns**
+
+- [`APIResponse<number[]>`](/en/api-reference/supernote-plugin/types/api-response): `result` is the list of element indices modified successfully
+
+## Example
+
+```ts wrap
+import { PluginFileAPI, ElementType, type Element } from 'sn-plugin-lib';
+
+/**
+ * Example: fetch page elements and submit a modification.
+ */
+export async function exampleModifyElements() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 0;
+
+ const listRes = await PluginFileAPI.getElements(page, NOTEPath);
+ if (!listRes.success) {
+ throw new Error(listRes.error?.message ?? 'getElements call failed');
+ }
+
+ const elements = (listRes.result ?? []) as Element[];
+ const target = elements[0];
+ switch (target?.type) {
+ case ElementType.TYPE_STROKE: {
+ target.thickness = (target.thickness ?? 200) + 100;
+ if (target.stroke) {
+ target.stroke.penColor = 0x9D;
+ }
+ break;
+ }
+ case ElementType.TYPE_TEXT:
+ case ElementType.TYPE_TEXT_DIGEST_QUOTE:
+ case ElementType.TYPE_TEXT_DIGEST_CREATE: {
+ if (target.textBox) {
+ target.textBox.textContentFull = 'exampletext';
+ target.textBox.textBold = 1;
+ }
+ break;
+ }
+ case ElementType.TYPE_TITLE: {
+ if (target.title) {
+ target.title.style = 1;
+ }
+ break;
+ }
+ default:
+ break;
+ }
+ const res = await PluginFileAPI.modifyElements(NOTEPath, page, elements);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'modifyElements call failed');
+ }
+ return res.result;
+}
+```

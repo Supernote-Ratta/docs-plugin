@@ -1,0 +1,52 @@
+---
+title: "getLassoElementTypeCounts"
+description: "Get lasso element type counts."
+---
+
+<Note>
+You must create a lasso selection before calling this API; otherwise the call fails.
+</Note>
+
+```ts wrap
+static getLassoElementTypeCounts(): Promise<APIResponse<object>>;
+```
+
+**Returns**
+
+- [`APIResponse<object>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is an object with the following fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `trailNum` | `number` | Normal stroke count |
+| `trailLinkNum` | `number` | Stroke link count |
+| `textLinkNum` | `number` | Normal text link count |
+| `todoLinkNum` | `number` | To-do link count |
+| `titleNum` | `number` | Title count |
+| `normalTextBoxNum` | `number` | Normal TextBox count |
+| `digestTextBoxNum` | `number` | Non-editable digest TextBox count |
+| `digestTextBoxEditableNum` | `number` | Editable digest TextBox count |
+| `geometryNum` | `number` | Total geometry count |
+| `straightLineNum` | `number` | Straight line count |
+| `circleNum` | `number` | Circle count |
+| `ellipseNum` | `number` | Ellipse count |
+| `polygonNum`| `number` | Polygon count |
+
+
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get lasso element type counts.
+ */
+export async function exampleGetLassoElementTypeCounts() {
+ const res = await PluginCommAPI.getLassoElementTypeCounts();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getLassoElementTypeCounts call failed');
+ }
+ return res.result;
+}
+```

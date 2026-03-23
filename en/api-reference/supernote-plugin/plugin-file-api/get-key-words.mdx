@@ -1,0 +1,39 @@
+---
+title: "getKeyWords"
+description: "Get keywords from a NOTE/DOC file."
+---
+
+```ts wrap
+static getKeyWords(NOTEPath: string, pageList: number[]): Promise<APIResponse<KeyWord[]>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE/DOC file path |
+| `pageList` | `number[]` | Page index list (starts from `0`) |
+
+**Returns**
+
+- [`APIResponse<KeyWord[]>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the keyword array. See [`KeyWord`](/en/api-reference/supernote-plugin/types/key-word).
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get keywords.
+ */
+export async function exampleGetKeyWords() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const res = await PluginFileAPI.getKeyWords(NOTEPath, [1]);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getKeyWords call failed');
+ }
+ return res.result;
+}
+```
+

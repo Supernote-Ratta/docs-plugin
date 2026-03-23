@@ -1,0 +1,28 @@
+---
+title: "init"
+description: "Initialize the plugin environment."
+---
+
+<Note>
+This API must be called; otherwise the plugin cannot run. Call it once as early as possible at startup (multiple calls are ignored).
+Preferably call it immediately after `AppRegistry.registerComponent`.
+</Note>
+
+```ts
+async init(): Promise<void>;
+```
+
+
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Example: initialize plugin environment.
+ */
+export async function exampleInit() {
+ await PluginManager.init();
+}
+```

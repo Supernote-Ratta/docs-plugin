@@ -1,0 +1,58 @@
+---
+title: "insertGeometry"
+description: "Insert geometry."
+---
+
+<Note>
+This API inserts a geometry into the current page of the currently opened file.
+</Note>
+
+```ts
+static insertGeometry(geometry: Geometry): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `geometry` | [`Geometry`](/en/api-reference/supernote-plugin/types/geometry) | Geometry data |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the insertion succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI, type Geometry } from 'sn-plugin-lib';
+
+/**
+ * Example: insert a geometry into the current page.
+ */
+export async function exampleInsertGeometry() {
+ const geometry: Geometry = {
+ penColor: 0x9d,
+ penType: 10,
+ penWidth: 200, // min 100
+ type: 'GEO_polygon',
+ points: [
+ { x: 100, y: 100 },
+ { x: 200, y: 100 },
+ { x: 200, y: 200 },
+ { x: 100, y: 200 },
+ { x: 100, y: 100 },
+ ],
+ ellipseCenterPoint: null,
+ ellipseMajorAxisRadius: 0,
+ ellipseMinorAxisRadius: 0,
+ ellipseAngle: 0,
+ };
+
+ const res = await PluginCommAPI.insertGeometry(geometry);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'insertGeometry call failed');
+ }
+ return res.result;
+}
+```

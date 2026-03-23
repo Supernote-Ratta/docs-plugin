@@ -1,0 +1,40 @@
+---
+title: "getElementNumList"
+description: "Get the element number list for a note page."
+---
+
+```ts wrap
+static getElementNumList(notePath: string, page: number): Promise<APIResponse<number[]>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `notePath` | `string` | Note file path |
+| `page` | `number` | Page index (starting from 0) |
+
+**Returns**
+
+- [`APIResponse<number[]>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the element number list for the page
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get the element number list for a note page.
+ */
+export async function exampleGetElementNumList() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+
+  const res = await PluginFileAPI.getElementNumList(notePath, page);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getElementNumList call failed');
+  }
+  return res.result;
+}
+```

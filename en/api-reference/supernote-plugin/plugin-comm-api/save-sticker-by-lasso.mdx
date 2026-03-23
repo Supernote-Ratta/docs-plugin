@@ -1,0 +1,42 @@
+---
+title: "saveStickerByLasso"
+description: "Save lasso-selected strokes as a sticker."
+---
+
+<Note>
+You must create a lasso selection before calling this API; otherwise the call fails.
+The lasso selection must contain only strokes or geometries; other element types cannot be converted to a sticker.
+</Note>
+
+```ts
+static saveStickerByLasso(path: string): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `path` | `string` | Sticker output path |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the save succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+* Example: save lasso-selected strokes or geometries as a sticker.
+ */
+export async function exampleSaveStickerByLasso() {
+ const outPath = '/storage/emulated/0/Note/stickers/lasso.sticker';
+ const res = await PluginCommAPI.saveStickerByLasso(outPath);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'saveStickerByLasso call failed');
+ }
+ return res.result;
+}
+```

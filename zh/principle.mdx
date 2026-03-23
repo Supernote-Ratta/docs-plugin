@@ -1,0 +1,61 @@
+---
+title: "插件工作原理"
+description: "了解 Plugin / PluginHost / Supernote App 三模块关系与运行机制。"
+---
+
+## 插件运行机制
+
+插件系统包含三个核心模块：
+
+- **Plugin**：开发者编写的插件，用于扩展 NOTE/DOC 的能力。插件不直接运行在 NOTE/DOC 内，由 PluginHost 加载与调度。
+- **PluginHost**：负责插件安装、卸载与生命周期管理，并提供 React Native 运行环境。插件逻辑运行在 PluginHost 中，通过标准接口与 NOTE/DOC 交互。
+- **Plugin-enabled App**：支持插件的宿主应用。目前包括 NOTE（笔记）与 DOC（文档）。它们从 PluginHost 获取插件信息，在工具栏、套索工具栏等位置展示插件按钮，并触发插件事件。
+
+下文分别说明安装流程与事件链路。
+
+## 插件安装流程
+
+整体插件安装流程如下图所示：
+
+![整体插件安装流程](/images/plugin-principle/principle-01.png)
+
+安装步骤：
+
+1. 在 Settings -> Apps -> Plugins 进入插件安装界面
+2. 选择插件安装包并点击 “Install”
+3. NOTE/DOC 将安装包发送给 PluginHost
+4. PluginHost 解析插件包内的配置文件，完成安装，并把代码与资源拷贝到插件运行目录
+
+插件安装成功之后，PluginHost会初始化插件，并向笔记、文档注册插件按钮，如图所示：
+
+![插件初始化与按钮注册](/images/plugin-principle/principle-02.png)
+
+初始化流程：
+
+1. PluginHost 初始化 React Native 运行环境
+2. PluginHost 激活已安装插件并执行其 JS/TS 入口逻辑（包含插件初始化与按钮注册）
+3. PluginHost 将注册结果同步给 NOTE/DOC，NOTE/DOC 在对应位置展示插件按钮
+
+如果 PluginHost 退出并重新启动，会重新执行初始化与后续注册流程。
+
+## 插件事件响应流程
+
+插件安装运行成功之后，在笔记、文档应用上会显示其相关的插件按钮，点击按钮会向对应插件发送相关的事件，具体流程如下：
+
+![插件事件响应流程](/images/plugin-principle/principle-03.png)
+
+NOTE/DOC 通过 Android 的 [Android Interface Definition Language（AIDL）](https://developer.android.com/guide/components/aidl) 向 PluginHost 发送事件消息。
+PluginHost 校验消息内容后，把事件转发给对应插件的监听器。插件在监听器回调中处理业务逻辑，并调用 SDK 接口完成对 NOTE/DOC 的操作。
+
+具体的功能调用接口如下：
+
+![功能调用接口与链路](/images/plugin-principle/principle-04.png)
+
+插件的业务逻辑由插件自身实现。插件可通过 React Native 的 TurboModule 调用 Java 层能力，再由 Java 层调用底层 C/C++；当前不支持从 JS/TS 直接调用 C/C++。
+
+此外，插件可通过 SDK 调用 NOTE/DOC 提供的标准接口，实现对内容与交互的操作。
+
+## 相关文档
+
+- 本地开发环境搭建见 [环境搭建](/zh/environment)
+- 插件开发与打包流程见 [编写第一个插件](/zh/first-plugin)

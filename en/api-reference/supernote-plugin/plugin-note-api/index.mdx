@@ -1,0 +1,30 @@
+---
+title: "PluginNoteAPI"
+sidebarTitle: "Overview"
+description: "NOTE-related API index. APIs in this section can only be called in NOTE."
+---
+
+## Import
+
+```ts
+import { PluginNoteAPI } from 'sn-plugin-lib';
+```
+
+## Return Convention
+
+Most async APIs return [`APIResponse<T>`](/en/api-reference/supernote-plugin/types/api-response). Read `result` only when `success === true`.
+
+## Methods
+
+- [getLassoLinks](/en/api-reference/supernote-plugin/plugin-note-api/get-lasso-link)
+- [setLassoStrokeLink](/en/api-reference/supernote-plugin/plugin-note-api/set-lasso-stroke-link)
+- [insertTextLink](/en/api-reference/supernote-plugin/plugin-note-api/insert-text-link)
+- [modifyLassoLink](/en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link)
+- [saveCurrentNote](/en/api-reference/supernote-plugin/plugin-note-api/save-current-note)
+- [setLassoTitle](/en/api-reference/supernote-plugin/plugin-note-api/set-lasso-title)
+- [getLassoTitles](/en/api-reference/supernote-plugin/plugin-note-api/get-lasso-title)
+- [modifyLassoTitle](/en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-title)
+- [getLassoText](/en/api-reference/supernote-plugin/plugin-note-api/get-lasso-text)
+- [insertText](/en/api-reference/supernote-plugin/plugin-note-api/insert-text)
+- [modifyLassoText](/en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-text)
+- [insertImage](/en/api-reference/supernote-plugin/plugin-note-api/insert-image)

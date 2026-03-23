@@ -1,0 +1,110 @@
+---
+title: "插件按钮注册与监听"
+description: "注册插件按钮，并监听按钮点击事件。"
+---
+
+<Note>
+本页包含 `registerButton` 与 `registerButtonListener` 两个接口。调用顺序：先注册按钮（`registerButton`），再监听点击事件（`registerButtonListener`）。
+</Note>
+
+## registerButton
+
+注册插件按钮。只有注册了按钮，用户才能在笔记/文档对应入口看到插件按钮并触发点击事件。
+
+```ts wrap
+registerButton(type: number, appTypes: string[], button: PluginButton): Promise<boolean>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `type` | `number` | 按钮类型：`1` 工具栏按钮，`2` 套索工具栏按钮，`3` 文档划词工具栏按钮 |
+| `appTypes` | `string[]` | 应用类型数组：`NOTE`/`DOC` |
+| `button` | [`PluginButton`](/zh/api-reference/supernote-plugin/types/plugin-button) | 注册的按钮信息对象 |
+
+**返回**
+
+- `Promise<boolean>`：是否注册成功
+
+## registerButtonListener
+
+监听插件按钮点击事件。通常你会在应用启动阶段注册按钮，在插件逻辑初始化时注册监听。
+
+```ts wrap
+registerButtonListener(buttonListener: ButtonListener): ButtonSubscription;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `buttonListener` | `ButtonListener` | 回调 `onButtonPress(event)` |
+
+**返回**
+
+- `ButtonSubscription`：订阅对象，调用 `remove()` 可注销监听
+
+
+## 类型定义
+
+### ButtonListener
+
+```ts
+interface ButtonListener {
+  onButtonPress(event: { id: number; name: string; icon: string }): void;
+}
+```
+
+**说明**
+
+- `onButtonPress(event)`：按钮被点击时触发
+- `event.id`：按钮 id
+- `event.name`：按钮名称
+- `event.icon`：按钮图标
+- 事件更多说明参考：[插件界面 - 按钮事件监听](/zh/plugin-base/plugin-ui)
+
+### ButtonSubscription
+
+```ts
+type ButtonSubscription = {
+  remove(): void;
+};
+```
+
+**说明**
+
+- 由 `registerButtonListener` 返回
+- 调用 `remove()` 可注销按钮事件监听
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 注册套索工具栏按钮，并监听按钮点击事件的示例。
+ * 实际使用中通常在页面卸载/不再需要监听时调用 `sub.remove()`。
+ */
+export async function exampleRegisterButtonAndListener() {
+  const ok = await PluginManager.registerButton(2, ['NOTE'], {
+    id: 1,
+    name: 'My Plugin',
+    icon: '',
+    editDataTypes: [0, 1, 2, 3, 4],
+    showType: 1,
+  });
+
+  const sub = PluginManager.registerButtonListener({
+    onButtonPress(event) {
+      const { id, name, icon } = event;
+      void id;
+      void name;
+      void icon;
+    },
+  } as any);
+
+  sub.remove();
+  return ok;
+}
+```

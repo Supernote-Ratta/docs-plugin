@@ -1,0 +1,46 @@
+---
+title: "PluginCommAPI"
+sidebarTitle: "概览"
+description: "通用接口，笔记和文档都可以调用的接口"
+---
+
+## 导入
+
+```ts
+import { PluginCommAPI } from "sn-plugin-lib";
+```
+
+## 返回值约定
+
+**返回**
+
+多数异步接口返回 [`APIResponse<T>`](/zh/api-reference/supernote-plugin/types/api-response)。通常只在 `success === true` 时读取 `result`。
+`success === false` 时result为空，但会有error信息，展示失败原因。
+
+## 方法列表
+
+- [createElement](/zh/api-reference/supernote-plugin/plugin-comm-api/create-trail)
+- [recycleElement](/zh/api-reference/supernote-plugin/plugin-comm-api/recycle-trail)
+- [clearElementCache](/zh/api-reference/supernote-plugin/plugin-comm-api/clear-trail-cache)
+- [saveStickerByLasso](/zh/api-reference/supernote-plugin/plugin-comm-api/save-sticker-by-lasso)
+- [getStickerSize](/zh/api-reference/supernote-plugin/plugin-comm-api/get-sticker-size)
+- [generateStickerThumbnail](/zh/api-reference/supernote-plugin/plugin-comm-api/generate-sticker-thumbnail)
+- [convertElement2Sticker](/zh/api-reference/supernote-plugin/plugin-comm-api/convert-trail2-sticker)
+- [insertSticker](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-sticker)
+- [setLassoBoxState](/zh/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state)
+- [getLassoRect](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect)
+- [lassoElements](/zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements)
+- [resizeLassoRect](/zh/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect)
+- [getLassoElements](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data)
+- [getLassoElementTypeCounts](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts)
+- [deleteLassoElements](/zh/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data)
+- [getCurrentPageNum](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num)
+- [getCurrentFilePath](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path)
+- [getPenInfo](/zh/api-reference/supernote-plugin/plugin-comm-api/get-pen-info)
+- [recognizeElements](/zh/api-reference/supernote-plugin/plugin-comm-api/recognize-elements)
+- [reloadFile](/zh/api-reference/supernote-plugin/plugin-comm-api/reload-file)
+- [getLassoGeometries](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-geometries)
+- [insertGeometry](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-geometry)
+- [modifyLassoGeometry](/zh/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry)
+- [getNoteSystemTemplates](/zh/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates)
+- [insertFiveStar](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-five-star)

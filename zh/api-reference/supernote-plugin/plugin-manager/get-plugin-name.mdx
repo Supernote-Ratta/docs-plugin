@@ -1,0 +1,26 @@
+﻿---
+title: "getPluginName"
+description: "获取插件名称。"
+---
+
+```ts
+getPluginName(): Promise<string | null | undefined>;
+```
+
+**返回**
+
+- `Promise<string | null | undefined>`：插件名称
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 获取插件名称的示例。
+ */
+export async function exampleGetPluginName() {
+  const name = await PluginManager.getPluginName();
+  return name;
+}
+```

@@ -1,0 +1,65 @@
+---
+title: "insertElements"
+description: "插入元素数据到笔记/文档文件页面中。"
+---
+
+```ts wrap
+static insertElements(notePath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记文件路径 |
+| `page` | `number` | 页面索引（从 0 开始） |
+| `elements` | [`Element[]`](/zh/api-reference/supernote-plugin/types/trail) | 元素数据数组 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示插入成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI, PointUtils, type Element } from 'sn-plugin-lib';
+
+/**
+ * 创建一个 Element 并插入到指定页面的示例。
+ */
+export async function exampleInsertElements() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+
+  const createRes = await PluginCommAPI.createElement(0);
+  if (!createRes.success) {
+    throw new Error(createRes.error?.message ?? 'createElement 调用失败');
+  }
+
+  const element = createRes.result as Element;
+  const pixelPoints = [
+    { x: 100, y: 100 },
+    { x: 200, y: 220 },
+    { x: 300, y: 260 },
+  ];
+  const pressures = [800, 900, 1000];
+  const pageSizeRes = await PluginFileAPI.getPageSize(notePath, page);
+  if (!pageSizeRes.success) {
+    throw new Error(pageSizeRes.error?.message ?? 'getPageSize 调用失败');
+  }
+  const pageSize = pageSizeRes.result;
+  const points = pixelPoints.map((p) => PointUtils.androidPoint2Emr(p, pageSize));
+  element.thickness = 2;
+  if (element.stroke) {
+    element.stroke.penColor = 0;
+    element.stroke.penType = 1;
+    await element.stroke.points.setRange(0, points.length - 1, points);
+    await element.stroke.pressures.setRange(0, pressures.length - 1, pressures);
+  }
+  const res = await PluginFileAPI.insertElements(notePath, page, [element]);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertElements 调用失败');
+  }
+  return res.result;
+}
+```

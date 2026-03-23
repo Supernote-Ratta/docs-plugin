@@ -1,0 +1,27 @@
+---
+title: "getPenInfo"
+description: "获取当前笔信息。"
+---
+
+```ts
+static getPenInfo(): Promise<APIResponse<PenInfo>>;
+```
+
+**返回**
+
+- [`APIResponse<PenInfo>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为 [`PenInfo`](/zh/api-reference/supernote-plugin/types/pen-info)
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleGetPenInfo() {
+  const res = await PluginCommAPI.getPenInfo();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getPenInfo 调用失败');
+  }
+  return res.result;
+}
+```

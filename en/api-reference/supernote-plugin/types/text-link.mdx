@@ -1,0 +1,21 @@
+---
+title: "TextLink"
+description: "TextLink data structure (used for insertTextLink)."
+---
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `destPath` | `string` | Destination path / URL: when `linkType === 4`, set this to the URL; otherwise set it to the destination file path |
+| `destPage` | `number` | Destination page (only valid when `linkType === 0` or `linkType === 2`) |
+| `style` | `number` | Link style: `0` solid underline, `1` solid border, `2` dashed border |
+| `linkType` | `number` | Link type: `0` note page, `1` note file, `2` document, `3` image, `4` URL |
+| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Text region rectangle (pixel coordinates; must be non-zero area) |
+| `fontSize` | `number` | Font size (positive number) |
+| `showText` | `string` | Display text (usually a simplified version of `fullText`) |
+| `fullText` | `string` | Full text |
+| `isItalic` | `number` | Italic: `0` no, `1` yes |
+
+<Note>
+`TextLink` is used to create text links (for `insertTextLink`). If you are reading link data from a lasso selection, see [`Link`](/en/api-reference/supernote-plugin/types/link) and [`LassoLink`](/en/api-reference/supernote-plugin/types/lasso-link).
+</Note>
+

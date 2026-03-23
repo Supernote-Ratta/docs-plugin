@@ -1,0 +1,28 @@
+﻿---
+title: "closePluginView"
+description: "关闭插件界面。"
+---
+
+调用该接口会直接关闭当前插件的界面显示。
+
+```ts
+closePluginView(): Promise<boolean>;
+```
+
+**返回**
+
+- `Promise<boolean>`：是否成功关闭
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 关闭插件界面的示例。
+ */
+export async function exampleClosePluginView() {
+  const ok = await PluginManager.closePluginView();
+  return ok;
+}
+```

@@ -1,0 +1,37 @@
+---
+title: "getLassoElements"
+description: "获取套索数据（元素列表）。成功时会补齐访问器字段。"
+---
+
+<Note>
+套索元素之后才能调用这个接口，否则会调用失败。
+</Note>
+
+```ts
+static getLassoElements(): Promise<APIResponse<Element[]>>;
+```
+
+**返回**
+
+- [`APIResponse<Element[]>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 的元素类型见 [`Element`](/zh/api-reference/supernote-plugin/types/trail)
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI, ElementType, type Element } from 'sn-plugin-lib';
+
+/**
+ * 获取套索元素并按类型筛选的示例。
+ */
+export async function exampleGetLassoElements() {
+  const res = await PluginCommAPI.getLassoElements();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLassoElements 调用失败');
+  }
+
+  const elements = (res.result ?? []) as Element[];
+  const strokes = elements.filter((e) => e.type === ElementType.TYPE_STROKE);
+  return { elements, strokes };
+}
+```

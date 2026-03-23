@@ -1,0 +1,49 @@
+﻿---
+title: '插件界面'
+---
+
+本章解释“插件界面显示在哪里、如何被渲染”，并给出按钮点击事件的监听方式。
+
+## 插件界面显示
+
+在 [插件系统工作原理](/principle) 中，我们介绍过插件事件链路。按钮点击后，事件会被发送到 PluginHost：
+
+![插件事件响应流程](/images/plugin-principle/principle-03.png)
+
+PluginHost 接收到点击事件后，会根据插件标识选择要展示的插件界面，并把该界面渲染到自己的容器视图中。
+
+React Native 的 UI 由 JS/TS 描述，但需要通过原生容器视图才能显示在 Android 上。典型做法是使用 `ReactRootView` 作为根视图容器，由它负责加载 JS/TS 并渲染到屏幕。
+
+PluginHost 内部同样维护一个 `ReactRootView`（或等价容器）。所有插件界面都会被挂载到该容器上；PluginHost 通过事件中的插件标识来确定具体渲染哪个插件的 `App` 入口。
+
+## 按钮事件监听
+
+插件可以注册多个按钮。为了区分“哪个按钮被点击”，需要监听按钮事件并读取事件中的 `id`。
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 监听原生按钮点击事件。
+ */
+const subscription = PluginManager.registerButtonListener({
+  onButtonPress: event => {
+    console.log('button press:', event);
+    console.log('button id:', event.id);
+  },
+});
+```
+`registerButtonListener` 会在按钮被点击时回调 `event`。常用字段如下：
+
+```ts wrap
+type ButtonEvent = {
+  id: number;    // 注册按钮时传入的 id
+  name: string;  // 按钮名称
+  icon: string;  // 按钮图标路径（注册按钮时传入）
+};
+
+```
+建议为每个按钮分配唯一的 `id`，并在回调中用 `id` 做分发处理（例如 `switch(event.id)`）。
+
+
+

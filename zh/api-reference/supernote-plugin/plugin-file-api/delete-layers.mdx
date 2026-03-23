@@ -1,0 +1,45 @@
+---
+title: "deleteLayers"
+description: "删除图层数据。"
+---
+
+<Note>
+只有笔记文件才有图层数据，文档文件没有图层数据。
+</Note>
+
+```ts wrap
+static deleteLayers(notePath: string, page: number, layerIds: number[]): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记文件路径 |
+| `page` | `number` | 页面索引（从 0 开始） |
+| `layerIds` | `number[]` | 需要删除的图层 ID（1-3）列表 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示删除图层成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 删除图层的示例。
+ */
+export async function exampleDeleteLayers() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+  const res = await PluginFileAPI.deleteLayers(notePath, page, [1, 2]);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'deleteLayers 调用失败');
+  }
+  return res.result;
+}
+```
+

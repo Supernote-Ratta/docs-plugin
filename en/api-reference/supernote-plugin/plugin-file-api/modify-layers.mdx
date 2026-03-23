@@ -1,0 +1,63 @@
+---
+title: "modifyLayers"
+description: "Modify page layer data (non-existent layers are ignored)."
+---
+
+<Note>
+Only NOTE files have layer data; other file types do not.
+</Note>
+
+```ts wrap
+static modifyLayers(NOTEPath: string, page: number, layers: Layer[]): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `layers` | [`Layer[]`](/en/api-reference/supernote-plugin/types/layer) | Existing layer data array |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the modification succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI, type Layer } from 'sn-plugin-lib';
+
+/**
+ * Example: modify page layer data.
+ */
+export async function exampleModifyLayers() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 0;
+
+ const listRes = await PluginFileAPI.getLayers(NOTEPath, page);
+ if (!listRes.success) {
+ throw new Error(listRes.error?.message ?? 'getLayers call failed');
+ }
+
+ const layers = (listRes.result ?? []) as Layer[];
+ const customs = layers.filter((l) => l.layerId >= 1 && l.layerId <= 3);
+ const custom = customs[0];
+ if (custom) {
+ custom.name = 'work layer';
+ custom.isVisible = true;
+ custom.isCurrentLayer = true;
+ }
+ layers.forEach((l) => {
+ if (l !== custom) {
+ l.isCurrentLayer = false;
+ }
+ });
+ const res = await PluginFileAPI.modifyLayers(NOTEPath, page, layers);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'modifyLayers call failed');
+ }
+ return res.result;
+}
+```

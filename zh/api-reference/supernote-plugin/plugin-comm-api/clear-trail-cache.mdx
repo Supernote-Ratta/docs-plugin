@@ -1,0 +1,22 @@
+﻿---
+title: "clearElementCache"
+description: "清除 Element 的 Android 本地缓存；清除后旧的 Element 对象将无法使用。"
+---
+
+```ts
+static clearElementCache(): void;
+```
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 清空 Element 原生缓存的示例。
+ */
+export async function exampleClearElementCache() {
+  PluginCommAPI.clearElementCache();
+}
+```
+

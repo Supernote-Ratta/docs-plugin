@@ -1,0 +1,43 @@
+---
+title: "createElement"
+description: "Create a new Element object."
+---
+Some fields in [`Element`](/en/api-reference/supernote-plugin/types/trail) can be very large (e.g. stroke sample points, pressure points, angle points, contour points).
+To avoid RN-side memory issues caused by loading large datasets at once, the SDK uses an accessor design. Therefore you should create elements via `createElement`.
+For details, see [`Element`](/en/api-reference/supernote-plugin/types/trail).
+
+```ts
+static createElement(
+ type: number
+): Promise<APIResponse<Element>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `type` | `number` | Element type. See [`ElementType`](/en/api-reference/supernote-plugin/types/trail#elementtype). |
+
+**Returns**
+
+- [`APIResponse<Element>`](/en/api-reference/supernote-plugin/types/api-response):
+See [`APIResponse`](/en/api-reference/supernote-plugin/types/api-response) and [`Element`](/en/api-reference/supernote-plugin/types/trail)
+- On success, `result` is an `Element` with accessor fields filled (e.g. `angles`, `contoursSrc`, and `stroke.*` accessors for stroke elements).
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Create one Element example.
+ */
+export async function exampleCreateElement() {
+
+ const res = await PluginCommAPI.createElement(0);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'createElement call failed');
+ }
+ return res.result;
+}
+```

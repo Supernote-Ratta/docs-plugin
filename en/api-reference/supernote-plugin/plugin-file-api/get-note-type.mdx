@@ -1,0 +1,38 @@
+---
+title: "getNoteType"
+description: "Get a note file type."
+---
+
+```ts wrap
+static getNoteType(NOTEPath: string): Promise<APIResponse<number>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE file path |
+
+**Returns**
+
+- [`APIResponse<number>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the note type: `0` normal note, `1` recognition note
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get note type.
+ */
+export async function exampleGetNoteType() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const res = await PluginFileAPI.getNoteType(NOTEPath);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getNoteType call failed');
+ }
+ return res.result;
+}
+```
+

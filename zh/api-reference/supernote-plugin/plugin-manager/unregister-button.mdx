@@ -1,0 +1,32 @@
+﻿---
+title: "unregisterButton"
+description: "注销插件按钮。"
+---
+
+```ts
+unregisterButton(id: number): Promise<boolean>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | `number` | 按钮唯一标识（注册按钮时设置的id） |
+
+**返回**
+
+- `Promise<boolean>`：是否成功注销
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 注销按钮的示例。
+ */
+export async function exampleUnregisterButton() {
+  const ok = await PluginManager.unregisterButton(1);
+  return ok;
+}
+```

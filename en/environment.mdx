@@ -1,0 +1,97 @@
+---
+title: "Environment Setup"
+description: "Set up React Native and Android build environments for Supernote plugin development."
+---
+
+Supernote plugins are built with React Native. For environment setup, you can treat it as:
+"React Native development environment + Android build environment".
+
+This page provides a minimal working setup on Windows and highlights common checkpoints. For a full guide, see the official React Native docs:
+https://reactnative.dev/docs/0.79/getting-started
+
+## Install Dependencies
+
+Required dependencies: Node.js, JDK, and Android Studio (with Android SDK). Steps below use Windows as an example.
+
+### Node.js and JDK
+
+- Node.js: use the current LTS version (and make sure it is >= 18)
+- JDK: React Native Android builds require JDK 19 or higher (Oracle JDK or OpenJDK)
+
+After installation, verify versions in your terminal:
+
+```bash wrap
+node -v
+javac -version
+```
+
+If your network cannot access the npm official registry, switch to an available mirror first; otherwise dependency installation may fail.
+
+### Yarn
+
+Yarn is an alternative package manager developed by Facebook, and it can speed up downloads (for example, Node templates). Install it with:
+
+```bash wrap
+npm install -g yarn
+```
+
+After installing Yarn, you can use it instead of npm (for example, use `yarn` instead of `npm install`, and `yarn add <package>` instead of `npm install <package>`).
+
+### Android Studio
+
+If you haven't set up Android Studio/SDK before, follow the steps below to complete the one-time installation and configuration.
+
+#### Install Android Studio
+
+Download and install [`Android Studio`](https://developer.android.com/studio). We recommend Android Studio Narwhal | 2025.1.2 or newer to avoid build failures caused by outdated versions.
+
+In the Android Studio setup wizard, make sure to check all of the following:
+
+- Android SDK
+- Android SDK Platform
+- Android Virtual Device
+
+Then click "Next" to install the selected components.
+
+#### Install Android SDK
+
+Android Studio installs the latest Android SDK by default. React Native currently requires the Android 15 (VanillaIceCream) SDK to build (note that the SDK version is not the same as the Android OS version; RN supports Android 6+ devices). You can select and install different SDK versions in Android Studio's SDK Manager.
+
+You can find SDK Manager from the Android Studio welcome screen. Click "Configure" and then select "SDK Manager".
+
+![image](/images/devguide/devguide-5.png)
+
+Note: You can also find SDK Manager in Android Studio "Settings" (Windows): File → Settings → Languages & Frameworks → Android SDK.
+
+In SDK Manager, go to the "SDK Platforms" tab and check "Show Package Details" in the bottom-right. Expand Android 15 (VanillaIceCream) and ensure these components are selected (if you cannot see this UI, you may need a stable proxy):
+
+- Android SDK Platform 35
+- Intel x86 Atom_64 System Image (official emulator image; not required if you use a third-party emulator)
+
+Then go to the "SDK Tools" tab, also check "Show Package Details", expand "Android SDK Build-Tools", and ensure Build-Tools 35.0.0 is installed (required by React Native). You can install multiple versions if needed.
+
+#### Configure ANDROID_HOME
+
+React Native needs environment variables to locate your Android SDK for building.
+
+Open Control Panel -> System and Security -> System -> Advanced system settings -> Advanced -> Environment Variables -> New, create an environment variable named ANDROID_HOME (system or user variable), and point it to your Android SDK directory (your path may differ from the screenshot; verify it on your machine):
+
+![image](/images/devguide/devguide-6.png)
+
+By default, the SDK is installed at:
+
+```text
+C:\Users\<your-username>\AppData\Local\Android\Sdk
+```
+
+You can check the actual SDK path in Android Studio "Preferences": Appearance & Behavior → System Settings → Android SDK.
+
+Close and reopen your terminal so the new environment variables take effect.
+
+#### Add Platform Tools to PATH
+
+Open Control Panel -> System and Security -> System -> Advanced system settings -> Advanced -> Environment Variables, select the Path variable and click Edit. Add the following entry for platform-tools:
+
+```text
+%ANDROID_HOME%\platform-tools
+```

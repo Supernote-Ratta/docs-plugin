@@ -1,0 +1,50 @@
+---
+title: "generateStickerThumbnail"
+description: "生成贴纸缩略图。"
+---
+
+```ts
+static generateStickerThumbnail(
+  stickerPath: string,
+  thumbnailPath: string,
+  size: Size
+): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `stickerPath` | `string` | 贴纸源文件路径 |
+| `thumbnailPath` | `string` | 缩略图输出路径（通常为 `.png`） |
+| `size` | [`Size`](/zh/api-reference/supernote-plugin/types/size) | 缩略图尺寸（需与原图保持等比例），可以通过 [`getStickerSize`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-sticker-size)这个接口获取贴纸的尺寸|
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示生成缩略图成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 生成贴纸缩略图的示例。
+ */
+export async function exampleGenerateStickerThumbnail() {
+  const stickerPath = '/storage/emulated/0/Note/stickers/demo.sticker';
+  const thumbnailPath = '/storage/emulated/0/Note/stickers/demo_thumb.png';
+  const sizeRes = await PluginCommAPI.getStickerSize(stickerPath);
+  if (!sizeRes.success || !sizeRes.result) {
+    throw new Error(sizeRes.error?.message ?? 'getStickerSize 调用失败');
+  }
+  const size = sizeRes.result;
+
+  const res = await PluginCommAPI.generateStickerThumbnail(stickerPath, thumbnailPath, size);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateStickerThumbnail 调用失败');
+  }
+  return res.result;
+}
+```

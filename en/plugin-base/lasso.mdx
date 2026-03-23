@@ -1,0 +1,141 @@
+---
+title: "Lasso"
+description: "Workflow, data model, and common APIs for lasso selection (get/update lasso rectangle and elements)."
+---
+
+Lasso is a common selection interaction in NOTE/DOC. After the user draws a region on the page, the system computes the selected element set and shows the lasso toolbar.
+Plugins can display their registered buttons in the lasso toolbar. After the user taps a plugin button and enters the plugin UI, the plugin can read and modify data based on the current lasso context.
+
+## Workflow
+
+1. User completes a lasso selection on the page
+2. The system shows the lasso toolbar (plugin-registered buttons may appear)
+3. User taps a plugin button and enters the plugin UI
+4. The plugin reads the lasso rectangle and selected elements, then runs business logic (e.g., modify selected TextBox elements, titles, geometries, stars, etc.)
+5. The plugin can show/hide/remove the lasso box as needed
+
+## Data Model
+
+The selected element list can be obtained via [`PluginCommAPI.getLassoElements()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data). The return value is [`Element[]`](/en/api-reference/supernote-plugin/types/trail).
+
+- Use `Element.type` to distinguish element categories (constants: [`ElementType`](/en/api-reference/supernote-plugin/types/trail#elementtype))
+- For large point datasets (e.g., angle points, contour points), `Element` fields are provided as accessors ([`ElementDataAccessor`](/en/api-reference/supernote-plugin/types/trail-data-accessor)) to avoid transferring large point sets to RN at once
+
+## Common APIs
+
+| Goal | API | Description |
+| --- | --- | --- |
+| Get lasso rectangle | [`getLassoRect()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect) | Returns lasso rectangle (`Rect`) |
+| Create lasso selection | [`lassoElements(rect)`](/en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | Creates a lasso selection from a rectangle (pixel coordinates) |
+| Resize lasso rectangle | [`resizeLassoRect(rect)`](/en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | Resizes the lasso rectangle. Currently only proportional scaling is supported |
+| Get selected elements | [`getLassoElements()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | Returns `Element[]` (accessor fields are filled on success) |
+| Control lasso box | [`setLassoBoxState(state)`](/en/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` show, `1` hide, `2` remove completely |
+
+<Tip>
+The lasso rectangle is a UI interaction rectangle and is typically expressed in the pixel coordinate system, while stroke point data uses the EMR coordinate system.
+If you need to align them, confirm the coordinate systems first and convert as needed. See [Coordinate System](/en/plugin-base/coordinate-system).
+</Tip>
+
+## Example
+
+The example below shows how to, within a plugin UI:
+
+- Get the lasso rectangle
+- Update the lasso rectangle by proportional scaling
+- Get selected elements and filter by type
+- Show/hide/remove the lasso box
+
+```ts wrap
+import { PluginCommAPI, PluginNoteAPI } from 'sn-plugin-lib';
+
+type Rect = { left: number; top: number; right: number; bottom: number };
+
+/**
+ * Get the current lasso rectangle.
+ */
+export async function fetchLassoRect(): Promise<Rect> {
+  const res = await PluginCommAPI.getLassoRect();
+  if (!res?.success || !res.result) {
+    throw new Error(res?.error?.message ?? 'Failed to get lasso rectangle');
+  }
+  return res.result as Rect;
+}
+
+/**
+ * Create a new Rect by scaling around the center point.
+ */
+export function scaleRectKeepAspect(rect: Rect, scale: number): Rect {
+  const width = rect.right - rect.left;
+  const height = rect.bottom - rect.top;
+  const cx = rect.left + width / 2;
+  const cy = rect.top + height / 2;
+  const newWidth = width * scale;
+  const newHeight = height * scale;
+
+  return {
+    left: cx - newWidth / 2,
+    top: cy - newHeight / 2,
+    right: cx + newWidth / 2,
+    bottom: cy + newHeight / 2,
+  };
+}
+
+/**
+ * Scale the lasso rectangle proportionally and submit the resize.
+ */
+export async function resizeLassoRectByScale(scale: number): Promise<boolean> {
+  const rect = await fetchLassoRect();
+  const nextRect = scaleRectKeepAspect(rect, scale);
+  const res = await PluginCommAPI.resizeLassoRect(nextRect);
+  return !!res?.success && !!res.result;
+}
+
+/**
+ * Fetch lasso elements and dispatch by type (example).
+ */
+export async function fetchLassoElementsAndDispatch(): Promise<void> {
+  const res = (await PluginCommAPI.getLassoElements()) as any;
+  if (!res?.success || !Array.isArray(res.result)) {
+    throw new Error(res?.error?.message ?? 'Failed to get lasso elements');
+  }
+
+  const elements = res.result as any[];
+  for (const el of elements) {
+    if (el.type === 100) {
+      await PluginNoteAPI.modifyLassoTitle({ style: 1 });
+    } else if (el.type === 500 || el.type === 501 || el.type === 502) {
+      const textBox = el.textBox;
+      if (textBox) {
+        await PluginNoteAPI.modifyLassoText({ ...textBox, textContentFull: 'Updated by plugin' });
+      }
+    } else if (el.type === 700) {
+      const geometry = el.geometry;
+      if (geometry) {
+        await PluginCommAPI.modifyLassoGeometry(geometry);
+      }
+    } else if (el.type === 800) {
+      const fiveStar = el.fiveStar;
+      if (fiveStar?.points) {
+        void fiveStar.points;
+      }
+    }
+  }
+}
+
+/**
+ * Control lasso box visibility.
+ * - 0: show
+ * - 1: hide
+ * - 2: remove completely
+ */
+export async function setLassoBoxState(state: 0 | 1 | 2): Promise<boolean> {
+  const res = await PluginCommAPI.setLassoBoxState(state);
+  return !!res?.success && !!res.result;
+}
+```
+
+## Constraints and Recommendations
+
+- `resizeLassoRect` currently only supports proportional scaling: call `getLassoRect` first, scale around the center, then submit the resize
+- `getLassoElements` may return elements with accessor fields: do not assume point sets are fully in JS; use accessors to fetch data on demand
+- `setLassoBoxState(2)` removes the lasso state completely: typically used at the end of an operation; after removal, the lasso toolbar will close on the user side

@@ -1,0 +1,42 @@
+---
+title: "getElement"
+description: "获取笔记某一页的单个元素。"
+---
+
+```ts wrap
+static getElement(notePath: string, page: number, num: number): Promise<APIResponse<Element>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记路径 |
+| `page` | `number` | 页码（从 0 开始） |
+| `num` | `number` | 该页内元素序号（从 0 开始） |
+
+**返回**
+
+- [`APIResponse<Element>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为 [`Element`](/zh/api-reference/supernote-plugin/types/trail)对象。
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取笔记某一页单个元素的示例。
+ */
+export async function exampleGetElement() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+  const num = 0;
+
+  const res = await PluginFileAPI.getElement(notePath, page, num);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getElement 调用失败');
+  }
+  return res.result;
+}
+```

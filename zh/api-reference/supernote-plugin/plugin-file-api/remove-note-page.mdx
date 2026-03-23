@@ -1,0 +1,39 @@
+---
+title: "removeNotePage"
+description: "删除笔记文件指定页面。"
+---
+
+```ts wrap
+static removeNotePage(notePath: string, page: number): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记文件路径 |
+| `page` | `number` | 要删除的页码（从 0 开始） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示删除成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 删除指定页面的示例。
+ */
+export async function exampleRemoveNotePage() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 2;
+  const res = await PluginFileAPI.removeNotePage(notePath, page);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'removeNotePage 调用失败');
+  }
+  return res.result;
+}
+```

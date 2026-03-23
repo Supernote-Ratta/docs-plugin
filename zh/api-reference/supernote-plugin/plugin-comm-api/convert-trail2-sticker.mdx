@@ -1,0 +1,57 @@
+---
+title: "convertElement2Sticker"
+description: "元素（Element）转换为贴纸。"
+---
+
+```ts
+static convertElement2Sticker(
+  params: {
+    machineType: number;
+    elements: Object[];
+    stickerPath: string;
+  }
+): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+- 参数对象字段：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `machineType` | `number` | 机器类型：`0` A5, `1` A6, `2` A6X, `3` A5X, `4` Nomad, `5` Manta |
+| `elements` | [`Element[]`](/zh/api-reference/supernote-plugin/types/trail) | 元素数据 |
+| `stickerPath` | `string` | 输出路径（贴纸保存位置） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示元素转化贴纸成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI, type Element } from 'sn-plugin-lib';
+
+/**
+ * 将套索选中的元素转换为贴纸的示例。
+ */
+export async function exampleConvertElement2Sticker() {
+  const lassoRes = await PluginCommAPI.getLassoElements();
+  if (!lassoRes.success) {
+    throw new Error(lassoRes.error?.message ?? 'getLassoElements 调用失败');
+  }
+
+  const params = {
+    machineType: 3,
+    elements: (lassoRes.result ?? []) as Element[],
+    stickerPath: '/storage/emulated/0/Note/stickers/out.png',
+  };
+
+  const res = await PluginCommAPI.convertElement2Sticker(params as any);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'convertElement2Sticker 调用失败');
+  }
+  return res.result;
+}
+```

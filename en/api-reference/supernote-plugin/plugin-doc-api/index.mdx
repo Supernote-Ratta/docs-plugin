@@ -1,0 +1,25 @@
+---
+title: "PluginDocAPI"
+sidebarTitle: "Overview"
+description: "DOC-related API index."
+---
+
+<Note>
+APIs in this section can only be called in DOC; NOTE cannot call these APIs.
+</Note>
+
+## Import
+
+```ts
+import { PluginDocAPI } from 'sn-plugin-lib';
+```
+
+## Return Convention
+
+Most async APIs return [`APIResponse<T>`](/en/api-reference/supernote-plugin/types/api-response). Read `result` only when `success === true`.
+
+## Methods
+
+- [getSelectedText](/en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text)
+- [getCurrentDocText](/en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text)
+- [getCurrentTotalPages](/en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages)

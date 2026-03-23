@@ -1,0 +1,65 @@
+---
+title: "insertElements"
+description: "Insert elements into a NOTE/DOC file page."
+---
+
+```ts wrap
+static insertElements(NOTEPath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `elements` | [`Element[]`](/en/api-reference/supernote-plugin/types/trail) | Element data array |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response): `result === true` indicates the insertion succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI, PointUtils, type Element } from 'sn-plugin-lib';
+
+/**
+ * Example: create an element and insert it into a page.
+ */
+export async function exampleInsertElements() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 0;
+
+ const createRes = await PluginCommAPI.createElement(0);
+ if (!createRes.success) {
+ throw new Error(createRes.error?.message ?? 'createElement call failed');
+ }
+
+ const element = createRes.result as Element;
+ const pixelPoints = [
+ { x: 100, y: 100 },
+ { x: 200, y: 220 },
+ { x: 300, y: 260 },
+ ];
+ const pressures = [800, 900, 1000];
+ const pageSizeRes = await PluginFileAPI.getPageSize(NOTEPath, page);
+ if (!pageSizeRes.success) {
+ throw new Error(pageSizeRes.error?.message ?? 'getPageSize call failed');
+ }
+ const pageSize = pageSizeRes.result;
+ const points = pixelPoints.map((p) => PointUtils.androidPoint2Emr(p, pageSize));
+ element.thickness = 2;
+ if (element.stroke) {
+ element.stroke.penColor = 0;
+ element.stroke.penType = 1;
+ await element.stroke.points.setRange(0, points.length - 1, points);
+ await element.stroke.pressures.setRange(0, pressures.length - 1, pressures);
+ }
+ const res = await PluginFileAPI.insertElements(NOTEPath, page, [element]);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'insertElements call failed');
+ }
+ return res.result;
+}
+```

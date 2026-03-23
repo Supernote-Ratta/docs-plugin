@@ -1,0 +1,55 @@
+---
+title: "modifyLassoGeometry"
+description: "修改套索几何图形。"
+---
+
+<Note>
+套索元素之后才能调用这个接口，否则会调用失败。并且必须套索单个几何图形，否则无法成功修改几何图形。
+</Note>
+
+```ts wrap
+static modifyLassoGeometry(geometry: Geometry): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `geometry` | [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry) | 几何图形参数 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示修改几何图形成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI, type Geometry } from 'sn-plugin-lib';
+
+/**
+ * 修改套索中的一个几何图形的示例。
+ */
+export async function exampleModifyLassoGeometry() {
+  const listRes = await PluginCommAPI.getLassoGeometries();
+  if (!listRes.success) {
+    throw new Error(listRes.error?.message ?? 'getLassoGeometries 调用失败');
+  }
+
+  const geometries = (listRes.result ?? []) as Geometry[];
+
+  if (geometries.length !== 1) {
+    throw new Error('请确保当前套索仅包含一个几何图形');
+  }
+  const first = geometries[0];
+  if (!first) {
+    return false;
+  }
+
+  const res = await PluginCommAPI.modifyLassoGeometry(first);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'modifyLassoGeometry 调用失败');
+  }
+  return res.result;
+}
+```

@@ -1,0 +1,55 @@
+---
+title: "PluginFileAPI"
+sidebarTitle: "概览"
+description: "文件相关接口总目录。"
+---
+
+<Note>
+该目录下的接口是直接操作文件。
+</Note>
+
+## 导入
+
+```ts wrap
+import { PluginFileAPI } from "sn-plugin-lib";
+```
+
+## 返回值约定
+
+多数异步接口返回 [`APIResponse<T>`](/zh/api-reference/supernote-plugin/types/api-response)。通常只在 `success === true` 时读取 `result`。
+
+## 方法列表
+
+- [getElements](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-trails)
+- [replaceElements](/zh/api-reference/supernote-plugin/plugin-file-api/replace-trails)
+- [insertElements](/zh/api-reference/supernote-plugin/plugin-file-api/insert-trails)
+- [modifyElements](/zh/api-reference/supernote-plugin/plugin-file-api/modify-trails)
+- [deleteElements](/zh/api-reference/supernote-plugin/plugin-file-api/delete-elements)
+- [getTitles](/zh/api-reference/supernote-plugin/plugin-file-api/get-titles)
+- [getKeyWords](/zh/api-reference/supernote-plugin/plugin-file-api/get-key-words)
+- [insertKeyWord](/zh/api-reference/supernote-plugin/plugin-file-api/insert-key-word)
+- [deleteKeyWord](/zh/api-reference/supernote-plugin/plugin-file-api/delete-key-word)
+- [getNoteTotalPageNum](/zh/api-reference/supernote-plugin/plugin-file-api/get-note-total-page-num)
+- [getPageSize](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size)
+- [generateNotePng](/zh/api-reference/supernote-plugin/plugin-file-api/generate-note-png)
+- [searchFiveStars](/zh/api-reference/supernote-plugin/plugin-file-api/search-five-stars)
+- [createNote](/zh/api-reference/supernote-plugin/plugin-file-api/create-note)
+- [removeNotePage](/zh/api-reference/supernote-plugin/plugin-file-api/remove-note-page)
+- [insertNotePage](/zh/api-reference/supernote-plugin/plugin-file-api/insert-note-page)
+- [clearLayerElements](/zh/api-reference/supernote-plugin/plugin-file-api/clear-page-layer-data)
+- [getLayers](/zh/api-reference/supernote-plugin/plugin-file-api/get-layers)
+- [modifyLayers](/zh/api-reference/supernote-plugin/plugin-file-api/modify-layers)
+- [insertLayer](/zh/api-reference/supernote-plugin/plugin-file-api/insert-layer)
+- [deleteLayers](/zh/api-reference/supernote-plugin/plugin-file-api/delete-layers)
+- [sortLayers](/zh/api-reference/supernote-plugin/plugin-file-api/sort-layers)
+- [getMarkPages](/zh/api-reference/supernote-plugin/plugin-file-api/get-mark-pages)
+- [generateMarkThumbnails](/zh/api-reference/supernote-plugin/plugin-file-api/generate-mark-thumbnails)
+- [clearMarkElements](/zh/api-reference/supernote-plugin/plugin-file-api/clear-mark-trails)
+- [getNotePageTemplate](/zh/api-reference/supernote-plugin/plugin-file-api/get-note-page-template)
+- [generateNoteTemplatePng](/zh/api-reference/supernote-plugin/plugin-file-api/generate-note-template-png)
+- [getNoteType](/zh/api-reference/supernote-plugin/plugin-file-api/get-note-type)
+- [getFileMachineType](/zh/api-reference/supernote-plugin/plugin-file-api/get-file-machine-type)
+- [getElementCounts](/zh/api-reference/supernote-plugin/plugin-file-api/get-element-counts)
+- [getElementNumList](/zh/api-reference/supernote-plugin/plugin-file-api/get-element-num-list)
+- [getElement](/zh/api-reference/supernote-plugin/plugin-file-api/get-element)
+- [getLastElement](/zh/api-reference/supernote-plugin/plugin-file-api/get-last-element)

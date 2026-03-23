@@ -1,0 +1,50 @@
+---
+title: "insertLayer"
+description: "插入图层数据。"
+---
+
+<Note>
+只有笔记文件可以插入图层数据，其他文件无法插入图层数据。
+</Note>
+
+```ts wrap
+static insertLayer(notePath: string, page: number, layer: Layer): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记路径 |
+| `page` | `number` | 页面索引（从 0 开始） |
+| `layer` | [`Layer`](/zh/api-reference/supernote-plugin/types/layer) | 需要插入的图层数据 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示插入图层成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI, type Layer } from 'sn-plugin-lib';
+
+/**
+ * 插入图层的示例。
+ */
+export async function exampleInsertLayer() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+  const layer: Layer = {
+    layerId: 1,
+    name: '新图层',
+    isCurrentLayer: false,
+    isVisible: true,
+  };
+  const res = await PluginFileAPI.insertLayer(notePath, page, layer);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertLayer 调用失败');
+  }
+  return res.result;
+}
+```

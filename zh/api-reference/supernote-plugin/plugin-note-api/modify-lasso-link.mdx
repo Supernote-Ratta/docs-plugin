@@ -1,0 +1,70 @@
+---
+title: "modifyLassoLink"
+description: "修改链接数据。"
+---
+<Note>
+该接口支持笔记中的撤销还原操作。
+
+该接口修改“当前套索选中的单个链接”。必须先套索选中一个链接；如果未套索、套索的不是链接，或一次套索选中了多个链接，调用会失败。
+通常建议在“套索工具栏按钮”进入的插件界面中调用该接口。
+</Note>
+```ts
+static modifyLassoLink(modifyLink: {
+  destPath: string;
+  destPage?: number;
+  linkType: number;
+  style: number;
+  fullText?: string;
+  showText?: string;
+}): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `modifyLink.destPath` | `string` | 目标路径/地址：当 `linkType === 4` 时填写 URL 地址，否则填写目标文件路径 |
+| `modifyLink.destPage` | `number` | 目标页码（仅 `linkType === 0` 或 `linkType === 2` 有效）<br />`linkType === 0`：必须填非负整数，表示需要跳到指定页面<br />`linkType === 2`：负数表示跳转到文档当前页，非负整数表示跳转到文档指定页面 |
+| `modifyLink.linkType` | `number` | 链接类型：`0` 跳转笔记页，`1` 跳转笔记文件，`2` 文档，`3` 图片，`4` 网址 |
+| `modifyLink.style` | `number` | 链接样式：`0` 实下划线，`1` 实边框，`2` 虚边框 |
+| `modifyLink.fullText` | `string` | 完整文本，仅文字链接需要 |
+| `modifyLink.showText` | `string` | 展示文本，仅文字链接需要 |
+
+<Note>
+`modifyLassoLink` 的参数校验当前只允许 `linkType` 为 `0..4`。
+读取套索链接数据时可能会遇到 `linkType=6`（摘录链接）；该类型当前只能读取，无法通过本接口修改。相关结构以 [`Link`](/zh/api-reference/supernote-plugin/types/link) / [`LassoLink`](/zh/api-reference/supernote-plugin/types/lasso-link) 为准。
+</Note>
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true`表示修改成功。
+
+<Note>
+该接口无法将文字链接修改为笔划链接，也无法将笔划链接修改为文字链接。
+</Note>
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 修改套索中的单个链接数据的示例。
+ */
+export async function exampleModifyLassoLink() {
+  const res = await PluginNoteAPI.modifyLassoLink({
+    destPath: '/storage/emulated/0/Note/target.note',
+    destPage: 1,
+    linkType: 0,
+    style: 1,
+    fullText: 'Full Text',
+    showText: 'Show Text',
+  });
+
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'modifyLassoLink 调用失败');
+  }
+  return res.result;
+}
+```

@@ -1,0 +1,26 @@
+﻿---
+title: "getDeviceType"
+description: "获取设备类型。"
+---
+
+```ts
+getDeviceType(): Promise<number>;
+```
+
+**返回**
+
+- `Promise<number>`：设备类型：`0` A5，`1` A6，`2` A6X，`3` A5X，`4` Nomad，`5` Manta
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 获取设备类型的示例。
+ */
+export async function exampleGetDeviceType() {
+  const deviceType = await PluginManager.getDeviceType();
+  return deviceType;
+}
+```

@@ -1,0 +1,110 @@
+---
+title: "Plugin Button Registration and Listener"
+description: "Register plugin buttons and listen for button press events."
+---
+
+<Note>
+This page includes two APIs: `registerButton` and `registerButtonListener`. Call order: register the button first (`registerButton`), then register the click listener (`registerButtonListener`).
+</Note>
+
+## registerButton
+
+Register a plugin button. Only after registration can users see the plugin button in the corresponding NOTE/DOC entry and trigger button press events.
+
+```ts wrap
+registerButton(type: number, appTypes: string[], button: PluginButton): Promise<boolean>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `type` | `number` | Button type: `1` toolbar button, `2` lasso toolbar button, `3` selection toolbar button in DOC |
+| `appTypes` | `string[]` | App types array: `NOTE` / `DOC` |
+| `button` | [`PluginButton`](/en/api-reference/supernote-plugin/types/plugin-button) | Button configuration object |
+
+**Returns**
+
+- `Promise<boolean>`: whether registration succeeds
+
+## registerButtonListener
+
+Listen for plugin button press events. Typically, you register buttons during app startup and register listeners during plugin initialization.
+
+```ts wrap
+registerButtonListener(buttonListener: ButtonListener): ButtonSubscription;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `buttonListener` | `ButtonListener` | callback `onButtonPress(event)` |
+
+**Returns**
+
+- `ButtonSubscription`: subscription object. Call `remove()` to unregister the listener
+
+
+## Type Definitions
+
+### ButtonListener
+
+```ts
+interface ButtonListener {
+ onButtonPress(event: { id: number; name: string; icon: string }): void;
+}
+```
+
+**Description**
+
+- `onButtonPress(event)`: triggered when the button is pressed
+- `event.id`: button id
+- `event.name`: button name
+- `event.icon`: button icon
+- For more details, see: [Plugin UI - Button Event Listener](/en/plugin-base/plugin-ui)
+
+### ButtonSubscription
+
+```ts
+type ButtonSubscription = {
+ remove(): void;
+};
+```
+
+**Description**
+
+- Returned by `registerButtonListener`
+- Call `remove()` to unregister the button event listener
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Example: register a lasso toolbar button and listen for button press events.
+ * In practice, call `sub.remove()` when the page unmounts or you no longer need the listener.
+ */
+export async function exampleRegisterButtonAndListener() {
+ const ok = await PluginManager.registerButton(2, ['NOTE'], {
+ id: 1,
+ name: 'My Plugin',
+ icon: '',
+ editDataTypes: [0, 1, 2, 3, 4],
+ showType: 1,
+ });
+
+ const sub = PluginManager.registerButtonListener({
+ onButtonPress(event) {
+ const { id, name, icon } = event;
+ void id;
+ void name;
+ void icon;
+ },
+ } as any);
+
+ sub.remove();
+ return ok;
+}
+```

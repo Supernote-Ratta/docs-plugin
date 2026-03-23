@@ -1,0 +1,38 @@
+---
+title: "getFileMachineType"
+description: "获取创建该笔记/mark文件的设备类型。"
+---
+
+```ts wrap
+static getFileMachineType(notePath: string): Promise<APIResponse<number>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记/mark文件路径 |
+
+**返回**
+
+- [`APIResponse<number>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为设备类型：`0=A5`、`1=A6`、`2=A6X`、`3=A5X`、`4=Nomad`、`5=Manta`
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取创建该笔记/批注文件的设备类型示例。
+ */
+export async function exampleGetFileMachineType() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+
+  const res = await PluginFileAPI.getFileMachineType(notePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getFileMachineType 调用失败');
+  }
+  return res.result;
+}
+```

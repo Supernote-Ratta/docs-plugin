@@ -1,0 +1,62 @@
+---
+title: "createNote"
+description: "Create a note file."
+---
+
+```ts
+static createNote(params: {
+ notePath: string;
+ template: string;
+ mode: number;
+ isPortrait: boolean;
+}): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `params.notePath` | `string` | Note file path |
+| `params.template` | `string` | Template source:<br/>- system template: call [getNoteSystemTemplates](/en/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates) and pass `Template.name`;<br/>- custom template: pass a custom template image path |
+| `params.mode` | `number` | Create mode: `0` normal, `1` recognition layout |
+| `params.isPortrait` | `boolean` | Whether portrait orientation is used |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the note file is created successfully
+
+## Example
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Create note example (using a system template).
+ */
+export async function exampleCreateNote() {
+ const notePath = '/storage/emulated/0/Note/new.note';
+
+ // Get the system template list and pick a Template.name
+ const tplRes = await PluginCommAPI.getNoteSystemTemplates();
+ if (!tplRes.success) {
+ throw new Error(tplRes.error?.message ?? 'getNoteSystemTemplates call failed');
+ }
+ const templates = (tplRes.result ?? []) as any[];
+ const templateName = templates[0]?.name;
+ if (!templateName) {
+ throw new Error('failed to get a system template name');
+ }
+
+ const res = await PluginFileAPI.createNote({
+ notePath,
+ template: templateName,
+ mode: 0,
+ isPortrait: true,
+ });
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'createNote call failed');
+ }
+ return res.result;
+}
+```

@@ -1,0 +1,63 @@
+---
+title: "setLassoStrokeLink"
+description: "设置套索元素为链接。"
+---
+
+<Note>
+该接口支持笔记中的撤销还原操作。
+
+只支持套索主图层的笔划、几何图形、文本框设置为链接，其他图层不支持。
+
+建议在点击套索工具栏按钮后进入的插件界面调用该接口。
+</Note>
+
+
+```ts
+static setLassoStrokeLink(params: {
+  destPath: string;
+  destPage: number;
+  style: number;
+  linkType: number;
+}): Promise<APIResponse<number>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `params.destPath` | `string` | 目标路径/地址：当 `linkType === 4` 时填写 URL 地址，否则填写目标文件路径 |
+| `params.destPage` | `number` | 目标页码（仅 `linkType === 0` 或 `linkType === 2` 有效）<br />`linkType === 0`：必须填非负整数，表示需要跳到指定页面<br />`linkType === 2`：负数表示跳转到文档当前页，非负整数表示跳转到文档指定页面 |
+| `params.style` | `number` | 链接样式：`0` 实下划线，`1` 实边框，`2` 虚边框 |
+| `params.linkType` | `number` | 链接类型：`0` 跳转笔记页，`1` 跳转笔记文件，`2` 文档，`3` 图片，`4` 网址 |
+
+<Note>
+`setLassoStrokeLink` 是“写入”接口。当前插件接口不支持把链接设置为摘录链接（`linkType=6`）；但在读取套索链接数据时，可能会遇到 `linkType=6` 的链接（表示摘录链接）。
+</Note>
+
+**返回**
+
+- [`APIResponse<number>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为状态码（文档约定：`0` 成功，`-1` 失败，`-2` 目标文件需要升级）
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 将套索笔划设置为“跳转到笔记页链接”的示例。
+ */
+export async function exampleSetLassoStrokeLink() {
+  const res = await PluginNoteAPI.setLassoStrokeLink({
+    destPath: '/storage/emulated/0/Note/demo.note',
+    destPage: 1,
+    style: 0,
+    linkType: 0,
+  });
+
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'setLassoStrokeLink 调用失败');
+  }
+  return res.result;
+}
+```

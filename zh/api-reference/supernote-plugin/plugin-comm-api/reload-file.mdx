@@ -1,0 +1,32 @@
+---
+title: "reloadFile"
+description: "重新加载当前笔记或文档文件。"
+---
+
+```ts
+static reloadFile(): Promise<APIResponse<boolean>>;
+```
+
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示加载成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 重新加载当前笔记的示例。
+ */
+export async function exampleReloadFile() {
+  const res = await PluginCommAPI.reloadFile();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'reloadFile 调用失败');
+  }
+  return res.result;
+}
+```
+

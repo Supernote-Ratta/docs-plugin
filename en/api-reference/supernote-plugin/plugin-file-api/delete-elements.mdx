@@ -1,0 +1,37 @@
+---
+title: "deleteElements"
+description: "Delete existing page elements (only existing elements can be deleted)."
+---
+
+```ts wrap
+static deleteElements(NOTEPath: string, page: number, numsInPage: number[]): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE/DOC file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `numsInPage` | `number[]` | Element indices in the page to delete |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response): `result === true` indicates the deletion succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+export async function exampleDeleteElements() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 0;
+ const numsInPage = [0, 1];
+ const res = await PluginFileAPI.deleteElements(NOTEPath, page, numsInPage);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'deleteElements call failed');
+ }
+ return res.result;
+}
+```

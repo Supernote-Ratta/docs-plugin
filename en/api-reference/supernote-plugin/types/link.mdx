@@ -1,0 +1,28 @@
+---
+title: "Link"
+description: "Link element detail data structure."
+---
+
+When [`Element`](/en/api-reference/supernote-plugin/types/trail) has `type === 600`, `element.link` provides link details.
+
+<Note>
+`Link.linkType` indicates the link type read from the file. Supported `linkType` ranges may differ across write APIs; for example, parameter validation in `insertTextLink` and `modifyLassoLink` currently only allows `0..4`.
+</Note>
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `category` | `number` | Link category: `0` text link, `1` stroke link |
+| `X` | `number` | Top-left X (pixel coordinates) |
+| `Y` | `number` | Top-left Y (pixel coordinates) |
+| `width` | `number` | Width (pixels) |
+| `height` | `number` | Height (pixels) |
+| `page` | `number` | Page number where the link is located |
+| `style` | `number` | Style: `0` solid underline, `1` solid border, `2` dashed border |
+| `linkType` | `number` | Type: `0` note page, `1` note file, `2` document, `3` image, `4` URL, `6` digest |
+| `destPath` | `string` | Destination path (when `linkType === 4`, this is the URL) |
+| `destPage` | `number` | Destination page (mainly used when `linkType === 0`) |
+| `fontSize` | `number` | Font size (text link) |
+| `fullText` | `string` | Full text (text link) |
+| `showText` | `string` | Display text (text link) |
+| `italic` | `number` | Italic: `0` no, `1` yes (text link) |
+| `controlTrailNums` | `number[]` | Stroke index list (stroke link) |

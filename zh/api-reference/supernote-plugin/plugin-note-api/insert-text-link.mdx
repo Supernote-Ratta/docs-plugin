@@ -1,0 +1,74 @@
+---
+title: "insertTextLink"
+description: "在笔记应用中，向当前打开的笔记页的主图层插入文字链接。"
+---
+<Note>
+链接只能插入到主图层，无法插入到其他图层。该接口支持笔记中的撤销还原操作
+</Note>
+
+```ts
+static insertTextLink(textLink: {
+  destPath: string;
+  destPage?: number;
+  style: number;
+  linkType: number;
+  rect: Rect;
+  fontSize: number;
+  fullText: string;
+  showText: string;
+  isItalic: number;
+}): Promise<APIResponse<number>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `textLink.destPath` | `string` | 目标路径/地址：当 `linkType === 4` 时填写 URL 地址，否则填写目标文件路径 |
+| `textLink.destPage` | `number` | 目标页码（仅 `linkType === 0` 或 `linkType === 2` 有效）<br />`linkType === 0`：必须填非负整数，表示需要跳到指定页面<br />`linkType === 2`：负数表示跳转到文档当前页，非负整数表示跳转到文档指定页面 |
+| `textLink.style` | `number` | 链接样式：`0` 实下划线，`1` 实边框，`2` 虚边框 |
+| `textLink.linkType` | `number` | 链接类型：`0` 跳转笔记页，`1` 跳转笔记文件，`2` 跳转文档，`3` 跳转图片，`4` 跳转网址 |
+| `textLink.rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 文本区域矩形（需为非零面积） |
+| `textLink.fontSize` | `number` | 字体大小（正数） |
+| `textLink.fullText` | `string` | 完整文本，仅文字链接需要 |
+| `textLink.showText` | `string` | 展示文本，仅文字链接需要 |
+| `textLink.isItalic` | `number` | 是否斜体：`0` 否，`1` 是 |
+
+<Note>
+`linkType` 在不同接口中的支持范围可能不同。`insertTextLink` 的参数校验当前只允许 `0..4`。
+读取套索链接数据时可能会遇到 `linkType=6`（摘录链接）；该类型当前只能读取，无法通过本接口创建。相关结构以 [`Link`](/zh/api-reference/supernote-plugin/types/link) / [`LassoLink`](/zh/api-reference/supernote-plugin/types/lasso-link) 为准。
+</Note>
+
+**返回**
+
+- [`APIResponse<number>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为状态码（文档约定：`0` 成功，`-1` 失败，`-2` 目标文件需要升级）
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI, type Rect } from 'sn-plugin-lib';
+
+/**
+ * 向当前打开的笔记页插入文本链接的示例。
+ */
+export async function exampleInsertTextLink() {
+  const rect: Rect = { left: 100, top: 100, right: 300, bottom: 160 };
+  const res = await PluginNoteAPI.insertTextLink({
+    destPath: '/storage/emulated/0/Note/demo.note',
+    destPage: 1,
+    style: 0,
+    linkType: 0,
+    rect,
+    fontSize: 32,
+    fullText: 'Full Text',
+    showText: 'Show Text',
+    isItalic: 0,
+  });
+
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertTextLink 调用失败');
+  }
+  return res.result;
+}
+```

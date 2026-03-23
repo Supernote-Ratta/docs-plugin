@@ -1,0 +1,54 @@
+---
+title: "PointUtils"
+description: "Conversion utilities between the EMR coordinate system and screen pixel coordinates."
+---
+
+`PointUtils` converts between two coordinate systems:
+
+- **Pixel coordinate system**: screen rendering/layout coordinates (unit: px)
+- **EMR coordinate system**: digitizer/handwriting hardware coordinates (unit: hardware units)
+
+For background and differences between the two coordinate systems, see: [Coordinate System](/en/plugin-base/coordinate-system).
+
+```ts
+import { PointUtils } from 'sn-plugin-lib';
+```
+
+## Constants
+
+### Page Orientation (`orientation`)
+
+| Constant | Value | Description |
+| --- | ---:| --- |
+| `PointUtils.ROTATION_0` | `1000` | 0° portrait |
+| `PointUtils.ROTATION_0_LR` | `2000` | 0° portrait, left/right split page |
+| `PointUtils.ROTATION_90` | `1090` | 90° landscape |
+| `PointUtils.ROTATION_90_UD` | `2090` | 90° landscape, top/bottom split page |
+| `PointUtils.ROTATION_180` | `1180` | 180° portrait |
+| `PointUtils.ROTATION_180_LR` | `2180` | 180° portrait, left/right split page |
+| `PointUtils.ROTATION_270` | `1270` | 270° landscape |
+| `PointUtils.ROTATION_270_UD` | `2270` | 270° landscape, top/bottom split page |
+
+### Device Model (`machineType`)
+
+| Constant | Value | Description |
+| --- | ---:| --- |
+| `PointUtils.MACHINE_TYPE_A5` | `0` | A5 |
+| `PointUtils.MACHINE_TYPE_A6` | `1` | A6 |
+| `PointUtils.MACHINE_TYPE_A6X` | `2` | A6X |
+| `PointUtils.MACHINE_TYPE_A5X` | `3` | A5X |
+| `PointUtils.MACHINE_TYPE_NOMAD` | `4` | Nomad |
+| `PointUtils.MACHINE_TYPE_MANTA` | `5` | Manta |
+
+### Common Page Pixel Sizes
+
+| Constant | Value |
+| --- | --- |
+| `PointUtils.NORMAL_PAGE_SIZE` | `{ width: 1404, height: 1872 }` |
+| `PointUtils.A5X2_PAGE_SIZE` | `{ width: 1920, height: 2560 }` |
+
+## Methods
+
+- [`androidPoint2Emr`](/en/api-reference/supernote-plugin/utils/point-utils/android-point2-emr)
+- [`emrPoint2Android`](/en/api-reference/supernote-plugin/utils/point-utils/emr-point2-android)
+- For page pixel size, use [`getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size)

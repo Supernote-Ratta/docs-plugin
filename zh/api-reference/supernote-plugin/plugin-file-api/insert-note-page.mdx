@@ -1,0 +1,43 @@
+---
+title: "insertNotePage"
+description: "向笔记文件插入新的页面。"
+---
+
+```ts wrap
+static insertNotePage(params: { notePath: string; page: number; template: string }): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `params.notePath` | `string` | 笔记文件路径 |
+| `params.page` | `number` | 页码（从 0 开始） |
+| `params.template` | `string` | 模版来源：<br/>- 系统模版：通过 [getNoteSystemTemplates](/zh/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates) 获取，传递其中的模版名称（[Template](/zh/api-reference/supernote-plugin/types/template) 的 `name`）即可创建；<br/>- 自定义模版：传递自定义模版的图片路径，根据图片文件创建笔记。 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示插入页面成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 插入新页面的示例。
+ */
+export async function exampleInsertNotePage() {
+  const res = await PluginFileAPI.insertNotePage({
+    notePath: '/storage/emulated/0/Note/demo.note',
+    page: 2,
+    template: 'style_blank',
+  });
+
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertNotePage 调用失败');
+  }
+  return res.result;
+}
+```

@@ -1,0 +1,40 @@
+---
+title: "getLassoLinks"
+description: "Get lasso link data."
+---
+<Note>
+You must create a lasso selection before calling this API; otherwise the call fails.
+
+Recommended to call this API from the plugin UI entered via a lasso toolbar button.
+</Note>
+
+<Note>
+This is a read-only API. The returned `LassoLink.linkType` may include `6` (digest link), which means the link jumps to a digest.
+Current plugin APIs do not support creating/modifying links as digest links (write APIs typically only allow `linkType=0..4`), but you can read digest link data for display or detection.
+</Note>
+
+```ts
+static getLassoLinks(): Promise<APIResponse<LassoLink[]>>;
+```
+
+**Returns**
+
+- [`APIResponse<LassoLink[]>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is [`LassoLink`](/en/api-reference/supernote-plugin/types/lasso-link)objectarray.
+
+## Example
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get link data from the current lasso selection.
+ */
+export async function exampleGetLassoLinks() {
+ const res = await PluginNoteAPI.getLassoLinks();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getLassoLinks call failed');
+ }
+ return res.result;
+}
+```

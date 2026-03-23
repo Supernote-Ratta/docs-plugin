@@ -1,0 +1,43 @@
+---
+title: "deleteKeyWord"
+description: "删除笔记或文档文件中的关键字。"
+---
+
+```ts
+static deleteKeyWord(notePath: string, page: number, index: number): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记/文档文件路径 |
+| `page` | `number` | 删除关键字所在的页码（从 0 开始） |
+| `index` | `number` | 删除关键字的序列号（页内从 1 开始） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示删关键字成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 删除关键字的示例（按页内序号删除）。
+ */
+export async function exampleDeleteKeyWord() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+  const index = 1;
+
+  const res = await PluginFileAPI.deleteKeyWord(notePath, page, index);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'deleteKeyWord 调用失败');
+  }
+  return res.result;
+}
+```
+

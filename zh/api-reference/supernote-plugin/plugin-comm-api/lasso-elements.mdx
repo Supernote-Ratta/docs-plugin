@@ -1,0 +1,38 @@
+---
+title: "lassoElements"
+description: "按矩形区域创建套索选择。"
+---
+
+<Note>
+该接口使用矩形区域（像素坐标）创建或更新当前套索选择。调用成功后，可继续调用 `getLassoRect()` / `getLassoElements()` 等套索相关接口。
+</Note>
+
+```ts
+static lassoElements(rect: Rect): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 套索矩形（像素坐标） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示创建套索成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleLassoElements() {
+  const rect = { left: 100, top: 120, right: 600, bottom: 400 };
+  const res = await PluginCommAPI.lassoElements(rect);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'lassoElements 调用失败');
+  }
+  return res.result;
+}
+```

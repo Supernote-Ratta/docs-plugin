@@ -1,0 +1,26 @@
+﻿---
+title: "getPluginDirPath"
+description: "获取插件安装目录路径。"
+---
+
+```ts
+getPluginDirPath(): Promise<string | null | undefined>;
+```
+
+**返回**
+
+- `Promise<string | null | undefined>`：插件安装目录路径
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 获取插件目录路径的示例。
+ */
+export async function exampleGetPluginDirPath() {
+  const dir = await PluginManager.getPluginDirPath();
+  return dir;
+}
+```

@@ -1,0 +1,71 @@
+﻿---
+title: "registerLangListener"
+description: "Listen for system language changes."
+---
+
+```ts
+registerLangListener(langListener: PluginEventListener): PluginEventSubscription;
+```
+
+Listens for system language changes. When the system language switches, it triggers the callback and provides the language code string.
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `langListener` | `PluginEventListener` | Language change listener that implements `onMsg(msg)`. `msg` is the language code string |
+
+**Returns**
+
+- `PluginEventSubscription`: subscription object. Call `remove()` to unregister the listener
+
+## Language Codes
+
+| Language | Code |
+| --- | --- |
+| English | `en` |
+| Simplified Chinese | `zh_CN` |
+| Traditional Chinese | `zh_TW` |
+| Japanese | `ja` |
+
+## Type Definitions
+
+### PluginEventListener
+
+```ts
+interface PluginEventListener {
+ onMsg(msg: string): void;
+}
+```
+
+**Description**
+
+- `onMsg(msg)`: triggered when the system language changes
+- `msg`: language code (see "Language Codes")
+
+### PluginEventSubscription
+
+```ts
+type PluginEventSubscription = {
+ remove(): void;
+};
+```
+
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Example: listen for system language changes.
+ */
+export async function exampleRegisterLangListener() {
+ const sub = PluginManager.registerLangListener({
+ onMsg(langCode) {
+ console.log('lang changed:', langCode);
+ },
+ });
+ return sub;
+}
+```

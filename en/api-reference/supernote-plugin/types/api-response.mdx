@@ -1,0 +1,13 @@
+---
+title: "APIResponse"
+description: "Unified API return result."
+---
+
+APIs in `PluginCommAPI`, `PluginNoteAPI`, `PluginDocAPI`, and `PluginFileAPI` return `APIResponse<T>`.
+The data structure is:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `success` | `boolean` | Whether the API call succeeds |
+| `result` | `T \| null` | Present only when `success === true`. When the call fails, `result` is `null`.<br />If `T` is `boolean`/`number`/`string`, `result` is the corresponding primitive value.<br />If `T` is a custom type, `result` is an instance of that type. |
+| `error` | `{ code: number; message: string } \| null` | Present only when `success === false`. When the call succeeds, it is `null`.<br />`code` is the error code, and `message` is the error description. |

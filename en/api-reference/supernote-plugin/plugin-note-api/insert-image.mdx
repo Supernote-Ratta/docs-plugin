@@ -1,0 +1,44 @@
+---
+title: "insertImage"
+description: "Insert an image into the current layer of the current note page."
+---
+
+<Note>
+This API can only be called in NOTE. `pngPath` must point to an existing, readable image file.
+</Note>
+
+```ts
+static insertImage(pngPath: string): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `pngPath` | `string` | Yes | - | Image file path (must exist and be readable) |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+  - When `success === true`, `result` is `true/false` indicating whether insertion succeeded
+  - When `success === false`, see `error.code` / `error.message`
+
+## Example
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: insert an image into the current note page.
+ */
+export async function exampleInsertImage() {
+  const pngPath = '/storage/emulated/0/Note/demo.png';
+
+  const res = await PluginNoteAPI.insertImage(pngPath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertImage call failed');
+  }
+
+  return res.result;
+}
+```

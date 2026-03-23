@@ -1,0 +1,42 @@
+---
+title: "getElement"
+description: "Get an element from a note page by element number."
+---
+
+```ts wrap
+static getElement(notePath: string, page: number, num: number): Promise<APIResponse<Element>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `notePath` | `string` | Note file path |
+| `page` | `number` | Page index (starting from 0) |
+| `num` | `number` | Element index within the page (starting from 0) |
+
+**Returns**
+
+- [`APIResponse<Element>`](/en/api-reference/supernote-plugin/types/api-response):
+element type: see [`Element`](/en/api-reference/supernote-plugin/types/trail)
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get a single element from a note page.
+ */
+export async function exampleGetElement() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+  const num = 0;
+
+  const res = await PluginFileAPI.getElement(notePath, page, num);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getElement call failed');
+  }
+  return res.result;
+}
+```

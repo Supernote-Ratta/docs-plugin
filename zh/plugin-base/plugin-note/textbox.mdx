@@ -1,0 +1,100 @@
+---
+title: '文本框'
+description: "笔记应用中的文本框使用。"
+---
+
+本文介绍如何在 NOTE 应用中插入、获取、修改文本框数据，涉及三个接口：
+
+- 插入文本框：PluginNoteAPI.insertText
+- 获取套索文本框：PluginNoteAPI.getLassoText
+- 修改套索文本框：PluginNoteAPI.modifyLassoText
+
+## 插入文本框
+
+调用 [`insertText`](/zh/api-reference/supernote-plugin/plugin-note-api/insert-text) 接口可以向“当前打开笔记的当前页当前图层”插入文本框。
+需要保证笔记已打开且当前页已加载，否则会返回错误。
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 向当前打开笔记的当前页当前图层插入文本框。
+ */
+async function insertTextBox() {
+  const textBox = {
+    textContentFull: 'Hello Supernote',// 文本框内容
+    textRect: { left: 100, top: 120, right: 480, bottom: 220 },
+    fontSize: 36,      // 文本框字体大小
+    textAlign: 0,      // 0: 左对齐 1: 居中 2: 右对齐
+    textBold: 0,       // 0: 正常 1: 粗体
+    textItalics: 0,    // 0: 正常 1: 斜体
+    textFrameWidthType: 0, // 边框宽度类型：0 固定宽度，1 自适应宽度
+    textFrameStyle: 0,     // 边框样式：0 无边框，3 描边
+    textEditable: 0,       // 可编辑状态：0 可编辑，1 不可编辑
+  };
+
+  const res = await PluginNoteAPI.insertText(textBox);
+  console.log('insertText:', res);
+}
+```
+
+
+<Note>
+textRect 必须是非零面积矩形（right > left 且 bottom > top），否则会抛出参数错误。
+</Note>
+
+## 获取套索文本框
+
+调用 [`getLassoText`](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-text) 接口可以获取当前套索区域中的文本框数据。
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取当前套索区域内的文本框列表。
+ */
+async function readLassoText() {
+  const res = await PluginNoteAPI.getLassoText();
+  if (!res.success) {
+    console.error('getLassoText error:', res.error);
+    return;
+  }
+  const list = res.result ?? [];
+  console.log('lasso text list:', list);
+}
+```
+
+<Warning>
+必须先进行“套索”操作后再调用，否则会返回错误。若当前套索中没有文本框，返回的数组为空。
+</Warning>
+
+## 修改套索文本框
+
+调用 [`modifyLassoText`](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-text) 接口可以修改“当前套索选中的文本框”。
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 修改当前套索选中的单个文本框。
+ */
+async function updateLassoText() {
+  // 先获取当前套索中的文本框
+  const res = await PluginNoteAPI.getLassoText();
+  if (!res.success || !res.result || res.result.length !== 1) {
+    console.error('必须套索单个文本框才能修改');
+    return;
+  }
+
+  const tb = res.result[0];
+  tb.textContentFull = 'Updated content';
+  tb.textRect = { left: 100, top: 120, right: 520, bottom: 240 };
+
+  const mod = await PluginNoteAPI.modifyLassoText(tb);
+  console.log('modifyLassoText:', mod);
+}
+```
+
+<Warning>
+必须保证套索区域内仅选中“一个文本框”，否则无法修改成功；未套索或套索多个文本框都会返回错误信息。
+</Warning>

@@ -1,0 +1,37 @@
+---
+title: "deleteElements"
+description: "删除指定页面中已有的元素（仅支持删除已存在的元素）。"
+---
+
+```ts wrap
+static deleteElements(notePath: string, page: number, numsInPage: number[]): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记/文档文件路径 |
+| `page` | `number` | 页面索引（从 `0` 开始） |
+| `numsInPage` | `number[]` | 要删除的元素在页面内的序号列表 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示删除成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+export async function exampleDeleteElements() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+  const numsInPage = [0, 1];
+  const res = await PluginFileAPI.deleteElements(notePath, page, numsInPage);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'deleteElements 调用失败');
+  }
+  return res.result;
+}
+```

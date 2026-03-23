@@ -1,0 +1,34 @@
+---
+title: "getLassoRect"
+description: "获取套索框区域位置。"
+---
+
+<Note>
+套索元素之后才能调用这个接口，否则会调用失败。
+</Note>
+
+```ts
+static getLassoRect(): Promise<APIResponse<Rect>>;
+```
+
+**返回**
+
+- [`APIResponse<Rect>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为 [`Rect`](/zh/api-reference/supernote-plugin/types/rect)，使用的是像素点坐标。
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI, type Rect } from 'sn-plugin-lib';
+
+/**
+ * 获取套索框矩形的示例。
+ */
+export async function exampleGetLassoRect(): Promise<Rect> {
+  const res = await PluginCommAPI.getLassoRect();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLassoRect 调用失败');
+  }
+  return res.result;
+}
+```

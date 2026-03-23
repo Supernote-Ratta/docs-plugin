@@ -1,0 +1,53 @@
+---
+title: "generateNotePng"
+description: "生成笔记文件指定页面的 PNG 图片。"
+---
+
+```ts wrap
+static generateNotePng(params: {
+  notePath: string;
+  page: number;
+  times: number;
+  pngPath: string;
+  type: number;
+}): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `params.notePath` | `string` | 笔记文件路径 |
+| `params.page` | `number` | 页码（从 0 开始） |
+| `params.times` | `number` | 图片放大倍数（通常为 `1` 或 `2`） |
+| `params.pngPath` | `string` | PNG 输出路径（需以 `.png` 结尾） |
+| `params.type` | `number` | 生成类型：`0` 透明底图片，`1` 白底图片 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示生成缩略图成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 生成页面 PNG 的示例。
+ */
+export async function exampleGenerateNotePng() {
+  const res = await PluginFileAPI.generateNotePng({
+    notePath: '/storage/emulated/0/Note/demo.note',
+    page: 1,
+    times: 1,
+    pngPath: '/storage/emulated/0/Note/out/page.png',
+    type: 1,
+  });
+
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateNotePng 调用失败');
+  }
+  return res.result;
+}
+```

@@ -1,0 +1,38 @@
+---
+title: "lassoElements"
+description: "Create a lasso selection for elements in a rectangle."
+---
+
+<Note>
+This API creates or updates the current lasso selection using a rectangle (pixel coordinates). After calling it successfully, you can call other lasso-related APIs (for example `getLassoRect()` / `getLassoElements()`).
+</Note>
+
+```ts
+static lassoElements(rect: Rect): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Selection rectangle (pixel coordinates) |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the lasso selection was created successfully
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleLassoElements() {
+ const rect = { left: 100, top: 120, right: 600, bottom: 400 };
+ const res = await PluginCommAPI.lassoElements(rect);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'lassoElements call failed');
+ }
+ return res.result;
+}
+```

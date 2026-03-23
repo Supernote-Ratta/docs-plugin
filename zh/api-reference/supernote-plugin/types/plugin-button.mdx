@@ -1,0 +1,37 @@
+---
+title: "PluginButton"
+description: "插件按钮数据结构。"
+---
+
+`PluginButton` 用于描述一个可注册到工具栏/套索工具栏/划词工具栏的插件按钮信息。
+
+```ts
+type PluginButton = {
+  id: number;
+  name: string;
+  icon: string;
+  showType?: number;
+  editDataTypes?: number[];
+};
+```
+
+## 字段
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | `number` | 按钮 ID（插件侧自定义，需保持唯一） |
+| `name` | `string` | 按钮名称 |
+| `icon` | `string` | 按钮图标路径（绝对路径或 URI） |
+| `showType` | `number` | 显示类型：`0` 不显示插件界面，`1` 显示插件界面（默认 `1`） |
+| `editDataTypes` | `number[]` | 当前套索数据类型数组（仅套索工具栏按钮需要）；匹配列表才会显示按钮 |
+
+## editDataTypes 取值
+
+| 值 | 含义 |
+| --- | --- |
+| `0` | 手写笔迹 |
+| `1` | 标题 |
+| `2` | 图片 |
+| `3` | 文字 |
+| `4` | 链接 |
+| `5` | 几何图形 |

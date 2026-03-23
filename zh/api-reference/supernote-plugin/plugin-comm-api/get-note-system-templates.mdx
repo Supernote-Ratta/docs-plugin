@@ -1,0 +1,26 @@
+---
+title: "getNoteSystemTemplates"
+description: "获取系统笔记模板列表。创建笔记文件可以使用该系统模版。"
+---
+
+```ts
+static getNoteSystemTemplates(): Promise<Template[] | null | undefined>;
+```
+
+**返回**
+
+- `Template[]`：模版类型见 [`Template`](/zh/api-reference/supernote-plugin/types/template)
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取系统模板列表的示例。
+ */
+export async function exampleGetNoteSystemTemplates() {
+  const templates = await PluginCommAPI.getNoteSystemTemplates();
+  return templates ?? [];
+}
+```

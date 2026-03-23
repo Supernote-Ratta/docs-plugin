@@ -1,0 +1,95 @@
+---
+title: "标题"
+description: "在 NOTE 应用中创建、读取与修改标题元素。"
+---
+
+<Note>
+标题是 NOTE（笔记）特有能力，DOC（文档）不支持。标题只能在笔记文件的主图层（layer=0）上创建与修改。
+</Note>
+
+## 标题创建
+
+调用 [`PluginNoteAPI.setLassoTitle`](/zh/api-reference/supernote-plugin/plugin-note-api/set-lasso-title) 可以把“套索选中的笔划或几何图形”设置为标题。
+示例代码如下：
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+PluginNoteAPI.setLassoTitle({ style: 1 })
+  .then(data => {
+    console.log('setLassoTitle success:', data);
+  })
+  .catch(error => {
+    console.error('setLassoTitle error:', error);
+  });
+```
+创建标题时只需要传入标题样式（`style`）。
+
+<Note>
+调用该接口前，必须先在页面中完成套索选择；否则接口会失败。
+</Note>
+
+
+## 获取套索标题数据
+
+调用 [`PluginNoteAPI.getLassoTitles`](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-title)
+接口获取套索的标题数据，样例代码如下：
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+PluginNoteAPI.getLassoTitles()
+  .then(data => {
+    console.log('getLassoTitles success:', data);
+  })
+  .catch(error => {
+    console.error('getLassoTitles error:', error);
+  });
+```
+[`PluginNoteAPI.getLassoTitles`](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-title)
+这个接口只能在存在套索上下文时调用。返回的是 [`APIResponse<Title[]>`](/zh/api-reference/supernote-plugin/types/api-response) 对象。
+`result` 为 [`Title`](/zh/api-reference/supernote-plugin/types/title) 对象数组。
+
+[`Title`](/zh/api-reference/supernote-plugin/types/title)的数据结构如下：
+```ts wrap
+class Title {
+  public X: number = 0; // 标题左上角坐标X轴值
+  public Y: number = 0; // 标题左上角坐标Y轴值
+  public width: number = 0; // 标题的宽度
+  public height: number = 0; // 标题的高度
+  public page: number = 0; // 标题的当前页码
+  public num: number = 0; // 标题在所在页码的序号
+  /**
+   * 标题样式映射表
+   * 0：去掉标题属性
+   * 1：黑底标题
+   * 2：灰白标题
+   * 3：灰黑标题
+   * 4：阴影标题
+   */
+  public style: number = 0;
+  // 关联的笔划编号列表，表示哪些笔划是属于该标题的
+  public controlTrailNums: number[] = [];
+}
+```
+
+以上是标题信息，每个参数的含义见上面的注释。
+
+## 修改标题
+
+当套索选中标题之后，可以通过 [`PluginNoteAPI.modifyLassoTitle`](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-title)
+修改套索的标题数据，样例代码如下：
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+PluginNoteAPI.modifyLassoTitle({ style: 2 })
+  .then(data => {
+    console.log('modifyLassoTitle success:', data);
+  })
+  .catch(error => {
+    console.error('modifyLassoTitle error:', error);
+  });
+```
+
+
+
+

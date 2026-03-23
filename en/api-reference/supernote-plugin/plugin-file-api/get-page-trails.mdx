@@ -1,0 +1,42 @@
+---
+title: "getElements"
+description: "Get page elements, including strokes, links, titles, TextBox elements, and five-star elements."
+---
+
+```ts wrap
+static getElements(page: number, NOTEPath: string): Promise<APIResponse<Element[]>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `page` | `number` | Page index (starts from `0`) |
+| `NOTEPath` | `string` | NOTE/DOC file path |
+
+**Returns**
+
+- [`APIResponse<Element[]>`](/en/api-reference/supernote-plugin/types/api-response):
+See [`Element`](/en/api-reference/supernote-plugin/types/trail) for element types and fields.
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get elements on a page.
+ */
+export async function exampleGetElements() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 1;
+
+ const res = await PluginFileAPI.getElements(page, NOTEPath);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getElements call failed');
+ }
+ return res.result;
+}
+```
+
+

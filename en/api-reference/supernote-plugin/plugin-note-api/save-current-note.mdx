@@ -1,0 +1,36 @@
+---
+title: "saveCurrentNote"
+description: "Save the currently opened note file."
+---
+
+When operating on the currently opened note, changes are typically written to an in-memory cache and are not persisted to the file immediately.
+If you call file-related APIs without saving (e.g. [`replaceElements`](/en/api-reference/supernote-plugin/plugin-file-api/replace-trails),
+[`insertElements`](/en/api-reference/supernote-plugin/plugin-file-api/insert-trails)、
+[`modifyElements`](/en/api-reference/supernote-plugin/plugin-file-api/modify-trails) etc.),
+the data state may become inconsistent. It is recommended to call `saveCurrentNote` first to persist cached data to the file, and then perform file-level read/write operations.
+
+```ts
+static saveCurrentNote(): Promise<APIResponse<boolean>>;
+```
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates saving the note file succeeded
+
+## Example
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: save the current note.
+ */
+export async function exampleSaveCurrentNote() {
+ const res = await PluginNoteAPI.saveCurrentNote();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'saveCurrentNote call failed');
+ }
+ return res.result;
+}
+```

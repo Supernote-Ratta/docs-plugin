@@ -1,0 +1,33 @@
+---
+title: "recognizeElements"
+description: "Recognize elements as text."
+---
+
+```ts wrap
+static recognizeElements(elements: Object[] | null | undefined, size: { width: number; height: number }): Promise<APIResponse<string>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `elements` | `Object[] \| null \| undefined` | Element list (currently supports only strokes and text boxes) |
+| `size` | `{ width: number; height: number }` | The note page size that elements are based on (pixels) |
+
+**Returns**
+
+- [`APIResponse<string>`](/en/api-reference/supernote-plugin/types/api-response): recognized text
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleRecognizeElements(elements, size) {
+ const res = await PluginCommAPI.recognizeElements(elements, size);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'recognizeElements call failed');
+ }
+ return res.result;
+}
+```

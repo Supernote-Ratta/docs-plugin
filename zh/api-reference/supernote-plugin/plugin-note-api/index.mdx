@@ -1,0 +1,30 @@
+---
+title: "PluginNoteAPI"
+sidebarTitle: "概览"
+description: "笔记相关接口总目录,该目录下的接口只能在笔记应用中调用。"
+---
+
+## 导入
+
+```ts
+import { PluginNoteAPI } from "sn-plugin-lib";
+```
+
+## 返回值约定
+
+多数异步接口返回 [`APIResponse<T>`](/zh/api-reference/supernote-plugin/types/api-response)。通常只在 `success === true` 时读取 `result`。
+
+## 方法列表
+
+- [getLassoLinks](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-link)
+- [setLassoStrokeLink](/zh/api-reference/supernote-plugin/plugin-note-api/set-lasso-stroke-link)
+- [insertTextLink](/zh/api-reference/supernote-plugin/plugin-note-api/insert-text-link)
+- [modifyLassoLink](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link)
+- [saveCurrentNote](/zh/api-reference/supernote-plugin/plugin-note-api/save-current-note)
+- [setLassoTitle](/zh/api-reference/supernote-plugin/plugin-note-api/set-lasso-title)
+- [getLassoTitles](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-title)
+- [modifyLassoTitle](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-title)
+- [getLassoText](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-text)
+- [insertText](/zh/api-reference/supernote-plugin/plugin-note-api/insert-text)
+- [modifyLassoText](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-text)
+- [insertImage](/zh/api-reference/supernote-plugin/plugin-note-api/insert-image)

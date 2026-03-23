@@ -1,0 +1,182 @@
+---
+title: '元素操作'
+description: '在笔记/文档文件中获取、创建、插入、修改与替换 Element。'
+---
+
+`Element` 是笔记/文档里“所有可见元素”的统一数据结构：普通笔画、标题、链接、文本框、几何图形、五角星、图片等都以 `Element` 表示，并通过 `type` 区分具体类别。
+
+- 元素类型与字段说明：[`Element`](/zh/api-reference/supernote-plugin/types/trail)
+- 类型常量：[`ElementType`](/zh/api-reference/supernote-plugin/types/trail#elementtype)
+
+本章围绕以下能力，给出一套可复用的元素操作流程：
+
+- 获取页面元素：[`PluginFileAPI.getElements`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-trails)
+- 创建新元素对象：[`PluginCommAPI.createElement`](/zh/api-reference/supernote-plugin/plugin-comm-api/create-trail)
+- 插入元素：[`PluginFileAPI.insertElements`](/zh/api-reference/supernote-plugin/plugin-file-api/insert-trails)
+- 修改元素：[`PluginFileAPI.modifyElements`](/zh/api-reference/supernote-plugin/plugin-file-api/modify-trails)
+- 替换整页元素：[`PluginFileAPI.replaceElements`](/zh/api-reference/supernote-plugin/plugin-file-api/replace-trails)
+
+## 关键概念
+
+### 1) 为什么要先 createElement？
+
+`Element` 里有一些字段数据量很大（例如笔画采样点、压力点、角度点、轮廓点等）。为了避免 JS 侧一次性承载大数据导致内存问题，SDK 采用了“访问器”设计：
+
+- RN 侧拿到的是 [`ElementDataAccessor`](/zh/api-reference/supernote-plugin/types/trail-data-accessor)（相当于引用/句柄）
+- 原始点数据缓存与读写发生在原生侧
+
+因此，**新建元素时推荐先调用 `PluginCommAPI.createElement(...)`**，让原生侧创建并初始化必要的缓存与访问器引用，再在 JS 侧补齐你要写入的内容。
+
+### 2) page 与 layer 的约定
+
+- `page`：对外文档统一按“从 0 开始”的页码理解（与 UI 页码一致）.
+- `layer`：在笔记中常见图层范围为 `0..3`。并且 **链接/标题必须在主图层（layer=0）**，否则会被校验拒绝。
+文档相关文件只有一个图层也就是主图层。
+
+### 3) 文档限制
+
+文档文件不能插入**文本框/标题/链接**，强行插入会被校验拒绝。
+
+## 获取页面元素
+
+当你需要读取某一页的全部元素（用于展示、筛选、二次编辑、复制等），使用 `getElements`：
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取指定文件指定页的所有元素。
+ */
+export async function loadPageElements(notePath: string, page: number) {
+  const res = await PluginFileAPI.getElements(page, notePath);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? '获取页面元素失败');
+  }
+  return res.result ?? [];
+}
+```
+
+<Tip>
+`getElements` 成功返回后，SDK 会自动对元素做结构转换与访问器补齐，你可以直接按 `type` 读取 `stroke/title/link/textBox/geometry/picture` 等细分字段。
+</Tip>
+
+## 创建新元素对象
+
+创建“将要插入到页面”的新元素，推荐使用 `createElement(type)`：
+
+```ts wrap
+import { PluginCommAPI, ElementType } from 'sn-plugin-lib';
+
+/**
+ * 创建一个新的笔画元素对象（Element）。
+ */
+export async function createStrokeElement() {
+  const res = await PluginCommAPI.createElement(ElementType.TYPE_STROKE);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? 'createElement 失败');
+  }
+  return res.result;
+}
+```
+
+<Note>
+`createElement` 返回的 `Element` 会包含 `uuid`，并按元素类型补齐必要的 `ElementDataAccessor` 访问器字段（例如 `angles/contoursSrc`，以及笔画类型下的 `stroke.*`）。
+</Note>
+
+## 插入元素到页面
+
+当你已经准备好了要插入的元素数组（通常来自 `createElement` 或复制自已有元素），使用 `insertElements` 插入到指定文件页：
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI, ElementType } from 'sn-plugin-lib';
+
+/**
+ * 向指定页插入一个“新建的笔画元素”。
+ */
+export async function insertOneStroke(notePath: string, page: number) {
+  const created = await PluginCommAPI.createElement(ElementType.TYPE_STROKE);
+  if (!created?.success || !created.result) {
+    throw new Error(created?.error?.message ?? 'createElement 失败');
+  }
+
+  const element = created.result;
+  element.pageNum = page;
+  element.layerNum = 0;
+
+  const res = await PluginFileAPI.insertElements(notePath, page, [element]);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? '插入元素失败');
+  }
+  return true;
+}
+```
+
+<Warning>
+文本框/链接/标题只能在主图层（layer=0）操作；插入前请确保 `element.layerNum = 0`，否则会直接校验失败。
+</Warning>
+
+## 修改已存在的元素
+
+修改元素的核心约束是：**只能修改“已经存在于该页”的元素**。SDK 会根据元素的关键标识（例如 `numInPage` 等）判断是否存在，不存在的元素不会修改成功。
+
+最稳妥的修改方式是：
+
+1. `getElements` 取出原始元素数组
+2. 在数组里找到你要修改的那个元素（例如按 `numInPage` 或 `uuid`）
+3. 修改字段后把该元素（或一组元素）传给 `modifyElements`
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 修改指定页内某个元素（示例：仅演示流程，具体修改字段按元素类型决定）。
+ */
+export async function modifyOneElement(notePath: string, page: number, numInPage: number) {
+  const listRes = await PluginFileAPI.getElements(page, notePath);
+  if (!listRes?.success || !listRes.result) {
+    throw new Error(listRes?.error?.message ?? '获取页面元素失败');
+  }
+
+  const elements = listRes.result;
+  const target = elements.find((e: any) => e.numInPage === numInPage);
+  if (!target) {
+    throw new Error(`元素不存在：numInPage=${numInPage}`);
+  }
+
+  target.thickness = (target.thickness ?? 0) + 1;
+
+  const modRes = await PluginFileAPI.modifyElements(notePath, page, [target]);
+  if (!modRes?.success) {
+    throw new Error(modRes?.error?.message ?? '修改元素失败');
+  }
+  return modRes.result;
+}
+```
+
+<Tip>
+如果你要修改的是“点数据”（例如笔画采样点），通常需要通过 `ElementDataAccessor.set/setRange` 在原生侧写入，而不是直接替换 JS 数组。
+</Tip>
+
+## 替换整页元素
+
+当你希望“清空页面现有元素，并完全替换为一组新元素”时使用 `replaceElements`。
+这通常用于整页重排、批量导入、或把编辑结果一次性落盘的场景。
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 用一组元素完全替换指定页的所有元素（会清空原有元素）。
+ */
+export async function replacePageElements(notePath: string, page: number, elements: any[]) {
+  const res = await PluginFileAPI.replaceElements(notePath, page, elements);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? '替换页面元素失败');
+  }
+  return true;
+}
+```
+
+<Warning>
+`replaceElements` 会清空原页面元素再写入新元素。对外提供该能力时建议加二次确认或提供撤销策略。
+</Warning>

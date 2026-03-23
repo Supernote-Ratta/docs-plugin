@@ -1,0 +1,20 @@
+---
+title: "Stroke"
+description: "纯笔划数据（Element 为笔划类型时存在）。"
+---
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `penColor` | `number` | 笔颜色，0x00:黑色，0x9D:深灰，0xC9：浅灰，0xFE：白色 |
+| `penType` | `number` | 笔类型，10：针管笔，1：压力笔，11：马克笔，14：书法笔 |
+| `points` | [`ElementDataAccessor<Point>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 采样点（EMR坐标） |
+| `pressures` | [`ElementDataAccessor<number>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 压力数据（0-4096） |
+| `eraseLineTrailNums` | [`ElementDataAccessor<number>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 线擦数据 |
+| `flagDraw` | [`ElementDataAccessor<boolean>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 写标志 |
+| `markPenDirection` | [`ElementDataAccessor<Point>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 马克笔方向 |
+| `recognPoints` | [`ElementDataAccessor<RecognData>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 识别点数据，可以给MyScript等识别库，生成对应文字（像素坐标系） |
+
+<Note>
+`points/pressures/eraseLineTrailNums/flagDraw/markPenDirection/recognPoints` 均为 [`ElementDataAccessor`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) 访问器对象，不是完整数组。需要通过 `size()/get()/getRange()` 等方法异步取数，避免一次性把大规模点集传到 RN 端导致内存问题。
+</Note>
+

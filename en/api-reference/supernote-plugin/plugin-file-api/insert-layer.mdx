@@ -1,0 +1,50 @@
+---
+title: "insertLayer"
+description: "Insert a layer."
+---
+
+<Note>
+Only NOTE files support layer data.
+</Note>
+
+```ts wrap
+static insertLayer(NOTEPath: string, page: number, layer: Layer): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `layer` | [`Layer`](/en/api-reference/supernote-plugin/types/layer) | Layer data to insert |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the insertion succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI, type Layer } from 'sn-plugin-lib';
+
+/**
+ * Insert layer example.
+ */
+export async function exampleInsertLayer() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 1;
+ const layer: Layer = {
+ layerId: 1,
+ name: 'new layer',
+ isCurrentLayer: false,
+ isVisible: true,
+ };
+ const res = await PluginFileAPI.insertLayer(NOTEPath, page, layer);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'insertLayer call failed');
+ }
+ return res.result;
+}
+```

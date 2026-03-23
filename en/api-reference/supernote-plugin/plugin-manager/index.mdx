@@ -1,0 +1,33 @@
+---
+title: "Overview"
+description: "Management entry for plugin lifecycle, buttons, and event listeners."
+---
+
+`PluginManager` is the management entry for running plugins. It is responsible for:
+
+- Initializing the plugin environment
+- Listening for plugin lifecycle events
+- Registering/listening for plugin buttons and config buttons
+- Registering/listening for plugin events
+- Getting basic plugin info (name, directory, device type, etc.)
+
+```ts
+import { PluginManager } from 'sn-plugin-lib';
+```
+
+## Methods
+
+- [`init`](/en/api-reference/supernote-plugin/plugin-manager/init)
+- [`registerButtonListener`](/en/api-reference/supernote-plugin/plugin-manager/register-button#registerbuttonlistener)
+- [`registerConfigButtonListener`](/en/api-reference/supernote-plugin/plugin-manager/register-config-button#registerconfigbuttonlistener)
+- [`registerLangListener`](/en/api-reference/supernote-plugin/plugin-manager/register-lang-listener)
+- [`registerEventListener`](/en/api-reference/supernote-plugin/plugin-manager/register-event-listener)
+- [`registerButton`](/en/api-reference/supernote-plugin/plugin-manager/register-button)
+- [`unregisterButton`](/en/api-reference/supernote-plugin/plugin-manager/unregister-button)
+- [`getButtonState`](/en/api-reference/supernote-plugin/plugin-manager/get-button-state)
+- [`setButtonState`](/en/api-reference/supernote-plugin/plugin-manager/set-button-state)
+- [`registerConfigButton`](/en/api-reference/supernote-plugin/plugin-manager/register-config-button)
+- [`getPluginDirPath`](/en/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path)
+- [`getPluginName`](/en/api-reference/supernote-plugin/plugin-manager/get-plugin-name)
+- [`getDeviceType`](/en/api-reference/supernote-plugin/plugin-manager/get-device-type)
+- [`closePluginView`](/en/api-reference/supernote-plugin/plugin-manager/close-plugin-view)

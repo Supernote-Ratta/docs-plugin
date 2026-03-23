@@ -1,0 +1,151 @@
+---
+title: '链接'
+---
+
+本章主要介绍如何使用插件接口在笔记应用（Note）中插入、修改链接数据。
+
+## 获取套索链接数据
+
+通过 [`PluginNoteAPI.getLassoLinks`](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-link)
+获取套索中的链接数据。样例代码如下：
+```ts wrap
+import {PluginNoteAPI} from 'sn-plugin-lib';
+PluginNoteAPI.getLassoLinks()
+    .then(data => {
+    console.log('getLassoLinks success:', data);
+    })
+    .catch(error => {
+    console.error('getLassoLinks error:', error);
+    });
+```
+
+如果套索中没有链接数据，那么返回的 result 数据为空；有链接数据时会返回一个链接数组（[`Link`](/zh/api-reference/supernote-plugin/types/link)）。
+详细解析请看 [`PluginNoteAPI.getLassoLinks`](/zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-link) 的接口描述。
+
+<Note>
+`Link.linkType` 的取值范围以类型定义为准。读取接口可能返回 `linkType=6`（摘录链接）。
+当前插件接口不支持创建或修改为摘录链接（写入接口如 `insertTextLink`、`modifyLassoLink` 通常只允许 `0..4`），但可以读取到摘录链接数据并用于展示或识别。
+</Note>
+
+## 文本链接（Text Link）
+
+笔记链接有两种类型：第一种是文本链接；第二种是笔划链接。需要注意的是，链接只能在主图层操作，不可插入其他图层。
+本节将详细介绍文本链接的创建方法。
+
+调用 [`PluginNoteAPI.insertTextLink`](/zh/api-reference/supernote-plugin/plugin-note-api/insert-text-link) 接口，
+可以向当前打开笔记的当前页主图层插入一个文本链接。
+
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+const textLink = {
+  destPath: '/storage/emulated/0/Note/test.note', // 目标路径
+  destPage: 2, // 目标页码
+  style: 0, // 样式：0 实下划线，1 实边框，2 虚边框
+  linkType: 0, // 类型：0 笔记页，1 笔记文件，2 文档，3 图片，4 网址
+  rect: { left: 100, top: 100, right: 300, bottom: 150 }, // 显示区域（像素坐标）
+  fontSize: 49,
+  fullText: 'Show Text',
+  showText: 'Show Text',
+  isItalic: 1, // 是否斜体：0 否，1 是
+};
+
+PluginNoteAPI.insertTextLink(textLink)
+  .then(data => {
+    console.log('insertTextLink success:', data);
+  })
+  .catch(error => {
+    console.error('insertTextLink error:', error);
+  });
+```
+
+
+如代码所示，insertTextLink 传入了一个 [`TextLink`](/zh/api-reference/supernote-plugin/types/text-link) 对象。
+调用 insertTextLink 接口之后，会向当前打开笔记的当前页主图层插入一个文本链接。
+
+
+如果链接需要跳转到笔记的指定页面，`linkType` 应设置为 `0`。
+如果需要跳转到文档的指定页面，`linkType` 应设置为 `2`。当 `linkType === 2` 时：
+
+- `destPage < 0`：跳转到文档当前页或文档第一页
+- `destPage >= 0`：跳转到文档目标页
+
+当 `linkType === 4`（网址）时，`destPath` 应为 URL 地址；此时 `destPage` 可设置为 `0`。
+
+## 笔划链接（Stroke Link）
+
+笔划链接是将笔划设置为链接，其中笔划包括普通笔划和几何图形。
+要创建此类链接，必须先框选相应的笔划，否则无法设置链接。此外，必须只套索纯笔划和几何图形，不能包含文本框、标题等元素。
+
+<Note>
+套索的笔划必须是主图层数据，其他图层无法创建链接。
+</Note>
+
+套索笔划和几何图形后，可以调用
+[`PluginNoteAPI.setLassoStrokeLink`](/zh/api-reference/supernote-plugin/plugin-note-api/set-lasso-stroke-link)
+接口将套索的元素设置为链接。示例代码如下：
+
+```ts wrap
+import {PluginNoteAPI} from 'sn-plugin-lib';
+
+PluginNoteAPI.setLassoStrokeLink({
+      destPath: '/storage/emulated/0/Note/test.note',
+      destPage: 12,
+      style: 1,
+      linkType: 2,
+    })
+    .then(data => {
+    console.log('setLassoStrokeLink success:', data);
+    })
+    .catch(error => {
+    console.error('setLassoStrokeLink error:', error);
+    });
+```
+
+如上述代码所示，`setLassoStrokeLink` 传入的对象和 `TextLink` 很像，
+只是少了 `rect`、`fontSize`、`fullText`、`showText`、`isItalic` 这几个参数，因为笔划链接不需要这些参数。
+
+## 修改套索链接
+
+链接需要套索之后才能修改，调用 [`PluginNoteAPI.modifyLassoLink`](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link) 接口，
+代码如下：
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+
+
+PluginNoteAPI.getLassoLinks()
+    .then(({success, result}) => {
+    if (!success || !result || result.length === 0) {
+        throw new Error('getLassoLinks result is empty');
+    }
+
+    const lassoLink = result[0];
+    const modifyLassoLink = {
+        category: lassoLink.category,
+        destPath: currentFilePath,
+        destPage: 1,
+        linkType: 1,
+        style: 1,
+        showText: 'Show Text1',
+        fullText: 'Show Text1',
+    };
+
+    return PluginNoteAPI.modifyLassoLink(modifyLassoLink);
+    })
+    .then(data => {
+    console.log('modifyLassoLink success:', data);
+    })
+    .catch(error => {
+    console.error('modifyLassoLink error:', error);
+    });
+```
+
+参数含义上文已说明，这里不再重复。[`PluginNoteAPI.modifyLassoLink`](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link)
+这个接口既可以修改文字链接，也可以修改笔划链接。文字链接需要填写 `fullText`、`showText` 这些参数；
+而笔划链接不需要填写 `fullText`、`showText`。
+
+接口 [`PluginNoteAPI.modifyLassoLink`](/zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link)
+能够修改的是单个链接，所以如果套索了多个链接或套索了其他元素，调用该接口会失败。

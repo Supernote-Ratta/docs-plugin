@@ -1,0 +1,33 @@
+﻿---
+title: "setButtonState"
+description: "设置按钮启用/禁用状态。"
+---
+
+```ts
+setButtonState(id: number, state: boolean): Promise<boolean>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | `number` | 按钮唯一标识（注册按钮时设置的id） |
+| `state` | `boolean` | 按钮状态：`true` 启用，`false` 禁用 |
+
+**返回**
+
+- `Promise<boolean>`：设置结果
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 设置按钮状态的示例。
+ */
+export async function exampleSetButtonState() {
+  const ok = await PluginManager.setButtonState(1, false);
+  return ok;
+}
+```

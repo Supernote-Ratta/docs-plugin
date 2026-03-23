@@ -1,0 +1,37 @@
+---
+title: "getNoteType"
+description: "获取笔记文件类型。"
+---
+
+```ts wrap
+static getNoteType(notePath: string): Promise<APIResponse<number>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记路径 |
+
+**返回**
+
+- [`APIResponse<number>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为笔记类型：`0` 正常笔记，`1` 识别笔记
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取笔记类型的示例。
+ */
+export async function exampleGetNoteType() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const res = await PluginFileAPI.getNoteType(notePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getNoteType 调用失败');
+  }
+  return res.result;
+}
+```

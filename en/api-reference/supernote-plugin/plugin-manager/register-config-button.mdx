@@ -1,0 +1,89 @@
+---
+title: "Config Button Registration and Listener"
+description: "Register the plugin config button and listen for config button click events."
+---
+
+<Note>
+This page includes two APIs: `registerConfigButton` and `registerConfigButtonListener`. Call order: register the config button first (`registerConfigButton`), then listen for click events (`registerConfigButtonListener`).
+</Note>
+
+## registerConfigButton
+
+Register the plugin config button. After registration succeeds, the plugin management page will show the config button entry.
+
+```ts wrap
+registerConfigButton(): Promise<boolean>;
+```
+
+**Returns**
+
+- `Promise<boolean>`: whether registration succeeds
+
+## registerConfigButtonListener
+
+Listen for config button click events.
+
+```ts wrap
+registerConfigButtonListener(buttonListener: ConfigButtonListener): ConfigButtonSubscription;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `buttonListener` | `ConfigButtonListener` | callback `onClick()` |
+
+**Returns**
+
+- `ConfigButtonSubscription`: subscription object. Call `remove()` to unregister the listener
+
+## Type Definitions
+
+### ConfigButtonListener
+
+```ts
+interface ConfigButtonListener {
+ onClick(): void;
+}
+```
+
+**Description**
+
+- `onClick()`: triggered when the config button is clicked
+
+### ConfigButtonSubscription
+
+```ts
+type ConfigButtonSubscription = {
+ remove(): void;
+};
+```
+
+**Description**
+
+- Returned by `registerConfigButtonListener`
+- Call `remove()` to unregister the config button event listener
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Example: register a config button and listen for clicks.
+ */
+export async function exampleRegisterConfigButtonAndListener() {
+ const ok = await PluginManager.registerConfigButton();
+ if (!ok) {
+ throw new Error('registerConfigButton call failed');
+ }
+
+ const sub = PluginManager.registerConfigButtonListener({
+ onClick() {
+ console.log('config button clicked');
+ },
+ });
+
+ return sub;
+}
+```

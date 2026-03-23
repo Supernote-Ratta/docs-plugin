@@ -1,0 +1,33 @@
+---
+title: "概览"
+description: "插件生命周期、按钮与事件监听的管理入口。"
+---
+
+`PluginManager` 是插件运行的管理入口，负责：
+
+- 初始化插件环境
+- 监听插件生命周期
+- 注册/监听插件按钮与配置按钮
+- 注册/监听插件事件
+- 获取插件基础信息（名称、目录、设备类型等）
+
+```ts
+import { PluginManager } from 'sn-plugin-lib';
+```
+
+## 方法
+
+- [`init`](/zh/api-reference/supernote-plugin/plugin-manager/init)
+- [`registerButtonListener`](/zh/api-reference/supernote-plugin/plugin-manager/register-button#registerbuttonlistener)
+- [`registerConfigButtonListener`](/zh/api-reference/supernote-plugin/plugin-manager/register-config-button#registerconfigbuttonlistener)
+- [`registerLangListener`](/zh/api-reference/supernote-plugin/plugin-manager/register-lang-listener)
+- [`registerEventListener`](/zh/api-reference/supernote-plugin/plugin-manager/register-event-listener)
+- [`registerButton`](/zh/api-reference/supernote-plugin/plugin-manager/register-button)
+- [`unregisterButton`](/zh/api-reference/supernote-plugin/plugin-manager/unregister-button)
+- [`getButtonState`](/zh/api-reference/supernote-plugin/plugin-manager/get-button-state)
+- [`setButtonState`](/zh/api-reference/supernote-plugin/plugin-manager/set-button-state)
+- [`registerConfigButton`](/zh/api-reference/supernote-plugin/plugin-manager/register-config-button)
+- [`getPluginDirPath`](/zh/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path)
+- [`getPluginName`](/zh/api-reference/supernote-plugin/plugin-manager/get-plugin-name)
+- [`getDeviceType`](/zh/api-reference/supernote-plugin/plugin-manager/get-device-type)
+- [`closePluginView`](/zh/api-reference/supernote-plugin/plugin-manager/close-plugin-view)

@@ -1,0 +1,41 @@
+---
+title: "getPageSize"
+description: "获取文件指定页面的尺寸（像素）。"
+---
+
+```ts wrap
+static getPageSize(notePath: string, page: number): Promise<APIResponse<Size>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记/文档文件路径 |
+| `page` | `number` | 页码（从 0 开始） |
+
+**返回**
+
+- [`APIResponse<Size>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为页面尺寸，见 [`Size`](/zh/api-reference/supernote-plugin/types/size)
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取页面像素尺寸的示例。
+ */
+export async function exampleGetPageSize() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+
+  const res = await PluginFileAPI.getPageSize(notePath, page);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getPageSize 调用失败');
+  }
+  return res.result;
+}
+```
+

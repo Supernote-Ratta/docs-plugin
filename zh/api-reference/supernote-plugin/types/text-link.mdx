@@ -1,0 +1,21 @@
+---
+title: "TextLink"
+description: "文字链接数据结构（用于 insertTextLink）。"
+---
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `destPath` | `string` | 目标路径/地址：当 `linkType === 4` 时填写 URL 地址，否则填写目标文件路径 |
+| `destPage` | `number` | 目标页码（仅 `linkType === 0` 或 `linkType === 2` 有效） |
+| `style` | `number` | 链接样式：`0` 实下划线，`1` 实边框，`2` 虚边框 |
+| `linkType` | `number` | 链接类型：`0` 跳转笔记页，`1` 跳转笔记文件，`2` 跳转文档，`3` 跳转图片，`4` 跳转网址 |
+| `rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 文本区域矩形（像素坐标，需为非零面积） |
+| `fontSize` | `number` | 字体大小（正数） |
+| `showText` | `string` | 展示文本（通常是 `fullText` 的简化版本） |
+| `fullText` | `string` | 完整文本 |
+| `isItalic` | `number` | 是否斜体：`0` 否，`1` 是 |
+
+<Note>
+`TextLink` 用于创建“文字链接”。如果你是从套索中读取链接数据，请参考 [`Link`](/zh/api-reference/supernote-plugin/types/link) 与 [`LassoLink`](/zh/api-reference/supernote-plugin/types/lasso-link)。
+</Note>
+

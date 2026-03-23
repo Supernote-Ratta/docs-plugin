@@ -1,0 +1,74 @@
+---
+title: "Element"
+description: "Unified data structure for visible elements in notes/documents."
+---
+
+`Element` describes the common metadata of all visible elements in a note file (and in document annotation scenarios), such as strokes, titles, links, TextBox, geometries, and pictures.
+An `Element` uses `type` to distinguish its category and provides more specific structures under the corresponding fields (e.g. `stroke`, `title`, `link`, `textBox`, `geometry`, `picture`).
+
+<Tip>
+If you only care about the element category, read `type`. If you need to operate on the content, read typed fields such as `stroke/title/link/textBox/geometry` based on `type`.
+</Tip>
+
+## Type Constants
+
+`ElementType` defines the value range of `Element.type`.
+
+## ElementType
+
+In the table below, the `ElementType.` prefix is omitted in the Constant column. In code, use the full name: `ElementType.XXX`.
+
+| Type | Constant | Value | Description | Detail Field |
+| --- | --- | ---| --- | --- |
+| Stroke | `TYPE_STROKE` | `0` | Handwritten stroke; can be inserted and edited on both main and custom layers | `stroke` |
+| Title | `TYPE_TITLE` | `100` | Title element; can be inserted and edited only on the main layer | `title` |
+| Picture | `TYPE_PICTURE` | `200` | Picture element; can be inserted and edited on both main and custom layers | `picture` |
+| TextBox | `TYPE_TEXT` | `500` | Regular TextBox; can be inserted and edited on both main and custom layers | `textBox` |
+| Digest quote TextBox | `TYPE_TEXT_DIGEST_QUOTE` | `501` | Quoted digest TextBox; can be inserted and edited only on the main layer | `textBox` |
+| Digest created TextBox | `TYPE_TEXT_DIGEST_CREATE` | `502` | Created digest TextBox; can be inserted and edited only on the main layer | `textBox` |
+| Link | `TYPE_LINK` | `600` | Text / stroke link; can be inserted and edited only on the main layer | `link` |
+| Geometry | `TYPE_GEO` | `700` | Geometry element; can be inserted and edited on both main and custom layers | `geometry` |
+| Five-star | `TYPE_FIVE_STAR` | `800` | Five-star element; can be inserted and edited only on the main layer | `fiveStar` |
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `uuid` | `string` | Unique identifier for the element |
+| `type` | `number` | Element type. See [`ElementType`](/en/api-reference/supernote-plugin/types/trail#elementtype) |
+| `pageNum` | `number` | Page number |
+| `layerNum` | `number` | Layer number (common range in notes: `0..3`) |
+| `thickness` | `number` | Stroke thickness (may be meaningless for some element types) |
+| `recognizeResult` | [`RecogResultData`](/en/api-reference/supernote-plugin/types/recog-result-data) | Recognition result data |
+| `maxX` | `number` | Max X value in the EMR coordinate system. See [Coordinate System](/en/plugin-base/coordinate-system) |
+| `maxY` | `number` | Max Y value in the EMR coordinate system. See [Coordinate System](/en/plugin-base/coordinate-system) |
+| `userData` | `string` | Custom user data |
+| `angles` | [`ElementDataAccessor<Point>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Angle points. The dataset can be large, so RN holds an accessor/index; raw data is on the Android side |
+| `status` | `number` | Element status |
+| `numInPage` | `number` | Index within the page (starts from `0`) |
+| `contoursSrc` | [`ElementDataAccessor<Point[]>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Contour points (pixel coordinates). RN holds an accessor/index; raw data is on the Android side |
+| `stroke` | [`Stroke \| null`](/en/api-reference/supernote-plugin/types/stroke) | Stroke data (only when `type === 0`) |
+| `title` | [`Title \| null`](/en/api-reference/supernote-plugin/types/title) | Title data (only when `type === 100`) |
+| `textBox` | [`TextBox \| null`](/en/api-reference/supernote-plugin/types/text-box) | TextBox data (only for TextBox-related types) |
+| `geometry` | [`Geometry \| null`](/en/api-reference/supernote-plugin/types/geometry) | Geometry data (only when `type === 700`) |
+| `link` | [`Link \| null`](/en/api-reference/supernote-plugin/types/link) | Link data (only when `type === 600`) |
+| `fiveStar` | `FiveStar \| null` | Five-star data (only when `type === 800`; see "FiveStar" below) |
+| `picture` | [`Picture \| null`](/en/api-reference/supernote-plugin/types/picture) | Picture data (only when `type === 200`) |
+
+<Note>
+`angles` and `contoursSrc` are accessor objects, not full arrays. Fetch data asynchronously via `size()/get()/getRange()` to avoid JS memory issues caused by transferring large point sets at once.
+</Note>
+
+## FiveStar (Five-star)
+
+When `type === 800`, the `fiveStar` field provides the point set of the five-star element.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `points` | [`Point[]`](/en/api-reference/supernote-plugin/types/point) | Five-star point coordinates (EMR) |
+
+## Methods
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `recycle()` | `Promise<void>` | Recycle native cached data for this element and clear accessor caches |

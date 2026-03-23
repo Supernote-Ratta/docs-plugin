@@ -1,0 +1,26 @@
+﻿---
+title: "getDeviceType"
+description: "Get devicetype."
+---
+
+```ts
+getDeviceType(): Promise<number>;
+```
+
+**Returns**
+
+- `Promise<number>`:devicetype:`0` A5,`1` A6,`2` A6X,`3` A5X,`4` Nomad,`5` Manta
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Get devicetype example.
+ */
+export async function exampleGetDeviceType() {
+ const deviceType = await PluginManager.getDeviceType();
+ return deviceType;
+}
+```

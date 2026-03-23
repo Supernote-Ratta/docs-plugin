@@ -1,0 +1,35 @@
+---
+title: "emrPoint2Android"
+description: "Convert an EMR coordinate point to a screen pixel point."
+---
+
+```ts
+static emrPoint2Android(point: Point, pageSize: { width: number; height: number }): Point;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `point` | [`Point`](/en/api-reference/supernote-plugin/types/point) | EMR coordinate point |
+| `pageSize` | [`Size`](/en/api-reference/supernote-plugin/types/size) | Page pixel size |
+
+**Returns**
+
+- [`Point`](/en/api-reference/supernote-plugin/types/point): converted screen pixel point
+
+## Example
+
+```ts wrap
+import { PointUtils, type Point } from 'sn-plugin-lib';
+
+/**
+ * Example: convert an EMR point to a pixel point.
+ */
+export async function exampleEmrPoint2Android() {
+ const point: Point = { x: 15819, y: 11864 };
+ const pageSize = { width: 1404, height: 1872 };
+
+ return PointUtils.emrPoint2Android(point, pageSize);
+}
+```

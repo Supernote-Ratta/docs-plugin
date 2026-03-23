@@ -1,0 +1,144 @@
+---
+title: "Links"
+---
+
+This chapter describes how to use plugin APIs to insert and modify link data in the NOTE app (NOTE).
+
+## Get Links from Lasso Selection
+
+via [`PluginNoteAPI.getLassoLinks`](/en/api-reference/supernote-plugin/plugin-note-api/get-lasso-link)
+get link data within the current lasso selection. Example:
+```ts wrap
+import {PluginNoteAPI} from 'sn-plugin-lib';
+PluginNoteAPI.getLassoLinks()
+    .then(data => {
+    console.log('getLassoLinks success:', data);
+    })
+    .catch(error => {
+    console.error('getLassoLinks error:', error);
+    });
+```
+
+If there are no links in the lasso selection, `result` is empty. If links exist, it returns an array of [`Link`](/en/api-reference/supernote-plugin/types/link).
+For details, see the API reference: [`PluginNoteAPI.getLassoLinks`](/en/api-reference/supernote-plugin/plugin-note-api/get-lasso-link).
+
+<Note>
+`Link.linkType` follows the type definition. Read APIs may return `linkType=6` (digest link).
+The current plugin APIs do not support creating or modifying digest links (write APIs such as `insertTextLink` and `modifyLassoLink` usually only allow `0..4`), but you can read digest link data for display or detection.
+</Note>
+
+## Text Links
+
+There are two link categories in NOTE: text links and stroke links. Links can only be created/modified on the main layer; other layers are not supported.
+This section explains how to create a text link.
+
+Call [`PluginNoteAPI.insertTextLink`](/en/api-reference/supernote-plugin/plugin-note-api/insert-text-link) to insert a text link into the main layer of the current page of the currently opened note.
+
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+const textLink = {
+  destPath: '/storage/emulated/0/Note/test.note', // Destination path
+  destPage: 2, // Destination page
+  style: 0, // Style: 0 solid underline, 1 solid border, 2 dashed border
+  linkType: 0, // Type: 0 NOTE page, 1 NOTE file, 2 DOC, 3 image, 4 URL
+  rect: { left: 100, top: 100, right: 300, bottom: 150 }, // Display rect (pixel coordinates)
+  fontSize: 49,
+  fullText: 'Show Text',
+  showText: 'Show Text',
+  isItalic: 1, // Italic: 0 no, 1 yes
+};
+
+PluginNoteAPI.insertTextLink(textLink)
+  .then(data => {
+    console.log('insertTextLink success:', data);
+  })
+  .catch(error => {
+    console.error('insertTextLink error:', error);
+  });
+```
+
+
+As shown above, `insertTextLink` takes a [`TextLink`](/en/api-reference/supernote-plugin/types/text-link) object and inserts a text link into the main layer of the current page.
+
+
+To jump to a specific page in a note, set `linkType` to `0`.
+To jump to a page in a document, set `linkType` to `2`. When `linkType === 2`:
+
+- `destPage < 0`: jump to the document current page (or the first page)
+- `destPage >= 0`: jump to the target document page
+
+When `linkType === 4` (URL), `destPath` must be the URL; `destPage` can be set to `0`.
+
+## Stroke Links
+
+Stroke links turn strokes into links. A stroke can be a normal stroke or a geometric shape.
+To create a stroke link, you must lasso the target strokes first. The lasso selection should only include strokes/geometries (not TextBox elements, titles, etc.).
+
+<Note>
+Selected strokes must be on the main layer; other layers cannot be used to create links.
+</Note>
+
+After lasso-selecting strokes and geometries, call
+[`PluginNoteAPI.setLassoStrokeLink`](/en/api-reference/supernote-plugin/plugin-note-api/set-lasso-stroke-link)
+to set lasso-selected elements as a link. Example:
+
+```ts wrap
+import {PluginNoteAPI} from 'sn-plugin-lib';
+
+PluginNoteAPI.setLassoStrokeLink({
+      destPath: '/storage/emulated/0/Note/test.note',
+      destPage: 12,
+      style: 1,
+      linkType: 2,
+    })
+    .then(data => {
+    console.log('setLassoStrokeLink success:', data);
+    })
+    .catch(error => {
+    console.error('setLassoStrokeLink error:', error);
+    });
+```
+
+`setLassoStrokeLink` takes an object similar to `TextLink`, but without `rect`, `fontSize`, `fullText`, `showText`, and `isItalic`, because stroke links do not need these fields.
+
+## Modify a Lasso Link
+
+You must create a lasso selection before modifying a link. Use [`PluginNoteAPI.modifyLassoLink`](/en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link):
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+
+
+PluginNoteAPI.getLassoLinks()
+    .then(({success, result}) => {
+    if (!success || !result || result.length === 0) {
+        throw new Error('getLassoLinks result is empty');
+    }
+
+    const lassoLink = result[0];
+    const modifyLassoLink = {
+        category: lassoLink.category,
+        destPath: currentFilePath,
+        destPage: 1,
+        linkType: 1,
+        style: 1,
+        showText: 'Show Text1',
+        fullText: 'Show Text1',
+    };
+
+    return PluginNoteAPI.modifyLassoLink(modifyLassoLink);
+    })
+    .then(data => {
+    console.log('modifyLassoLink success:', data);
+    })
+    .catch(error => {
+    console.error('modifyLassoLink error:', error);
+    });
+```
+
+Parameter meanings are described above. [`PluginNoteAPI.modifyLassoLink`](/en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link) can modify both text links and stroke links. Text links require `fullText` and `showText`; stroke links do not.
+
+[`PluginNoteAPI.modifyLassoLink`](/en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link) modifies a single link. If multiple links (or other elements) are included in the lasso selection, this call will fail.

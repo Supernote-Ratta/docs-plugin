@@ -1,0 +1,28 @@
+﻿---
+title: "getButtonState"
+description: "获取插件按钮启用状态。"
+---
+
+插件按钮启用时才会显示在工具栏/套索工具栏/划词工具栏上，禁用时是不会显示相关按钮。
+
+```ts
+getButtonState(id: number): Promise<boolean>;
+```
+
+**返回**
+
+- `Promise<boolean>`：按钮状态，`true` 启用，`false` 禁用
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 获取按钮状态的示例。
+ */
+export async function exampleGetButtonState() {
+  const enabled = await PluginManager.getButtonState(1);
+  return enabled;
+}
+```

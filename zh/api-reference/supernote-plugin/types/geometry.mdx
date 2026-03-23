@@ -1,0 +1,27 @@
+---
+title: "Geometry"
+description: "几何图形数据。"
+---
+
+常量（`type` 取值）：
+
+| 常量 | 值 |说明|
+| --- | --- | ---|
+| `Geometry.TYPE_STRAIGHT_LINE` | `straightLine` | 直线|
+| `Geometry.TYPE_CIRCLE` | `GEO_circle` | 圆|
+| `Geometry.TYPE_ELLIPSE` | `GEO_ellipse` | 椭圆|
+| `Geometry.TYPE_POLYGON` | `GEO_polygon` | 多边形 |
+
+字段：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `penColor` | `number` | 笔颜色，0x00:黑色，0x9D:深灰，0xC9：浅灰，0xFE：白色 |
+| `penType` | `number` | 笔类型，10：针管笔，1：压力笔，11：马克笔，14：书法笔 |
+| `penWidth` | `number` | 笔宽度（最小值 `100`） |
+| `type` | `string` | 几何图形类型，详见上表的类型说明|
+| `points` | [`Point[]`](/zh/api-reference/supernote-plugin/types/point) | 多边形点坐标（像素坐标） |
+| `ellipseCenterPoint` | [`Point \| null`](/zh/api-reference/supernote-plugin/types/point) | 椭圆中心点（像素坐标） |
+| `ellipseMajorAxisRadius` | `number` | 椭圆长轴半径（像素） |
+| `ellipseMinorAxisRadius` | `number` | 椭圆短轴半径（像素）|
+| `ellipseAngle` | `number` | 椭圆旋转弧度 |

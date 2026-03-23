@@ -1,0 +1,41 @@
+---
+title: "setLassoBoxState"
+description: "Set lasso box state."
+---
+
+<Note>
+You must create a lasso selection before calling this API; otherwise the call fails.
+</Note>
+
+```ts
+static setLassoBoxState(state: number): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `state` | `number` | `0` show, `1` hide, `2` remove completely |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the call succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: set lasso box state.
+ */
+export async function exampleSetLassoBoxState() {
+ const res = await PluginCommAPI.setLassoBoxState(1);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'setLassoBoxState call failed');
+ }
+ return res.result;
+}
+```
+

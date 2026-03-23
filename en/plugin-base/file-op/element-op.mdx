@@ -1,0 +1,181 @@
+---
+title: "Element Operations"
+description: "Read, create, insert, modify, and replace Elements in NOTE/DOC files."
+---
+
+`Element` is the unified data structure for “all visible elements” in NOTE/DOC: strokes, titles, links, TextBox elements, geometries, five-star elements, pictures, etc. are all represented as `Element`, and distinguished by `type`.
+
+- Element types and fields: [`Element`](/en/api-reference/supernote-plugin/types/trail)
+- Type constants: [`ElementType`](/en/api-reference/supernote-plugin/types/trail#elementtype)
+
+This chapter provides a reusable workflow around the following capabilities:
+
+- Get page elements: [`PluginFileAPI.getElements`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-trails)
+- Create a new element object: [`PluginCommAPI.createElement`](/en/api-reference/supernote-plugin/plugin-comm-api/create-trail)
+- Insert element：[`PluginFileAPI.insertElements`](/en/api-reference/supernote-plugin/plugin-file-api/insert-trails)
+- Modify element：[`PluginFileAPI.modifyElements`](/en/api-reference/supernote-plugin/plugin-file-api/modify-trails)
+- Replace all elements on a page: [`PluginFileAPI.replaceElements`](/en/api-reference/supernote-plugin/plugin-file-api/replace-trails)
+
+## Key Concepts
+
+### 1) Why call createElement first?
+
+Some fields in `Element` can be very large (e.g., stroke sample points, pressure points, angle points, contour points). To avoid JS-side memory issues, the SDK uses an "accessor" design:
+
+- On the RN side you receive an [`ElementDataAccessor`](/en/api-reference/supernote-plugin/types/trail-data-accessor) (a reference/handle)
+- Raw point data caching and read/write happen on the native side
+
+Therefore, when creating a new element, it is recommended to call `PluginCommAPI.createElement(...)` first so the native side can create and initialize the required caches and accessor references, and then fill in the content you want to write on the JS side.
+
+### 2) Conventions: page and layer
+
+- `page`: documentation uses zero-based page numbers (aligned with UI page numbering).
+- `layer`: in notes, common layers are `0..3`. **Links/titles must be on the main layer (`layer=0`)**, otherwise validation fails.
+  Document files only have a single layer: the main layer.
+
+### 3) Document limitations
+
+Document files do not allow inserting **TextBox elements / titles / links**. Forcing insertion will be rejected by validation.
+
+## Get Page Elements
+
+When you need to read all elements on a page (for display, filtering, editing, copying, etc.), use `getElements`:
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Get all elements on a given page in a given file.
+ */
+export async function loadPageElements(notePath: string, page: number) {
+  const res = await PluginFileAPI.getElements(page, notePath);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? 'Failed to get page elements');
+  }
+  return res.result ?? [];
+}
+```
+
+<Tip>
+After `getElements` succeeds, the SDK automatically normalizes element structures and fills in accessors. You can directly read typed fields such as `stroke/title/link/textBox/geometry/picture` based on `type`.
+</Tip>
+
+## Create a New Element
+
+To create a new element that will be inserted into a page, use `createElement(type)`:
+
+```ts wrap
+import { PluginCommAPI, ElementType } from 'sn-plugin-lib';
+
+/**
+ * Create a new stroke element (Element).
+ */
+export async function createStrokeElement() {
+  const res = await PluginCommAPI.createElement(ElementType.TYPE_STROKE);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? 'createElement failed');
+  }
+  return res.result;
+}
+```
+
+<Note>
+The `Element` returned by `createElement` includes `uuid`, and fills required `ElementDataAccessor` fields based on the element type (e.g., `angles/contoursSrc`, and `stroke.*` for stroke elements).
+</Note>
+
+## Insert Elements into a Page
+
+After preparing the element array to insert (usually from `createElement` or copied from existing elements), use `insertElements` to insert into a target page:
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI, ElementType } from 'sn-plugin-lib';
+
+/**
+ * Insert a newly-created stroke element into a page.
+ */
+export async function insertOneStroke(notePath: string, page: number) {
+  const created = await PluginCommAPI.createElement(ElementType.TYPE_STROKE);
+  if (!created?.success || !created.result) {
+    throw new Error(created?.error?.message ?? 'createElement failed');
+  }
+
+  const element = created.result;
+  element.pageNum = page;
+  element.layerNum = 0;
+
+  const res = await PluginFileAPI.insertElements(notePath, page, [element]);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? 'Failed to insert elements');
+  }
+  return true;
+}
+```
+
+<Warning>
+TextBox elements/links/titles can only be operated on the main layer (`layer=0`). Before insertion, ensure `element.layerNum = 0`, otherwise validation fails.
+</Warning>
+
+## Modify Existing Elements
+
+The key constraint is: **you can only modify elements that already exist on the page**. The SDK checks existence using identifiers (e.g., `numInPage`). Non-existent elements will not be modified successfully.
+
+The safest workflow:
+
+1. Call `getElements` to fetch the original element list
+2. Find the target element (e.g., by `numInPage` or `uuid`)
+3. Modify fields and pass that element (or a set of elements) to `modifyElements`
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Modify an element on a page (workflow example; fields depend on element type).
+ */
+export async function modifyOneElement(notePath: string, page: number, numInPage: number) {
+  const listRes = await PluginFileAPI.getElements(page, notePath);
+  if (!listRes?.success || !listRes.result) {
+    throw new Error(listRes?.error?.message ?? 'Failed to get page elements');
+  }
+
+  const elements = listRes.result;
+  const target = elements.find((e: any) => e.numInPage === numInPage);
+  if (!target) {
+    throw new Error(`Element not found: numInPage=${numInPage}`);
+  }
+
+  target.thickness = (target.thickness ?? 0) + 1;
+
+  const modRes = await PluginFileAPI.modifyElements(notePath, page, [target]);
+  if (!modRes?.success) {
+    throw new Error(modRes?.error?.message ?? 'Failed to modify elements');
+  }
+  return modRes.result;
+}
+```
+
+<Tip>
+If you need to modify "point data" (e.g., stroke sample points), you usually write via `ElementDataAccessor.set/setRange` on the native side instead of replacing JS arrays directly.
+</Tip>
+
+## Replace All Elements on a Page
+
+Use `replaceElements` when you want to "clear all existing elements and replace the page with a new set". Common scenarios: full-page re-layout, batch import, or writing edited results in one shot.
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Replace all elements on a page with a new set (clears existing elements).
+ */
+export async function replacePageElements(notePath: string, page: number, elements: any[]) {
+  const res = await PluginFileAPI.replaceElements(notePath, page, elements);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? 'Failed to replace page elements');
+  }
+  return true;
+}
+```
+
+<Warning>
+`replaceElements` clears existing elements first and then writes the new set. If you expose this in your UI, consider adding a confirmation step or an undo strategy.
+</Warning>

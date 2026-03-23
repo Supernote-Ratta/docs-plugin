@@ -1,0 +1,35 @@
+---
+title: "ElementDataAccessor"
+description: "Accessor for large point datasets and the point data types it provides."
+---
+
+Point data is typically cached on the native side. On the RN side, you fetch data on demand via an accessor.
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `size()` | `Promise<number>` | Get the dataset length |
+| `get(index)` | `Promise<T \| null>` | Get the item at `index` |
+| `getRange(startIndex, count)` | `Promise<T[]>` | Get a range of items |
+| `add(index, value)` | `Promise<boolean>` | Insert an item at a specified position (clears cache on success) |
+| `set(index, value)` | `Promise<boolean>` | Overwrite the item at `index` (clears cache on success) |
+| `setRange(index, endIndex, valueArray)` | `Promise<boolean>` | Overwrite a range of items (clears cache on success) |
+| `clearCache()` | `void` | Clear the RN-side cache |
+| `getCacheStats()` | `{ cachedCount: number; totalSize: number }` | Get cache stats |
+| `preload(startIndex, count)` | `Promise<void>` | Preload a range into cache |
+| `isCached(index)` | `boolean` | Whether an item is already cached |
+
+
+## ElementPointDataType
+
+Point data types exposed by `ElementDataAccessor` (enum).
+
+| Enum | Value | Description |
+| --- | ---:| --- |
+| `ElementPointDataType.ANGLE_POINT` | `0` | angle points |
+| `ElementPointDataType.CONTOUR_POINT` | `1` | contour points |
+| `ElementPointDataType.STROKE_SAMPLE_POINT` | `2` | strokesample points |
+| `ElementPointDataType.STROKE_PRESSURE_POINT` | `3` | stroke pressure points |
+| `ElementPointDataType.ERASE_LINE_DATA` | `4` | erase line data |
+| `ElementPointDataType.WRITE_FLAG` | `5` | write flag |
+| `ElementPointDataType.MARK_PEN_DIRECTION` | `6` | marker pen direction |
+| `ElementPointDataType.RECOGNITION_DATA_POINT` | `7` | recognition data points |

@@ -1,0 +1,42 @@
+---
+title: "insertImage"
+description: "在当前打开的笔记当前页的当前图层插入图片。"
+---
+
+<Note>
+该接口只能在 NOTE（笔记）中调用。`pngPath` 需指向存在且可读的图片文件。
+</Note>
+
+```ts
+static insertImage(pngPath: string): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `pngPath` | `string` | 图片文件路径（需存在且可读） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为 boolean，表示是否插入成功
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 插入图片示例。
+ */
+export async function exampleInsertImage() {
+  const pngPath = '/storage/emulated/0/Note/demo.png';
+
+  const res = await PluginNoteAPI.insertImage(pngPath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertImage 调用失败');
+  }
+
+  return res.result;
+}
+```

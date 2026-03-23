@@ -1,0 +1,45 @@
+---
+title: "insertFiveStar"
+description: "Insert a five-point star into the current file and page (and current layer for NOTE)."
+---
+
+```ts wrap
+static insertFiveStar(starPoints: Point[]): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `starPoints` | [`Point[]`](/en/api-reference/supernote-plugin/types/point) | Five-star point set (pixel coordinates). Must contain 6 points and the first/last points must be identical |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the insertion succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: insert a five-point star (requires 6 points with identical first/last point).
+ */
+export async function exampleInsertFiveStar() {
+  const starPoints = [
+    { x: 100, y: 20 },
+    { x: 120, y: 80 },
+    { x: 180, y: 80 },
+    { x: 130, y: 120 },
+    { x: 150, y: 180 },
+    { x: 100, y: 20 },
+  ];
+
+  const res = await PluginCommAPI.insertFiveStar(starPoints);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertFiveStar call failed');
+  }
+  return res.result;
+}
+```

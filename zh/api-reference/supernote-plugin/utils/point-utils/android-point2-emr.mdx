@@ -1,0 +1,35 @@
+---
+title: "androidPoint2Emr"
+description: "将屏幕像素点转换为 EMR 坐标点。"
+---
+
+```ts
+static androidPoint2Emr(point: Point, pageSize: { width: number; height: number }): Point;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `point` | [`Point`](/zh/api-reference/supernote-plugin/types/point) | 屏幕像素坐标点 |
+| `pageSize` | [`Size`](/zh/api-reference/supernote-plugin/types/size) | 页面像素尺寸 |
+
+**返回**
+
+- [`Point`](/zh/api-reference/supernote-plugin/types/point)：转换后的 EMR 坐标点
+
+## 示例
+
+```ts wrap
+import { PointUtils, type Point } from 'sn-plugin-lib';
+
+/**
+ * 将像素点转换为 EMR 点的示例。
+ */
+export async function exampleAndroidPoint2Emr() {
+  const point: Point = { x: 100, y: 200 };
+  const pageSize = { width: 1404, height: 1872 };
+
+  return PointUtils.androidPoint2Emr(point, pageSize);
+}
+```

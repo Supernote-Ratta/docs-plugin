@@ -1,0 +1,44 @@
+---
+title: "modifyLassoTitle"
+description: "修改套索的标题。"
+---
+
+<Note>
+该接口支持笔记中的撤销还原操作。
+
+该接口修改的是套索的文标题数据，所以必须在套索标题之后调用，
+而且是套索单个标题。如果套索的不是标题，或者套索多个标题，调用会失败。
+所以建议在点击套索工具栏按钮后进入的插件界面调用该接口。
+</Note>
+
+```ts wrap
+static modifyLassoTitle(params: { style: number }): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `params.style` | `number` | 标题样式：`0` 去掉标题属性，`1` 黑底标题，`2` 灰白标题，`3` 灰黑标题，`4` 阴影标题 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true`表示修改成功
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 修改套索标题样式的示例。
+ */
+export async function exampleModifyLassoTitle() {
+  const res = await PluginNoteAPI.modifyLassoTitle({ style: 2 });
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'modifyLassoTitle 调用失败');
+  }
+  return res.result;
+}
+```

@@ -1,0 +1,25 @@
+---
+title: "getCurrentPageNum"
+description: "Get the current page index of the currently opened file."
+---
+
+```ts
+static getCurrentPageNum(): Promise<APIResponse<number>>;
+```
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get the current page index.
+ */
+export async function exampleGetCurrentPageNum() {
+ const res = await PluginCommAPI.getCurrentPageNum();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getCurrentPageNum call failed');
+ }
+ return res.result;
+}
+```

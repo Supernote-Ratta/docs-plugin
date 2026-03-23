@@ -1,0 +1,27 @@
+---
+title: "getPenInfo"
+description: "Get current pen information."
+---
+
+```ts
+static getPenInfo(): Promise<APIResponse<PenInfo>>;
+```
+
+**Returns**
+
+- [`APIResponse<PenInfo>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is [`PenInfo`](/en/api-reference/supernote-plugin/types/pen-info)
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleGetPenInfo() {
+ const res = await PluginCommAPI.getPenInfo();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getPenInfo call failed');
+ }
+ return res.result;
+}
+```

@@ -1,0 +1,94 @@
+---
+title: '环境搭建'
+---
+
+Supernote 插件基于 React Native 开发。搭建开发环境时，可以把它视为“React Native 开发环境 + Android 构建环境”。
+本章给出在 Windows 上的最小可用配置，并标注常见检查点。更完整的说明请参考 React Native 官方文档：
+https://reactnative.dev/docs/0.79/getting-started
+
+## 安装依赖
+
+必须安装的依赖包括：Node.js、JDK、Android Studio（含 Android SDK）。以下步骤以 Windows 为例。
+
+### Node.js 与 JDK
+
+- Node.js：建议使用当前 LTS 版本（并确保版本 ≥ 18）
+- JDK：React Native Android 构建需要 JDK 19 或更高版本（Oracle JDK 或 OpenJDK 均可）
+
+安装后建议在命令行确认版本：
+
+```bash wrap
+node -v
+javac -version
+```
+
+如果你的网络环境无法访问 npm 官方 registry，需要先把 registry 切换到可用的镜像源；否则依赖安装会失败。
+
+### Yarn
+
+Yarn是Facebook提供的替代npm的工具，可以加速node模板的下载，在命令行输入以下命令：
+
+```bash wrap
+npm install -g yarn
+```
+
+安装完yarn之后就可以用yarn代替npm了，例如用yarn代替npm install命令，用yarn add 某第三方库名代替npm install 某第三方库名。
+
+### Android Studio开发环境
+
+如果你之前没有配置过 Android Studio/SDK，按下面步骤完成一次性安装与配置即可。
+
+#### 安装Android Studio
+
+下载并安装 [`Android Studio`](https://developer.android.com/studio)。建议使用 Android Studio Narwhal | 2025.1.2 或更高版本，避免因版本过旧导致构建失败。
+
+在Android Studio安装向导中，确保选中以下所有项目旁边的复选框：
+
+- Android SDK
+- Android SDK Platform
+- Android Virtual Device
+
+然后点击“Next”来安装选中的组件。
+
+#### 安装Android SDK
+
+Android Studio 默认会安装最新版本的 Android SDK。目前编译 React Native 应用需要的是Android 15 (VanillaIceCream)版本的 SDK（注意 SDK 版本不等于终端系统版本，RN 目前支持 android 6 以上设备）。你可以在 Android Studio 的 SDK Manager 中选择安装各版本的 SDK。
+
+你可以在 Android Studio 的欢迎界面中找到 SDK Manager。点击"Configure"，然后就能看到"SDK Manager"。
+
+![image](/images/devguide/devguide-5.png)
+
+注：SDK Manager 还可以在 Android Studio 的"Preferences"菜单中找到。具体路径是File → Settings → Languages & Framework → Android SDK。
+
+在 SDK Manager 中选择"SDK Platforms"选项卡，然后在右下角勾选"Show Package Details"。展开Android 15 (VanillaIceCream)选项，确保勾选了下面这些组件（如果你看不到这个界面，则需要使用稳定的代理软件）：
+
+- Android SDK Platform 35
+- Intel x86 Atom_64 System Image（官方模拟器镜像文件，使用非官方模拟器不需要安装此组件）
+
+然后点击"SDK Tools"选项卡，同样勾中右下角的"Show Package Details"。展开"Android SDK Build-Tools"选项，确保选中了 React Native 所必须的35.0.0版本。你可以同时安装多个其他版本。
+
+#### 配置ANDROID_HOME环境变量
+
+React Native 需要通过环境变量来了解你的 Android SDK 装在什么路径，从而正常进行编译。
+
+打开控制面板 -> 系统和安全 -> 系统 -> 高级系统设置 -> 高级 -> 环境变量 -> 新建，创建一个名为ANDROID_HOME的环境变量（系统或用户变量均可），指向你的 Android SDK 所在的目录（具体的路径可能和下图不一致，请自行确认）：
+
+![image](/images/devguide/devguide-6.png)
+
+SDK 默认是安装在下面的目录：
+
+```text
+C:\Users\你的用户名\AppData\Local\Android\Sdk
+```
+
+你可以在 Android Studio 的"Preferences"菜单中查看 SDK 的真实路径，具体是Appearance & Behavior → System Settings → Android SDK。
+
+你需要关闭现有的命令符提示窗口然后重新打开，这样新的环境变量才能生效。
+
+#### 把工具目录添加到环境变量
+
+打开控制面板 -> 系统和安全 -> 系统 -> 高级系统设置 -> 高级 -> 环境变量，选中Path变量，然后点击编辑。点击新建然后把以下工具目录路径添加进去：platform-tools
+
+```text
+%ANDROID_HOME%\platform-tools
+```

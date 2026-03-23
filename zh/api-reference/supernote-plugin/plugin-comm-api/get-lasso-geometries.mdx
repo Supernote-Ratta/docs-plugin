@@ -1,0 +1,34 @@
+---
+title: "getLassoGeometries"
+description: "获取套索几何图形数据列表。"
+---
+
+<Note>
+套索元素之后才能调用这个接口，否则会调用失败。
+</Note>
+
+```ts
+static getLassoGeometries(): Promise<APIResponse<Geometry[]>>;
+```
+
+**返回**
+
+- [`APIResponse<Geometry[]>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result`的几何图形类型信息见 [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry)
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取套索几何图形列表的示例。
+ */
+export async function exampleGetLassoGeometries() {
+  const res = await PluginCommAPI.getLassoGeometries();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLassoGeometries 调用失败');
+  }
+  return res.result;
+}
+```

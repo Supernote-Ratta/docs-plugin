@@ -1,0 +1,43 @@
+---
+title: "createElement"
+description: "创建一个新的元素对象（Element）。"
+---
+[`Element`](/zh/api-reference/supernote-plugin/types/trail)里有一些字段数据量很大（例如笔画采样点、压力点、角度点、轮廓点等）。
+为了避免 RN 侧一次性承载大数据导致内存问题，SDK 采用了“访问器”设计，所以需要通过createElement创建。
+详细原因见[`Element`](/zh/api-reference/supernote-plugin/types/trail)。
+
+```ts
+static createElement(
+  type: number
+): Promise<APIResponse<Element>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `type` | `number` | 数据类型，参考 [`ElementType`](/zh/api-reference/supernote-plugin/types/trail#elementtype) |
+
+**返回**
+
+- [`APIResponse<Element>`](/zh/api-reference/supernote-plugin/types/api-response)：
+见 [`APIResponse`](/zh/api-reference/supernote-plugin/types/api-response) 与 [`Element`](/zh/api-reference/supernote-plugin/types/trail)
+- 成功时会在返回的 `Element` 上补齐访问器字段（例如 `angles`、`contoursSrc`，以及笔划类型下的 `stroke.*` 访问器）
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 创建一个 Element 的示例。
+ */
+export async function exampleCreateElement() {
+
+  const res = await PluginCommAPI.createElement(0);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'createElement 调用失败');
+  }
+  return res.result;
+}
+```

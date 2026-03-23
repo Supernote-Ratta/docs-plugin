@@ -1,0 +1,38 @@
+---
+title: "searchFiveStars"
+description: "Search a file for five-star elements and return the page indices."
+---
+
+```ts wrap
+static searchFiveStars(filePath: string): Promise<APIResponse<number[]>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `filePath` | `string` | NOTE/DOC file path |
+
+**Returns**
+
+- [`APIResponse<number[]>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the list of page indices that contain five-star elements
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: search a file for five-star pages.
+ */
+export async function exampleSearchFiveStars() {
+ const filePath = '/storage/emulated/0/Note/demo.note';
+ const res = await PluginFileAPI.searchFiveStars(filePath);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'searchFiveStars call failed');
+ }
+ return res.result;
+}
+```
+

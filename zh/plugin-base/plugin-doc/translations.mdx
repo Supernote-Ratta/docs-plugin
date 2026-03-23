@@ -1,0 +1,95 @@
+---
+title: '翻译'
+description: '在 DOC 应用中实现划词翻译与整页翻译。'
+---
+
+在 DOC（文档）应用里做“翻译”类插件，通常有两种交互形态：
+
+- **划词翻译**：用户在文档中划选一段文字，插件读取选中文本并翻译
+- **整页翻译**：插件读取指定页的完整文本内容，进行整页翻译或摘要处理
+
+本章围绕 `PluginDocAPI` 提供的两个接口，介绍如何把这两种能力串成可用的插件流程。
+
+## 划词翻译（选中文本）
+
+调用 [`PluginDocAPI.getSelectedText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-selected-text) 可获取“当前划词选中的文本”。
+
+```ts wrap
+import { PluginDocAPI } from 'sn-plugin-lib';
+
+/**
+ * 将文本翻译为目标语言。
+ * 这里仅给出函数签名与调用方式，请替换为你自己的翻译实现（本地/自建服务/第三方服务等）。
+ */
+async function translateText(text: string, targetLang: string): Promise<string> {
+  return `[${targetLang}] ${text}`;
+}
+
+/**
+ * 划词翻译：读取当前选中文本并翻译。
+ */
+export async function translateSelection(targetLang: string) {
+  const res = await PluginDocAPI.getSelectedText();
+  if (!res || !res.success) {
+    throw new Error(res?.error?.message ?? '获取选中文本失败');
+  }
+
+  const selectedText = (res.result ?? '').trim();
+  if (!selectedText) {
+    throw new Error('未选中文字');
+  }
+
+  const translated = await translateText(selectedText, targetLang);
+  return { source: selectedText, translated };
+}
+```
+
+<Warning>
+必须先在文档中“划词选中文本”后再调用，否则会返回错误信息。
+</Warning>
+
+<Tip>
+划词翻译更适合做“轻量弹窗”或“工具栏按钮”：触发后展示原文/译文，并提供复制、替换、发起搜索等后续动作。
+</Tip>
+
+## 整页翻译（指定页文本）
+
+调用 [`PluginDocAPI.getCurrentDocText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text) 可获取“当前打开文档的指定页文本内容”。你可以在此基础上做整页翻译、要点提取、术语高亮等处理。
+
+```ts wrap
+import { PluginDocAPI } from 'sn-plugin-lib';
+
+/**
+ * 整页翻译：读取指定页文本并翻译。
+ */
+export async function translatePage(page: number, targetLang: string) {
+  const res = await PluginDocAPI.getCurrentDocText(page);
+  if (!res || !res.success) {
+    throw new Error(res?.error?.message ?? '获取页面文本失败');
+  }
+
+  const pageText = (res.result ?? '').trim();
+  if (!pageText) {
+    return { page, source: '', translated: '' };
+  }
+
+  const translated = await translateText(pageText, targetLang);
+  return { page, source: pageText, translated };
+}
+```
+
+<Tip>
+整页文本可能很长，建议在翻译前做分段（例如按换行或句号拆分），并控制并发与重试策略，避免一次性请求过大导致失败。
+</Tip>
+
+## 错误处理与体验建议
+
+- **权限/时机**：划词翻译必须先选中文本；整页翻译必须文档处于打开状态且页码合法
+- **空结果**：选中内容为空或页面文本为空时，优先给出友好提示而不是静默失败
+- **交互节奏**：划词翻译适合即时反馈；整页翻译建议展示加载状态并支持取消/重试
+
+## 相关接口
+
+- [`getSelectedText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-selected-text)
+- [`getCurrentDocText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text)
+- [`getCurrentTotalPages`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages)

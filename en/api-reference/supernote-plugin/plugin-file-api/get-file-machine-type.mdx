@@ -1,0 +1,38 @@
+---
+title: "getFileMachineType"
+description: "Get the device type that created this note/annotation file."
+---
+
+```ts wrap
+static getFileMachineType(notePath: string): Promise<APIResponse<number>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `notePath` | `string` | Note/annotation file path |
+
+**Returns**
+
+- [`APIResponse<number>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the device type: `0=A5`, `1=A6`, `2=A6X`, `3=A5X`, `4=Nomad`, `5=Manta`
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get the device type that created this note/annotation file.
+ */
+export async function exampleGetFileMachineType() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+
+  const res = await PluginFileAPI.getFileMachineType(notePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getFileMachineType call failed');
+  }
+  return res.result;
+}
+```

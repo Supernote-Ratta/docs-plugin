@@ -1,0 +1,61 @@
+---
+title: "replaceElements"
+description: "替换指定页面元素数据。"
+---
+
+```ts wrap
+static replaceElements(notePath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记/文档文件路径 |
+| `page` | `number` | 页面索引（从 0 开始） |
+| `elements` | [`Element[]`](/zh/api-reference/supernote-plugin/types/trail) | 元素数据数组 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示替换成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI, ElementType, type Element } from 'sn-plugin-lib';
+
+/**
+ * 读取页面元素并回写（替换）的示例。
+ */
+export async function exampleReplaceElements() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+
+  const listRes = await PluginFileAPI.getElements(page, notePath);
+  if (!listRes.success) {
+    throw new Error(listRes.error?.message ?? 'getElements 调用失败');
+  }
+
+  const elements = (listRes.result ?? []) as Element[];
+
+  const createRes = await PluginCommAPI.createElement(ElementType.TYPE_TEXT);
+  if (!createRes.success) {
+    throw new Error(createRes.error?.message ?? 'createElement 调用失败');
+  }
+  const textEl = createRes.result as Element;
+  if (textEl.textBox) {
+    textEl.textBox.textContentFull = '替换后的页面内容';
+    textEl.textBox.fontSize = 16;
+    textEl.textBox.textBold = 1;
+    textEl.textBox.textAlign = 1;
+    textEl.textBox.textRect = { left: 100, top: 120, right: 600, bottom: 220 };
+  }
+
+  const newElements = [textEl];
+  const res = await PluginFileAPI.replaceElements(notePath, page, newElements);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'replaceElements 调用失败');
+  }
+  return res.result;
+}
+```

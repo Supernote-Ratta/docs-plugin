@@ -1,0 +1,13 @@
+---
+title: "APIResponse"
+description: "统一的接口返回结果。"
+---
+
+PluginCommAPI、PluginNoteAPI、PluginDocAPI、PluginFileAPI 这些文件中的接口调用之后都会返回 `APIResponse<T>`。
+详细数据结构如下：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `success` | `boolean` | 接口调用是否成功 |
+| `result` | `T \| null` | 接口调用成功时才会有该值，失败时 `result` 为 `null`。<br />`T` 为 `boolean`/`number`/`string` 时，`result` 即对应基础类型。<br />`T` 为自定义类型时，`result` 即对应自定义类型实例。 |
+| `error` | `{ code: number; message: string } \| null` | 接口调用失败时才会有 `error` 值，成功时为 `null`。<br />`code` 为错误码，`message` 为错误描述。 |

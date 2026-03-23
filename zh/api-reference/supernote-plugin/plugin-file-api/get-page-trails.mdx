@@ -1,0 +1,41 @@
+---
+title: "getElements"
+description: "获取页面元素数据，包含普通笔划、链接、标题、文本框、五角星。"
+---
+
+```ts wrap
+static getElements(page: number, notePath: string): Promise<APIResponse<Element[]>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `page` | `number` | 页面索引（从 0 开始） |
+| `notePath` | `string` | 笔记/文档文件路径 |
+
+**返回**
+
+- [`APIResponse<Element[]>`](/zh/api-reference/supernote-plugin/types/api-response)：
+元素类型见 [`Element`](/zh/api-reference/supernote-plugin/types/trail)
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取某页元素列表的示例。
+ */
+export async function exampleGetElements() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+
+  const res = await PluginFileAPI.getElements(page, notePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getElements 调用失败');
+  }
+  return res.result;
+}
+```
+

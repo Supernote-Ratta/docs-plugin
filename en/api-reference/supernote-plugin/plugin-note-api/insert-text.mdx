@@ -1,0 +1,72 @@
+---
+title: "insertText"
+description: "Insert TextBox."
+---
+
+<Note>
+TextBox can only be inserted into the main layer. This API supports undo/redo in NOTE.
+</Note>
+
+```ts
+static insertText(textBox: {
+ fontSize?: number;
+ fontPath?: string;
+ textContentFull: string;
+ textRect: Rect;
+ textAlign?: number;
+ textBold?: number;
+ textItalics?: number;
+ textFrameWidthType?: number;
+ textFrameStyle?: number;
+ textEditable?: number;
+}): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `textBox.textContentFull` | `string` | Text content (required, non-empty) |
+| `textBox.textRect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | TextBox rectangle (required; must be non-zero area) |
+| `textBox.fontSize` | `number` | Font size (must be positive) |
+| `textBox.fontPath` | `string` | Font path (optional) |
+| `textBox.textAlign` | `number` | Alignment: `0` left, `1` center, `2` right |
+| `textBox.textBold` | `number` | Bold: `0` normal, `1` bold |
+| `textBox.textItalics` | `number` | Italic: `0` normal, `1` italic |
+| `textBox.textFrameWidthType` | `number` | Border width type: `0` fixed width, `1` auto width |
+| `textBox.textFrameStyle` | `number` | Border style: `0` none, `3` stroke |
+| `textBox.textEditable` | `number` | Editable: `0` editable, `1` non-editable |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the insertion succeeded
+
+## Example
+
+```ts wrap
+import { PluginNoteAPI, type Rect } from 'sn-plugin-lib';
+
+/**
+ * Insert TextBox example.
+ */
+export async function exampleInsertText() {
+ const textRect: Rect = { left: 100, top: 100, right: 320, bottom: 180 };
+ const res = await PluginNoteAPI.insertText({
+ textContentFull: 'Hello from plugin',
+ textRect,
+ fontSize: 32,
+ textAlign: 0,
+ textBold: 0,
+ textItalics: 0,
+ textFrameWidthType: 0,
+ textFrameStyle: 0,
+ textEditable: 0,
+ });
+
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'insertText call failed');
+ }
+ return res.result;
+}
+```

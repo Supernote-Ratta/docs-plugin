@@ -1,0 +1,36 @@
+---
+title: "getSelectedText"
+description: "Get selected text in the current DOC."
+---
+
+
+<Note>
+You must select text in DOC before calling this API; otherwise the call fails.
+</Note>
+
+```ts
+static getSelectedText(): Promise<APIResponse<string>>;
+```
+
+**Returns**
+
+- [`APIResponse<string>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the selected text content
+
+## Example
+
+```ts wrap
+import { PluginDocAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get selected text.
+ */
+export async function exampleGetSelectedText() {
+ const res = await PluginDocAPI.getSelectedText();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getSelectedText call failed');
+ }
+ return res.result;
+}
+```
+

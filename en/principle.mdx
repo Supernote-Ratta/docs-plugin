@@ -1,0 +1,61 @@
+﻿---
+title: "Plugin Principles"
+description: "Understand the relationship between Plugin, PluginHost, and Plugin-enabled Apps, and how the system runs."
+---
+
+## Runtime Model
+
+The plugin system has three core parts:
+
+- **Plugin**: A developer-built plugin that extends NOTE/DOC capabilities. It does not run inside NOTE/DOC directly; PluginHost loads and schedules it.
+- **PluginHost**: Manages plugin install/uninstall and lifecycle, and provides the React Native runtime. Plugin logic runs in PluginHost and interacts with NOTE/DOC through standard interfaces.
+- **Plugin-enabled App**: Host apps that support plugins. Currently NOTE and DOC. They read plugin metadata from PluginHost, show plugin buttons in the toolbar and lasso toolbar, and dispatch plugin events.
+
+The following sections describe the install flow and the event chain.
+
+## Installation Flow
+
+The overall installation flow:
+
+![Overall plugin installation flow](/images/plugin-principle/principle-01.png)
+
+Steps:
+
+1. Open Settings -> Apps -> Plugins
+2. Select a plugin package and tap "Install"
+3. NOTE/DOC sends the package to PluginHost
+4. PluginHost parses the config inside the package, installs it, and copies code/assets into the plugin runtime directory
+
+After installation, PluginHost initializes the plugin and registers buttons to NOTE/DOC:
+
+![Plugin initialization and button registration](/images/plugin-principle/principle-02.png)
+
+Initialization:
+
+1. PluginHost initializes the React Native runtime
+2. PluginHost activates installed plugins and runs their JS/TS entry logic (plugin initialization + button registration)
+3. PluginHost syncs registered button metadata to NOTE/DOC, and NOTE/DOC renders the buttons in the corresponding locations
+
+If PluginHost exits and restarts, it will re-run initialization and the subsequent registration steps.
+
+## Event Handling Flow
+
+After a plugin is installed and running, NOTE/DOC will show its plugin buttons. Tapping a button sends an event to the corresponding plugin:
+
+![Plugin event handling flow](/images/plugin-principle/principle-03.png)
+
+NOTE/DOC sends event messages to PluginHost via Android [Android Interface Definition Language (AIDL)](https://developer.android.com/guide/components/aidl).
+After validating the message, PluginHost forwards the event to the target plugin listener. The plugin handles the business logic in the listener callback and calls SDK APIs to operate on NOTE/DOC.
+
+The call chain looks like:
+
+![API call chain](/images/plugin-principle/principle-04.png)
+
+Plugin business logic is implemented by the plugin itself. A plugin can call Java capabilities through React Native TurboModules, and then call underlying C/C++ from Java; calling C/C++ directly from JS/TS is not supported.
+
+In addition, plugins can use the SDK to call NOTE/DOC standard interfaces to operate on content and interactions.
+
+## Related Docs
+
+- Local development setup: [Environment Setup](/en/environment)
+- Plugin development and packaging: [Your First Plugin](/en/first-plugin)

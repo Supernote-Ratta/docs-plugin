@@ -1,0 +1,26 @@
+﻿---
+title: "getCurrentPageNum"
+description: "获取当前打开文件的当前页码。"
+---
+
+```ts
+static getCurrentPageNum(): Promise<APIResponse<number>>;
+```
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取当前页码的示例。
+ */
+export async function exampleGetCurrentPageNum() {
+  const res = await PluginCommAPI.getCurrentPageNum();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getCurrentPageNum 调用失败');
+  }
+  return res.result;
+}
+```
+

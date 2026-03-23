@@ -1,0 +1,105 @@
+---
+title: '几何图形'
+description: '在 NOTE 与 DOC 应用中使用几何图形元素的方法与示例。'
+---
+
+几何图形既是“绘图”也是“数据”。在 NOTE（笔记）与 DOC（文档）应用里，几何元素可用于标注、构图或搭配笔记内容呈现结构化信息。下面从插入、读取套索、修改三个维度讲解常用能力。
+
+## 插入几何图形
+
+调用 [`insertGeometry`](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-geometry) 可插入一个几何元素：
+
+- 在 NOTE 应用中：插入到“当前打开笔记的当前页当前图层”
+- 在 DOC 应用中：插入到“当前打开文档的当前页”
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 插入一个圆形几何图形到当前页面。
+ */
+async function insertCircle() {
+  const geometry = {
+    penColor: 0x9d,     // 绘制几何图形的笔颜色
+    penType: 10,        // 绘制几何图形的笔类型
+    penWidth: 200,      // 几何图形的线条粗细（最小值 100）
+    type: 'GEO_circle', // 几何图形类型
+    ellipseCenterPoint: { x: 300, y: 400 }, // 椭圆的中心点位置，使用屏幕坐标系
+    ellipseMajorAxisRadius: 120,            // 椭圆长轴半径
+    ellipseMinorAxisRadius: 120,            // 椭圆短轴半径
+    ellipseAngle: 0,                        // 椭圆的旋转弧度
+  };
+  const res = await PluginCommAPI.insertGeometry(geometry);
+  console.log('insertGeometry:', res);
+}
+```
+
+<Tip>
+几何类型字段 `type` 的取值与结构见 [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry)。点坐标为屏幕像素坐标系。
+</Tip>
+
+## 获取套索几何图形
+
+当你用“套索工具”框选了页面上的几何元素，可以调用 [`getLassoGeometries`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-geometries)
+读取被选中的几何图形列表。
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 读取当前套索区域中的几何图形。
+ */
+async function readLassoGeos() {
+  const res = await PluginCommAPI.getLassoGeometries();
+  if (!res?.success) {
+    console.error('getLassoGeometries error:', res?.error);
+    return;
+  }
+  const list = res.result ?? [];
+  console.log('lasso geometries:', list);
+}
+```
+返回的result是 [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry)列表。
+<Warning>
+必须先进行“套索”选择后再调用。若套索中没有几何元素，返回的数组为空。
+</Warning>
+
+## 修改套索几何图形
+
+你可以对已套索选中的几何图形进行修改，例如调整圆的半径或变更直线点集。
+调用 [`modifyLassoGeometry`](/zh/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry) 完成修改：
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 修改当前套索选中的单个圆形几何的半径。
+ */
+async function updateLassoCircle() {
+  const res = await PluginCommAPI.getLassoGeometries();
+  if (!res?.success || !res.result || res.result.length !== 1) {
+    console.error('必须套索单个几何图形才能修改');
+    return;
+  }
+  const geo = res.result[0];
+
+  if (geo.type === 'GEO_circle' || geo.type === 'GEO_ellipse') {
+    geo.ellipseMajorAxisRadius = (geo.ellipseMajorAxisRadius ?? 100) + 20;
+    geo.ellipseMinorAxisRadius = (geo.ellipseMinorAxisRadius ?? 100) + 20;
+  }
+
+  const mod = await PluginCommAPI.modifyLassoGeometry(geo);
+  console.log('modifyLassoGeometry:', mod);
+}
+```
+
+<Warning>
+修改操作要求当前套索中仅包含“一个几何元素”。未套索或套索多个几何时调用会失败。
+</Warning>
+
+## 相关类型
+
+- 几何数据结构：[`Geometry`](/zh/api-reference/supernote-plugin/types/geometry)
+- 插入几何接口：[`insertGeometry`](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-geometry)
+- 获取套索几何接口：[`getLassoGeometries`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-geometries)
+- 修改套索几何接口：[`modifyLassoGeometry`](/zh/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry)

@@ -1,0 +1,18 @@
+---
+title: "ButtonListener"
+description: "Button event listener type."
+---
+
+`ButtonListener` is used to listen for plugin button press events.
+
+```ts
+interface ButtonListener {
+  onButtonPress(event: { id: number; name: string; icon: string }): void;
+}
+```
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `event.id` | `number` | Button id |
+| `event.name` | `string` | Button name |
+| `event.icon` | `string` | Button icon |

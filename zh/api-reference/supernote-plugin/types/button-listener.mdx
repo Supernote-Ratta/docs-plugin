@@ -1,0 +1,18 @@
+---
+title: "ButtonListener"
+description: "按钮事件监听器类型。"
+---
+
+`ButtonListener` 用于监听插件按钮的点击/按下事件。
+
+```ts
+interface ButtonListener {
+  onButtonPress(event: { id: number; name: string; icon: string }): void;
+}
+```
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `event.id` | `number` | 按钮 id |
+| `event.name` | `string` | 按钮名称 |
+| `event.icon` | `string` | 按钮图标 |

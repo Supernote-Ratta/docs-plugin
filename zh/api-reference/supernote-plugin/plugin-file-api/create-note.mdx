@@ -1,0 +1,62 @@
+---
+title: "createNote"
+description: "创建笔记文件。"
+---
+
+```ts
+static createNote(params: {
+  notePath: string;
+  template: string;
+  mode: number;
+  isPortrait: boolean;
+}): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `params.notePath` | `string` | 笔记路径 |
+| `params.template` | `string` | 模版来源：<br/>- 系统模版：通过 [getNoteSystemTemplates](/zh/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates) 获取，传递其中的模版名称（[Template](/zh/api-reference/supernote-plugin/types/template) 的 `name`）即可创建；<br/>- 自定义模版：传递自定义模版的图片路径，根据图片文件创建笔记。|
+| `params.mode` | `number` | 创建模式：`0` 普通笔记文件，`1` 识别笔记文件 |
+| `params.isPortrait` | `boolean` | 是否是竖屏笔记 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示创建笔记文件成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 创建笔记的示例（使用系统模版）。
+ */
+export async function exampleCreateNote() {
+  const notePath = '/storage/emulated/0/Note/new.note';
+
+  // 获取系统模版列表并选择一个模版名称（Template.name）
+  const tplRes = await PluginCommAPI.getNoteSystemTemplates();
+  if (!tplRes.success) {
+    throw new Error(tplRes.error?.message ?? 'getNoteSystemTemplates 调用失败');
+  }
+  const templates = (tplRes.result ?? []) as any[];
+  const templateName = templates[0]?.name;
+  if (!templateName) {
+    throw new Error('未获取到系统模版名称');
+  }
+
+  const res = await PluginFileAPI.createNote({
+    notePath,
+    template: templateName,
+    mode: 0,
+    isPortrait: true,
+  });
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'createNote 调用失败');
+  }
+  return res.result;
+}
+```

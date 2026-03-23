@@ -1,0 +1,74 @@
+---
+title: "Element"
+description: "笔记/文档中“可见元素”的统一数据结构。"
+---
+
+`Element` 用来描述笔记文件（以及文档标注场景）中所有“可见元素”的共同信息：例如普通笔画、标题、链接、文本框、几何图形、图片等。
+同一个 `Element` 会通过 `type` 来区分具体类别，并在对应类别下提供更细分的数据结构（例如 `stroke`、`title`、`link`、`textBox`、`geometry`、`picture`）。
+
+<Tip>
+如果你只关心“元素是什么类型”，读取 `type` 即可；如果你要操作具体内容，再根据 `type` 去读取 `stroke/title/link/textBox/geometry` 等细分字段。
+</Tip>
+
+## 类型常量
+
+元素类型常量（`ElementType`）用于标识 `Element.type` 的取值范围。
+
+## ElementType
+
+下表中“常量”列省略了 `ElementType.` 前缀；在代码里使用时请补全为 `ElementType.XXX`。
+
+| 类型 | 常量 | 值 | 说明 | 细分字段 |
+| --- | --- | ---| --- | --- |
+| 笔画 | `TYPE_STROKE` | `0` | 手写笔划：既能插入到主图层，也能插入到自定义图层，后续操作也都支持这两种层 | `stroke` |
+| 标题 | `TYPE_TITLE` | `100` | 标题元素：只能在主图层插入和操作，其他层不允许 | `title` |
+| 图片 | `TYPE_PICTURE` | `200` | 图片元素：既能插入到主图层，也能插入到自定义图层，后续操作也都支持这两种层 | `picture` |
+| 文本框 | `TYPE_TEXT` | `500` | 普通文本框：既能插入到主图层，也能插入到自定义图层，后续操作也都支持这两种层 | `textBox` |
+| 摘录引用文本框 | `TYPE_TEXT_DIGEST_QUOTE` | `501` | 引用摘录：只能在主图层插入和操作，其他层不允许 | `textBox` |
+| 摘录创建文本框 | `TYPE_TEXT_DIGEST_CREATE` | `502` | 创建类摘录文本框：只能在主图层插入和操作，其他层不允许 | `textBox` |
+| 链接 | `TYPE_LINK` | `600` | 文本链接/笔画链接：只能在主图层插入和操作，其他层不允许 | `link` |
+| 几何图形 | `TYPE_GEO` | `700` | 几何图形：既能插入到主图层，也能插入到自定义图层，后续操作也都支持这两种层 | `geometry` |
+| 五角星 | `TYPE_FIVE_STAR` | `800` | 五角星：只能在主图层插入和操作，其他层不允许| `fiveStar` |
+
+## 字段
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `uuid` | `string` | 通用唯一识别码（元素唯一 ID） |
+| `type` | `number` | 元素类型，见 [`ElementType`](/zh/api-reference/supernote-plugin/types/trail#elementtype) |
+| `pageNum` | `number` | 页码 |
+| `layerNum` | `number` | 图层号（笔记中常见范围为 `0..3`） |
+| `thickness` | `number` | 笔划粗细（部分元素可能无意义） |
+| `recognizeResult` | [`RecogResultData`](/zh/api-reference/supernote-plugin/types/recog-result-data) | 识别结果数据 |
+| `maxX` | `number` | EMR坐标系中X轴的最大值，EMR坐标系详见[`坐标系`](/zh/plugin-base/coordinate-system)这章 |
+| `maxY` | `number` | EMR坐标系中X轴的最大值，EMR坐标系详见[`坐标系`](/zh/plugin-base/coordinate-system)这章 |
+| `userData` | `string` | 用于存储用户数据 |
+| `angles` | [`ElementDataAccessor<Point>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 角度点，数据量太大，RN端持有的是索引，原始数据存在Android端 |
+| `status` | `number` | 元素状态值 |
+| `numInPage` | `number` | 元素在页内的序号（从 `0` 开始） |
+| `contoursSrc` | [`ElementDataAccessor<Point[]>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 轮廓点（像素坐标），数据量太大，RN端持有的是索引，原始数据存在Android端 |
+| `stroke` | [`Stroke \| null`](/zh/api-reference/supernote-plugin/types/stroke) | 笔画数据（仅 `type === 0` 时存在） |
+| `title` | [`Title \| null`](/zh/api-reference/supernote-plugin/types/title) | 标题数据（仅 `type === 100` 时存在） |
+| `textBox` | [`TextBox \| null`](/zh/api-reference/supernote-plugin/types/text-box) | 文本框数据（仅文本框相关类型时存在） |
+| `geometry` | [`Geometry \| null`](/zh/api-reference/supernote-plugin/types/geometry) | 几何图形数据（仅 `type === 700` 时存在） |
+| `link` | [`Link \| null`](/zh/api-reference/supernote-plugin/types/link) | 链接数据（仅 `type === 600` 时存在） |
+| `fiveStar` | `FiveStar \| null` | 五角星数据（仅 `type === 800` 时存在；见下方“FiveStar”） |
+| `picture` | [`Picture \| null`](/zh/api-reference/supernote-plugin/types/picture) | 图片数据（仅 `type === 200` 时存在） |
+
+<Note>
+`angles` 与 `contoursSrc` 是访问器对象，不是完整数组。需要通过 `size()/get()/getRange()` 等方法异步取数，避免一次性把大规模点集传到 RN 端导致内存问题。
+</Note>
+
+## FiveStar（五角星）
+
+当 `type === 800` 时，`fiveStar` 字段提供五角星点集。
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `points` | [`Point[]`](/zh/api-reference/supernote-plugin/types/point) | 五角星点坐标（EMR 坐标） |
+
+## 方法
+
+| 方法 | 返回 | 说明 |
+| --- | --- | --- |
+| `recycle()` | `Promise<void>` | 回收该元素对应的原生缓存数据，并清理访问器缓存 |

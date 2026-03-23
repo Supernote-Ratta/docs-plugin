@@ -1,0 +1,37 @@
+---
+title: "getLassoElements"
+description: "Get lasso data (element list). On success, accessor fields are filled."
+---
+
+<Note>
+You must create a lasso selection before calling this API; otherwise the call fails.
+</Note>
+
+```ts
+static getLassoElements(): Promise<APIResponse<Element[]>>;
+```
+
+**Returns**
+
+- [`APIResponse<Element[]>`](/en/api-reference/supernote-plugin/types/api-response):
+See [`Element`](/en/api-reference/supernote-plugin/types/trail) for element types and fields.
+
+## Example
+
+```ts wrap
+import { PluginCommAPI, ElementType, type Element } from 'sn-plugin-lib';
+
+/**
+ * Example: get lasso elements and filter by type.
+ */
+export async function exampleGetLassoElements() {
+ const res = await PluginCommAPI.getLassoElements();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getLassoElements call failed');
+ }
+
+ const elements = (res.result ?? []) as Element[];
+ const strokes = elements.filter((e) => e.type === ElementType.TYPE_STROKE);
+ return { elements, strokes };
+}
+```

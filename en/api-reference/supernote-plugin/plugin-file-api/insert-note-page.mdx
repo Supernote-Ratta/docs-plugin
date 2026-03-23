@@ -1,0 +1,43 @@
+---
+title: "insertNotePage"
+description: "Insert a new page into a note file."
+---
+
+```ts wrap
+static insertNotePage(params: { notePath: string; page: number; template: string }): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `params.notePath` | `string` | Note file path |
+| `params.page` | `number` | Page number (starts from `0`) |
+| `params.template` | `string` | Template name for the new page |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the insertion succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Insert new page example.
+ */
+export async function exampleInsertNotePage() {
+ const res = await PluginFileAPI.insertNotePage({
+ notePath: '/storage/emulated/0/Note/demo.note',
+ page: 2,
+ template: 'style_blank',
+ });
+
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'insertNotePage call failed');
+ }
+ return res.result;
+}
+```

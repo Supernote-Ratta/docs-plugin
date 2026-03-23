@@ -1,0 +1,36 @@
+---
+title: "getLassoTitles"
+description: "获取套索的标题数据。"
+---
+
+<Note>
+必须套索之后调用该接口，否则会调用失败。
+
+建议在点击套索工具栏按钮后进入的插件界面调用该接口。
+</Note>
+
+```ts
+static getLassoTitles(): Promise<APIResponse<Title[]>>;
+```
+
+**返回**
+
+- [`APIResponse<Title[]>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为[`Title`](/zh/api-reference/supernote-plugin/types/title)对象数组。
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取当前套索标题数据的示例。
+ */
+export async function exampleGetLassoTitles() {
+  const res = await PluginNoteAPI.getLassoTitles();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLassoTitles 调用失败');
+  }
+  return res.result;
+}
+```

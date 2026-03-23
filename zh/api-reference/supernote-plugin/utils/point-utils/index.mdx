@@ -1,0 +1,54 @@
+---
+title: "PointUtils"
+description: "EMR（电磁屏）与屏幕像素坐标系的转换工具。"
+---
+
+`PointUtils` 用于在两套坐标系之间做换算：
+
+- **像素坐标系**：屏幕渲染/布局使用的坐标（单位 px）
+- **EMR 坐标系**：数位板/手写硬件使用的坐标（单位为硬件刻度）
+
+两种坐标系的背景与区别可参考：[坐标系](/zh/plugin-base/coordinate-system)。
+
+```ts
+import { PointUtils } from 'sn-plugin-lib';
+```
+
+## 常量
+
+### 页面方向（orientation）
+
+| 常量 | 值 | 说明 |
+| --- | ---:| --- |
+| `PointUtils.ROTATION_0` | `1000` | 0° 竖屏 |
+| `PointUtils.ROTATION_0_LR` | `2000` | 0° 竖屏左右分页 |
+| `PointUtils.ROTATION_90` | `1090` | 90° 横屏 |
+| `PointUtils.ROTATION_90_UD` | `2090` | 90° 横屏上下分页 |
+| `PointUtils.ROTATION_180` | `1180` | 180° 竖屏 |
+| `PointUtils.ROTATION_180_LR` | `2180` | 180° 竖屏左右分页 |
+| `PointUtils.ROTATION_270` | `1270` | 270° 横屏 |
+| `PointUtils.ROTATION_270_UD` | `2270` | 270° 横屏上下分页 |
+
+### 机器类型（machineType）
+
+| 常量 | 值 | 说明 |
+| --- | ---:| --- |
+| `PointUtils.MACHINE_TYPE_A5` | `0` | A5 |
+| `PointUtils.MACHINE_TYPE_A6` | `1` | A6 |
+| `PointUtils.MACHINE_TYPE_A6X` | `2` | A6X |
+| `PointUtils.MACHINE_TYPE_A5X` | `3` | A5X |
+| `PointUtils.MACHINE_TYPE_NOMAD` | `4` | Nomad |
+| `PointUtils.MACHINE_TYPE_MANTA` | `5` | Manta |
+
+### 常见页面像素尺寸
+
+| 常量 | 值 |
+| --- | --- |
+| `PointUtils.NORMAL_PAGE_SIZE` | `{ width: 1404, height: 1872 }` |
+| `PointUtils.A5X2_PAGE_SIZE` | `{ width: 1920, height: 2560 }` |
+
+## 方法
+
+- [`androidPoint2Emr`](/zh/api-reference/supernote-plugin/utils/point-utils/android-point2-emr)
+- [`emrPoint2Android`](/zh/api-reference/supernote-plugin/utils/point-utils/emr-point2-android)
+- 获取页面像素尺寸请使用 [`getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size)

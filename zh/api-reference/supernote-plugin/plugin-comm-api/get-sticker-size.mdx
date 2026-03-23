@@ -1,0 +1,36 @@
+---
+title: "getStickerSize"
+description: "获取贴纸尺寸。"
+---
+
+```ts
+static getStickerSize(path: string): Promise<APIResponse<Size>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `path` | `string` | 贴纸路径 |
+
+**返回**
+
+- [`APIResponse<Size>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为 [`Size`](/zh/api-reference/supernote-plugin/types/size)
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取贴纸尺寸的示例。
+ */
+export async function exampleGetStickerSize() {
+  const stickerPath = '/storage/emulated/0/Note/stickers/demo.png';
+  const res = await PluginCommAPI.getStickerSize(stickerPath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getStickerSize 调用失败');
+  }
+  return res.result;
+}
+```

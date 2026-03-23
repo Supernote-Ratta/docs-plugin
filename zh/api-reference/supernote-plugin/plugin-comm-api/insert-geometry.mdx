@@ -1,0 +1,58 @@
+---
+title: "insertGeometry"
+description: "插入几何图形。"
+---
+
+<Note>
+调用该接口会将几何图形插入到当前打开文件当前页当前图层。
+</Note>
+
+```ts
+static insertGeometry(geometry: Geometry): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `geometry` | [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry) | 几何图形参数 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示插入几何图形成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI, type Geometry } from 'sn-plugin-lib';
+
+/**
+ * 插入一个简单几何图形的示例。
+ */
+export async function exampleInsertGeometry() {
+  const geometry: Geometry = {
+    penColor: 0x9d,
+    penType: 10,
+    penWidth: 200, // 最小值 100
+    type: 'GEO_polygon',
+    points: [
+      { x: 100, y: 100 },
+      { x: 200, y: 100 },
+      { x: 200, y: 200 },
+      { x: 100, y: 200 },
+      { x: 100, y: 100 },
+    ],
+    ellipseCenterPoint: null,
+    ellipseMajorAxisRadius: 0,
+    ellipseMinorAxisRadius: 0,
+    ellipseAngle: 0,
+  };
+
+  const res = await PluginCommAPI.insertGeometry(geometry);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertGeometry 调用失败');
+  }
+  return res.result;
+}
+```

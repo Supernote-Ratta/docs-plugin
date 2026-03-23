@@ -1,0 +1,43 @@
+---
+title: "insertKeyWord"
+description: "插入关键字。"
+---
+
+```ts wrap
+static insertKeyWord(notePath: string, page: number, keyword: string):
+ Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记/文档文件路径 |
+| `page` | `number` | 页码（从 0 开始） |
+| `keyword` | `string` | 关键字内容 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示插入成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 插入关键字的示例。
+ */
+export async function exampleInsertKeyWord() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+  const keyword = 'TODO';
+
+  const res = await PluginFileAPI.insertKeyWord(notePath, page, keyword);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertKeyWord 调用失败');
+  }
+  return res.result;
+}
+```
+

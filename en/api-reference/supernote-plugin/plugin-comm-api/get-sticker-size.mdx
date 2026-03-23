@@ -1,0 +1,37 @@
+---
+title: "getStickerSize"
+description: "Get sticker size."
+---
+
+```ts
+static getStickerSize(path: string): Promise<APIResponse<Size>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `path` | `string` | Sticker path |
+
+**Returns**
+
+- [`APIResponse<Size>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is [`Size`](/en/api-reference/supernote-plugin/types/size)
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get sticker size.
+ */
+export async function exampleGetStickerSize() {
+ const stickerPath = '/storage/emulated/0/Note/stickers/demo.png';
+ const res = await PluginCommAPI.getStickerSize(stickerPath);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getStickerSize call failed');
+ }
+ return res.result;
+}
+```

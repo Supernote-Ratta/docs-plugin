@@ -1,0 +1,57 @@
+---
+title: "convertElement2Sticker"
+description: "Convert elements to a sticker."
+---
+
+```ts
+static convertElement2Sticker(
+ params: {
+ machineType: number;
+ elements: Object[];
+ stickerPath: string;
+ }
+): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+- `params` fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `machineType` | `number` | Device type: `0` A5, `1` A6, `2` A6X, `3` A5X, `4` Nomad, `5` Manta |
+| `elements` | [`Element[]`](/en/api-reference/supernote-plugin/types/trail) | Element data |
+| `stickerPath` | `string` | Output path (sticker save location) |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates conversion succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI, type Element } from 'sn-plugin-lib';
+
+/**
+* Example: convert lasso-selected elements to a sticker.
+ */
+export async function exampleConvertElement2Sticker() {
+ const lassoRes = await PluginCommAPI.getLassoElements();
+ if (!lassoRes.success) {
+ throw new Error(lassoRes.error?.message ?? 'getLassoElements call failed');
+ }
+
+ const params = {
+ machineType: 3,
+ elements: (lassoRes.result ?? []) as Element[],
+ stickerPath: '/storage/emulated/0/Note/stickers/out.png',
+ };
+
+ const res = await PluginCommAPI.convertElement2Sticker(params as any);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'convertElement2Sticker call failed');
+ }
+ return res.result;
+}
+```

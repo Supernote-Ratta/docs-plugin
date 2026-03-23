@@ -1,0 +1,21 @@
+﻿---
+title: "clearElementCache"
+description: "Clear the Android local cache for Elements. After clearing, previously obtained Element objects can no longer be used."
+---
+
+```ts
+static clearElementCache(): void;
+```
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: clear native Element caches.
+ */
+export async function exampleClearElementCache() {
+ PluginCommAPI.clearElementCache();
+}
+```

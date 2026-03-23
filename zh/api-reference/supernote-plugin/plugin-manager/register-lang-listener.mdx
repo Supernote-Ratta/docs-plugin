@@ -1,0 +1,71 @@
+﻿---
+title: "registerLangListener"
+description: "监听系统语言变化。"
+---
+
+```ts
+registerLangListener(langListener: PluginEventListener): PluginEventSubscription;
+```
+
+监听系统语言变化。当系统语言切换时，会触发回调并返回语言代码字符串。
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `langListener` | `PluginEventListener` | 语言变化监听器，实现 `onMsg(msg)`；`msg` 为语言代码字符串 |
+
+**返回**
+
+- `PluginEventSubscription`：订阅对象，调用 `remove()` 可注销监听
+
+## 语言代码
+
+| 语言 | 代码 |
+| --- | --- |
+| 英语 | `en` |
+| 简体中文 | `zh_CN` |
+| 繁体中文 | `zh_TW` |
+| 日文 | `ja` |
+
+## 类型定义
+
+### PluginEventListener
+
+```ts
+interface PluginEventListener {
+  onMsg(msg: string): void;
+}
+```
+
+**说明**
+
+- `onMsg(msg)`：系统语言变化时触发
+- `msg`：语言代码（见“语言代码”）
+
+### PluginEventSubscription
+
+```ts
+type PluginEventSubscription = {
+  remove(): void;
+};
+```
+
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 监听系统语言变化的示例。
+ */
+export async function exampleRegisterLangListener() {
+  const sub = PluginManager.registerLangListener({
+    onMsg(langCode) {
+      console.log('lang changed:', langCode);
+    },
+  });
+  return sub;
+}
+```

@@ -1,0 +1,36 @@
+---
+title: "ElementDataAccessor"
+description: "大体量点数据的访问器，以及访问的点数据类型。"
+---
+
+点数据通常由原生端缓存，RN 侧通过访问器按需取数。
+
+| 方法 | 返回 | 说明 |
+| --- | --- | --- |
+| `size()` | `Promise<number>` | 获取数据长度 |
+| `get(index)` | `Promise<T \| null>` | 获取某个下标的数据 |
+| `getRange(startIndex, count)` | `Promise<T[]>` | 批量获取一段数据 |
+| `add(index, value)` | `Promise<boolean>` | 在指定位置插入一条数据（成功后会清空缓存） |
+| `set(index, value)` | `Promise<boolean>` | 覆盖指定下标的数据（成功后会清空缓存） |
+| `setRange(index, endIndex, valueArray)` | `Promise<boolean>` | 批量覆盖一段数据（成功后会清空缓存） |
+| `clearCache()` | `void` | 清空 RN 侧缓存 |
+| `getCacheStats()` | `{ cachedCount: number; totalSize: number }` | 获取缓存统计信息 |
+| `preload(startIndex, count)` | `Promise<void>` | 预加载指定范围的数据到缓存 |
+| `isCached(index)` | `boolean` | 判断指定下标是否已在缓存中 |
+
+
+## ElementPointDataType
+
+`ElementDataAccessor` 访问的点数据类型（枚举）。
+
+| 枚举值 | 数值 | 说明 |
+| --- | ---:| --- |
+| `ElementPointDataType.ANGLE_POINT` | `0` | 角度点 |
+| `ElementPointDataType.CONTOUR_POINT` | `1` | 轮廓点 |
+| `ElementPointDataType.STROKE_SAMPLE_POINT` | `2` | 笔划采样点 |
+| `ElementPointDataType.STROKE_PRESSURE_POINT` | `3` | 笔划压力点 |
+| `ElementPointDataType.ERASE_LINE_DATA` | `4` | 线擦数据 |
+| `ElementPointDataType.WRITE_FLAG` | `5` | 写标志 |
+| `ElementPointDataType.MARK_PEN_DIRECTION` | `6` | 马克笔方向 |
+| `ElementPointDataType.RECOGNITION_DATA_POINT` | `7` | 识别数据点 |
+

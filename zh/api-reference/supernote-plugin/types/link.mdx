@@ -1,0 +1,28 @@
+---
+title: "Link"
+description: "链接元素的详细数据结构。"
+---
+
+当 [`Element`](/zh/api-reference/supernote-plugin/types/trail) 的 `type === 600` 时，`element.link` 会提供链接的详细信息。
+
+<Note>
+`Link.linkType` 表示“读取到的链接类型”。不同写入接口对 `linkType` 的支持范围可能不同；例如 `insertTextLink` 与 `modifyLassoLink` 的参数校验当前只允许 `0..4`。
+</Note>
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `category` | `number` | 链接分类：`0` 文字链接，`1` 笔划链接 |
+| `X` | `number` | 左上角 X（像素坐标） |
+| `Y` | `number` | 左上角 Y（像素坐标） |
+| `width` | `number` | 宽度（像素） |
+| `height` | `number` | 高度（像素） |
+| `page` | `number` | 所在页码 |
+| `style` | `number` | 样式：`0` 实下划线，`1` 实边框，`2` 虚边框 |
+| `linkType` | `number` | 类型：`0` 笔记页，`1` 笔记文件，`2` 文档，`3` 图片，`4` 网址，`6` 摘录 |
+| `destPath` | `string` | 目标路径（当 `linkType === 4` 时为 URL） |
+| `destPage` | `number` | 目标页码（主要在 `linkType === 0` 时有效） |
+| `fontSize` | `number` | 字体大小（文字链接） |
+| `fullText` | `string` | 全量文字（文字链接） |
+| `showText` | `string` | 展示文字（文字链接） |
+| `italic` | `number` | 是否斜体：`0` 否，`1` 是（文字链接） |
+| `controlTrailNums` | `number[]` | 笔划编号列表（笔划链接） |

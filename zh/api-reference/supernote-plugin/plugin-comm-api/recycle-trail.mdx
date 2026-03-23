@@ -1,0 +1,27 @@
+---
+title: "recycleElement"
+description: "回收 Element 对象并释放原生Android端的缓存。"
+---
+
+```ts
+static recycleElement(uuid: string): void;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `uuid` | `string` | Element 的唯一标志（见 [`Element.uuid`](/zh/api-reference/supernote-plugin/types/trail)） |
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 回收 Element 的示例。
+ */
+export async function exampleRecycleElement(uuid: string) {
+  PluginCommAPI.recycleElement(uuid);
+}
+```

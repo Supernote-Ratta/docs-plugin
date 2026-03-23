@@ -1,0 +1,96 @@
+---
+title: "Translation"
+description: "Implement selection translation and full-page translation in DOC."
+---
+
+In DOC, translation-oriented plugins typically have two interaction patterns:
+
+- **Selection translation**: the user selects a piece of text in a document; the plugin reads the selected text and translates it.
+- **Full-page translation**: the plugin reads the full text of a specified page and performs full-page translation or summarization.
+
+This chapter focuses on two `PluginDocAPI` APIs and shows how to compose them into a usable plugin flow.
+
+## Selection Translation (Selected Text)
+
+Call [`PluginDocAPI.getSelectedText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text) to get the currently selected text.
+
+```ts wrap
+import { PluginDocAPI } from 'sn-plugin-lib';
+
+/**
+ * Translate text to the target language.
+ * This is only a function signature and usage example. Replace it with your own implementation
+ * (local model, self-hosted service, third-party service, etc.).
+ */
+async function translateText(text: string, targetLang: string): Promise<string> {
+  return `[${targetLang}] ${text}`;
+}
+
+/**
+ * Selection translation: read the current selected text and translate it.
+ */
+export async function translateSelection(targetLang: string) {
+  const res = await PluginDocAPI.getSelectedText();
+  if (!res || !res.success) {
+    throw new Error(res?.error?.message ?? 'Failed to get selected text');
+  }
+
+  const selectedText = (res.result ?? '').trim();
+  if (!selectedText) {
+    throw new Error('No text selected');
+  }
+
+  const translated = await translateText(selectedText, targetLang);
+  return { source: selectedText, translated };
+}
+```
+
+<Warning>
+You must select text in DOC before calling this API; otherwise it returns an error.
+</Warning>
+
+<Tip>
+Selection translation works best as a lightweight popup or a toolbar button: show source/translated text, and provide follow-up actions such as copy, replace, and search.
+</Tip>
+
+## Full-Page Translation (Specified Page Text)
+
+Call [`PluginDocAPI.getCurrentDocText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text) to get the text content of a specified page in the currently opened document. Based on it, you can do full-page translation, key-point extraction, terminology highlighting, and more.
+
+```ts wrap
+import { PluginDocAPI } from 'sn-plugin-lib';
+
+/**
+ * Full-page translation: read page text and translate it.
+ */
+export async function translatePage(page: number, targetLang: string) {
+  const res = await PluginDocAPI.getCurrentDocText(page);
+  if (!res || !res.success) {
+    throw new Error(res?.error?.message ?? 'Failed to get page text');
+  }
+
+  const pageText = (res.result ?? '').trim();
+  if (!pageText) {
+    return { page, source: '', translated: '' };
+  }
+
+  const translated = await translateText(pageText, targetLang);
+  return { page, source: pageText, translated };
+}
+```
+
+<Tip>
+Page text can be long. Consider splitting it before translating (e.g., by line breaks or sentences), and control concurrency and retries to avoid failures caused by oversized requests.
+</Tip>
+
+## Error Handling and UX Recommendations
+
+- **Permissions/timing**: selection translation requires selected text; full-page translation requires DOC to be open and the page number to be valid.
+- **Empty results**: if selection text or page text is empty, show a friendly message instead of failing silently.
+- **Interaction pacing**: selection translation should respond immediately; full-page translation should show loading state and support cancel/retry.
+
+## Related APIs
+
+- [`getSelectedText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text)
+- [`getCurrentDocText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text)
+- [`getCurrentTotalPages`](/en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages)

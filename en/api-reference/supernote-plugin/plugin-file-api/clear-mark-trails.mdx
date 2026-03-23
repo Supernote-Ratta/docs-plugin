@@ -1,0 +1,42 @@
+---
+title: "clearMarkElements"
+description: "Clear handwriting elements in a DOC file."
+---
+
+Handwriting elements in DOC are not written directly into the DOC file, but into its corresponding mark file.
+
+```ts wrap
+static clearMarkElements(filePath: string, page: number): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `filePath` | `string` | DOC file path |
+| `page` | `number` | Page index (starts from `0`) |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response): `result === true` indicates clearing succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Clear a page mark element example.
+ */
+export async function exampleClearMarkElements() {
+ const filePath = '/storage/emulated/0/Note/demo.pdf';
+ const page = 1;
+
+ const res = await PluginFileAPI.clearMarkElements(filePath, page);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'clearMarkElements call failed');
+ }
+ return res.result;
+}
+```
+

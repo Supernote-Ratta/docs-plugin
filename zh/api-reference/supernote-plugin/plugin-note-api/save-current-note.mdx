@@ -1,0 +1,36 @@
+---
+title: "saveCurrentNote"
+description: "保存当前笔记文件。"
+---
+
+笔记应用对当前打开的笔记进行操作时，修改通常先写入内存缓存，并不会立刻落盘到实际文件。
+如果你在未保存的情况下调用文件相关接口（例如 [`replaceElements`](/zh/api-reference/supernote-plugin/plugin-file-api/replace-trails)、
+[`insertElements`](/zh/api-reference/supernote-plugin/plugin-file-api/insert-trails)、
+[`modifyElements`](/zh/api-reference/supernote-plugin/plugin-file-api/modify-trails) 等），
+可能导致数据状态不一致。建议先调用 `saveCurrentNote` 将缓存数据保存到实际文件，再进行文件级读写操作。
+
+```ts
+static saveCurrentNote(): Promise<APIResponse<boolean>>;
+```
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示保存笔记文件成功
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 保存当前笔记的示例。
+ */
+export async function exampleSaveCurrentNote() {
+  const res = await PluginNoteAPI.saveCurrentNote();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'saveCurrentNote 调用失败');
+  }
+  return res.result;
+}
+```

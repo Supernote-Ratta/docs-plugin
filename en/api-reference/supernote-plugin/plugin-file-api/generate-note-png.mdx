@@ -1,0 +1,54 @@
+---
+title: "generateNotePng"
+description: "Generate a PNG for a note page."
+---
+
+```ts wrap
+static generateNotePng(params: {
+ NOTEPath: string;
+ page: number;
+ times: number;
+ pngPath: string;
+ type: number;
+}): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `params.notePath` | `string` | NOTE file path |
+| `params.page` | `number` | Page index (starts from `0`) |
+| `params.times` | `number` | Image scale factor (usually `1` or `2`) |     
+| `params.pngPath` | `string` | Output PNG path (must end with `.png`) |
+| `params.type` | `number` | Output type: `0` transparent background, `1` white background |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates generation succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Generate page PNG example.
+ */
+export async function exampleGenerateNotePng() {
+ const res = await PluginFileAPI.generateNotePng({
+ NOTEPath: '/storage/emulated/0/Note/demo.note',
+ page: 1,
+ times: 1,
+ pngPath: '/storage/emulated/0/Note/out/page.png',
+ type: 1,
+ });
+
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'generateNotePng call failed');
+ }
+ return res.result;
+}
+```
+

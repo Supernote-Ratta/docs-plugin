@@ -1,0 +1,73 @@
+---
+title: "modifyElements"
+description: "修改已存在的页面元素数据（必须是已存在的数据，否则不会生效）。"
+---
+
+```ts wrap
+static modifyElements(notePath: string, page: number, elements: Element[]): Promise<APIResponse<number[]>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记/文档文件路径 |
+| `page` | `number` | 页面索引（从 0 开始） |
+| `elements` | [`Element[]`](/zh/api-reference/supernote-plugin/types/trail) | 需要修改的元素数组（必须已存在） |
+
+**返回**
+
+- [`APIResponse<number[]>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为修改成功的元素索引列表
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI, ElementType, type Element } from 'sn-plugin-lib';
+
+/**
+ * 拉取页面元素并提交修改的示例。
+ */
+export async function exampleModifyElements() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+
+  const listRes = await PluginFileAPI.getElements(page, notePath);
+  if (!listRes.success) {
+    throw new Error(listRes.error?.message ?? 'getElements 调用失败');
+  }
+
+  const elements = (listRes.result ?? []) as Element[];
+  const target = elements[0];
+  switch (target?.type) {
+    case ElementType.TYPE_STROKE: {
+      target.thickness = (target.thickness ?? 200) + 100;
+      if (target.stroke) {
+        target.stroke.penColor = 0x9D;
+      }
+      break;
+    }
+    case ElementType.TYPE_TEXT:
+    case ElementType.TYPE_TEXT_DIGEST_QUOTE:
+    case ElementType.TYPE_TEXT_DIGEST_CREATE: {
+      if (target.textBox) {
+        target.textBox.textContentFull = '示例文本';
+        target.textBox.textBold = 1;
+      }
+      break;
+    }
+    case ElementType.TYPE_TITLE: {
+      if (target.title) {
+        target.title.style = 1;
+      }
+      break;
+    }
+    default:
+      break;
+  }
+  const res = await PluginFileAPI.modifyElements(notePath, page, elements);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'modifyElements 调用失败');
+  }
+  return res.result;
+}
+```

@@ -1,0 +1,42 @@
+---
+title: "generateNoteTemplatePng"
+description: "生成笔记文件指定页面的背景模版 PNG 图片。"
+---
+
+```ts wrap
+static generateNoteTemplatePng(notePath: string, page: number, pngPath: string): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记文件路径 |
+| `page` | `number` | 页码（从 0 开始） |
+| `pngPath` | `string` | PNG 输出路径（需以 `.png` 结尾） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示生成图片成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 生成页面背景模版 PNG 的示例。
+ */
+export async function exampleGenerateNoteTemplatePng() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+  const pngPath = '/storage/emulated/0/Note/out/template.png';
+
+  const res = await PluginFileAPI.generateNoteTemplatePng(notePath, page, pngPath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateNoteTemplatePng 调用失败');
+  }
+  return res.result;
+}
+```

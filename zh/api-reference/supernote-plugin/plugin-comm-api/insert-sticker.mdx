@@ -1,0 +1,42 @@
+---
+title: "insertSticker"
+description: "插入贴纸。"
+---
+
+<Note>
+调用该接口会将贴纸插入到当前打开文件当前页当前图层。
+</Note>
+
+```ts
+static insertSticker(path: string): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `path` | `string` | 贴纸文件（.sticker）路径 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示插入贴纸成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 插入贴纸的示例。
+ */
+export async function exampleInsertSticker() {
+  const stickerPath = '/storage/emulated/0/Note/stickers/demo.sticker';
+  const res = await PluginCommAPI.insertSticker(stickerPath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertSticker 调用失败');
+  }
+  return res.result;
+}
+```
+

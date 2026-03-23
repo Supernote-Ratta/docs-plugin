@@ -1,0 +1,32 @@
+---
+title: "reloadFile"
+description: "Reload the currently opened NOTE/DOC file."
+---
+
+```ts
+static reloadFile(): Promise<APIResponse<boolean>>;
+```
+
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates reload succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: reload current file.
+ */
+export async function exampleReloadFile() {
+ const res = await PluginCommAPI.reloadFile();
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'reloadFile call failed');
+ }
+ return res.result;
+}
+```
+

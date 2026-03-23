@@ -1,0 +1,44 @@
+---
+title: "deleteLayers"
+description: "Delete layers."
+---
+
+<Note>
+Only NOTE files have layers; DOC files do not have layer data.
+</Note>
+
+```ts wrap
+static deleteLayers(NOTEPath: string, page: number, layerIds: number[]): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `layerIds` | `number[]` | Layer ID list to delete (`1..3`) |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates deletion succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: delete layers.
+ */
+export async function exampleDeleteLayers() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 1;
+ const res = await PluginFileAPI.deleteLayers(NOTEPath, page, [1, 2]);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'deleteLayers call failed');
+ }
+ return res.result;
+}
+```

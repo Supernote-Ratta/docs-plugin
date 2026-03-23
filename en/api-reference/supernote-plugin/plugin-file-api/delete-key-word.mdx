@@ -1,0 +1,44 @@
+---
+title: "deleteKeyWord"
+description: "Delete a keyword from a NOTE/DOC file."
+---
+
+```ts
+static deleteKeyWord(NOTEPath: string, page: number, index: number): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE/DOC file path |
+| `page` | `number` | Page index where the keyword is located (starts from `0`) |
+| `index` | `number` | Keyword index within the page (starts from `1`) |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates deletion succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: delete a keyword.
+ */
+export async function exampleDeleteKeyWord() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 1;
+ const index = 1;
+
+ const res = await PluginFileAPI.deleteKeyWord(NOTEPath, page, index);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'deleteKeyWord call failed');
+ }
+ return res.result;
+}
+```
+
+

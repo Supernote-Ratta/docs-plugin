@@ -1,0 +1,42 @@
+---
+title: "clearLayerElements"
+description: "清除笔记文件中的页面的指定图层上的元素数据。"
+---
+
+```ts wrap
+static clearLayerElements(notePath: string, page: number, layer: number): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记文件路径 |
+| `page` | `number` | 笔记文件页码（从 0 开始） |
+| `layer` | `number` | 图层id（0-3） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示清除图层数据成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 清除指定图层元素数据的示例。
+ */
+export async function exampleClearLayerElements() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 1;
+  const layer = 0;
+  const res = await PluginFileAPI.clearLayerElements(notePath, page, layer);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'clearLayerElements 调用失败');
+  }
+  return res.result;
+}
+```
+

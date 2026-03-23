@@ -1,0 +1,49 @@
+---
+title: "generateMarkThumbnails"
+description: "生成文档的 mark 页面缩略图。"
+---
+
+```ts wrap
+static generateMarkThumbnails(
+  markPath: string,
+  page: number,
+  pngPath: string,
+  size: Size
+): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `markPath` | `string` | 文档文件路径 |
+| `page` | `number` | 页码（从 0 开始） |
+| `pngPath` | `string` | PNG 输出路径（需以 `.png` 结尾） |
+| `size` | [`Size`](/zh/api-reference/supernote-plugin/types/size) | 生成的图片大小 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示生成缩略图成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 生成 mark 缩略图的示例。
+ */
+export async function exampleGenerateMarkThumbnails() {
+  const markPath = '/storage/emulated/0/Note/demo.pdf';
+  const page = 1;
+  const pngPath = '/storage/emulated/0/Note/out/mark.png';
+  const size = { width: 512, height: 512 };
+
+  const res = await PluginFileAPI.generateMarkThumbnails(markPath, page, pngPath, size);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateMarkThumbnails 调用失败');
+  }
+  return res.result;
+}
+```

@@ -1,0 +1,89 @@
+﻿---
+title: "插件配置按钮注册与监听"
+description: "注册插件配置按钮，并监听配置按钮点击事件。"
+---
+
+<Note>
+本页包含 `registerConfigButton` 与 `registerConfigButtonListener` 两个接口。调用顺序：先注册配置按钮（`registerConfigButton`），再监听点击事件（`registerConfigButtonListener`）。
+</Note>
+
+## registerConfigButton
+
+注册插件配置按钮。注册成功后，插件管理页面会显示配置按钮入口。
+
+```ts wrap
+registerConfigButton(): Promise<boolean>;
+```
+
+**返回**
+
+- `Promise<boolean>`：是否注册成功
+
+## registerConfigButtonListener
+
+监听插件配置按钮点击事件。
+
+```ts wrap
+registerConfigButtonListener(buttonListener: ConfigButtonListener): ConfigButtonSubscription;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `buttonListener` | `ConfigButtonListener` | 回调 `onClick()` |
+
+**返回**
+
+- `ConfigButtonSubscription`：订阅对象，调用 `remove()` 可注销监听
+
+## 类型定义
+
+### ConfigButtonListener
+
+```ts
+interface ConfigButtonListener {
+  onClick(): void;
+}
+```
+
+**说明**
+
+- `onClick()`：配置按钮被点击时触发
+
+### ConfigButtonSubscription
+
+```ts
+type ConfigButtonSubscription = {
+  remove(): void;
+};
+```
+
+**说明**
+
+- 由 `registerConfigButtonListener` 返回
+- 调用 `remove()` 可注销配置按钮事件监听
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 注册插件配置按钮，并监听配置按钮点击事件的示例。
+ */
+export async function exampleRegisterConfigButtonAndListener() {
+  const ok = await PluginManager.registerConfigButton();
+  if (!ok) {
+    throw new Error('registerConfigButton 调用失败');
+  }
+
+  const sub = PluginManager.registerConfigButtonListener({
+    onClick() {
+      console.log('配置按钮被点击');
+    },
+  });
+
+  return sub;
+}
+```

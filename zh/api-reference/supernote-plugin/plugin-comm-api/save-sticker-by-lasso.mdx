@@ -1,0 +1,41 @@
+---
+title: "saveStickerByLasso"
+description: "保存套索中的笔划为贴纸。"
+---
+
+<Note>
+必须套索之后才能调用该接口，否则会调用失败。
+并且必须套索笔划或几何图形数据，其他数据无法转化为贴纸。
+</Note>
+
+```ts
+static saveStickerByLasso(path: string): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `path` | `string` | 贴纸保存路径 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示保存成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 将当前套索中的笔划或几何图形保存为贴纸的示例。
+ */
+export async function exampleSaveStickerByLasso() {
+  const outPath = '/storage/emulated/0/Note/stickers/lasso.sticker';
+  const res = await PluginCommAPI.saveStickerByLasso(outPath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'saveStickerByLasso 调用失败');
+  }
+  return res.result;
+}
+```

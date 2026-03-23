@@ -1,0 +1,63 @@
+---
+title: "setLassoStrokeLink"
+description: "Set lasso-selected elements as a link."
+---
+
+<Note>
+This API supports undo/redo in NOTE.
+
+Only elements on the main lasso layer are supported (strokes, geometries, TextBox elements). Other layers are not supported.
+
+Recommended to call this API from the plugin UI entered via a lasso toolbar button.
+</Note>
+
+
+```ts
+static setLassoStrokeLink(params: {
+ destPath: string;
+ destPage: number;
+ style: number;
+ linkType: number;
+}): Promise<APIResponse<number>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `params.destPath` | `string` | Destination path / URL: when `linkType === 4`, set this to the URL; otherwise set it to the destination file path |
+| `params.destPage` | `number` | Destination page (only valid when `linkType === 0` or `linkType === 2`)<br />For `linkType === 0`: must be a non-negative integer, meaning the target note page<br />For `linkType === 2`: a negative value jumps to the document current page; a non-negative integer jumps to the specified document page |
+| `params.style` | `number` | Link style: `0` solid underline, `1` solid border, `2` dashed border |
+| `params.linkType` | `number` | Link type: `0` note page, `1` note file, `2` document, `3` image, `4` URL |
+
+<Note>
+`setLassoStrokeLink` is a write API. Current plugin APIs do not support setting links to digest links (`linkType=6`). However, when reading lasso link data, you may encounter links with `linkType=6` (digest links).
+</Note>
+
+**Returns**
+
+- [`APIResponse<number>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is a status code (convention: `0` success, `-1` failure, `-2` target file requires upgrade)
+
+## Example
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: set lasso-selected strokes as a “jump to note page” link.
+ */
+export async function exampleSetLassoStrokeLink() {
+ const res = await PluginNoteAPI.setLassoStrokeLink({
+ destPath: '/storage/emulated/0/Note/demo.note',
+ destPage: 1,
+ style: 0,
+ linkType: 0,
+ });
+
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'setLassoStrokeLink call failed');
+ }
+ return res.result;
+}
+```

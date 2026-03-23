@@ -1,0 +1,62 @@
+---
+title: "replaceElements"
+description: "Replace all elements on a page."
+---
+
+```ts wrap
+static replaceElements(NOTEPath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE/DOC file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `elements` | [`Element[]`](/en/api-reference/supernote-plugin/types/trail) | Element data array |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response): `result === true` indicates replacement succeeded
+
+## Example
+
+```ts wrap
+import { PluginFileAPI, PluginCommAPI, ElementType, type Element } from 'sn-plugin-lib';
+
+/**
+ * Example: read page elements and write back (replace).
+ */
+export async function exampleReplaceElements() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const page = 0;
+
+ const listRes = await PluginFileAPI.getElements(page, NOTEPath);
+ if (!listRes.success) {
+ throw new Error(listRes.error?.message ?? 'getElements call failed');
+ }
+
+ const elements = (listRes.result ?? []) as Element[];
+
+ const createRes = await PluginCommAPI.createElement(ElementType.TYPE_TEXT);
+ if (!createRes.success) {
+ throw new Error(createRes.error?.message ?? 'createElement call failed');
+ }
+ const textEl = createRes.result as Element;
+ if (textEl.textBox) {
+ textEl.textBox.textContentFull = 'Replaced content';
+ textEl.textBox.fontSize = 16;
+ textEl.textBox.textBold = 1;
+ textEl.textBox.textAlign = 1;
+ textEl.textBox.textRect = { left: 100, top: 120, right: 600, bottom: 220 };
+ }
+
+ const newElements = [textEl];
+ const res = await PluginFileAPI.replaceElements(NOTEPath, page, newElements);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'replaceElements call failed');
+ }
+ return res.result;
+}
+```
+

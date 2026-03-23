@@ -1,0 +1,42 @@
+---
+title: "clearMarkElements"
+description: "清除文档文件中的手写元素数据。"
+---
+
+文档的中的手写元素不是直接写在文档文件中的，而是写在文档文件对应的mark文件上的。
+
+```ts wrap
+static clearMarkElements(filePath: string, page: number): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `filePath` | `string` | 文档文件路径 |
+| `page` | `number` | 文档文件的页码（从 0 开始） |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示清除元素数据成功
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 清除某页 mark 元素的示例。
+ */
+export async function exampleClearMarkElements() {
+  const filePath = '/storage/emulated/0/Note/demo.pdf';
+  const page = 1;
+
+  const res = await PluginFileAPI.clearMarkElements(filePath, page);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'clearMarkElements 调用失败');
+  }
+  return res.result;
+}
+```
+

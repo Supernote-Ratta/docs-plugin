@@ -1,0 +1,41 @@
+---
+title: "setLassoBoxState"
+description: "设置套索框状态。"
+---
+
+<Note>
+必须套索之后才能调用该接口，否则会调用失败。
+</Note>
+
+```ts
+static setLassoBoxState(state: number): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `state` | `number` | `0` 显示，`1` 隐藏，`2` 完全移除 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示设置成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 设置套索框状态的示例。
+ */
+export async function exampleSetLassoBoxState() {
+  const res = await PluginCommAPI.setLassoBoxState(1);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'setLassoBoxState 调用失败');
+  }
+  return res.result;
+}
+```
+

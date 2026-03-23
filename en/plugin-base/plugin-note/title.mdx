@@ -1,0 +1,92 @@
+---
+title: "Title"
+description: "Create, read, and modify title elements in NOTE."
+---
+
+<Note>
+Titles are a NOTE-only capability; DOC does not support them. Titles can only be created and modified on the main layer (`layer=0`) of a note file.
+</Note>
+
+## Create a Title
+
+Call [`PluginNoteAPI.setLassoTitle`](/en/api-reference/supernote-plugin/plugin-note-api/set-lasso-title) to set the lasso-selected strokes or geometries as a title. Example:
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+PluginNoteAPI.setLassoTitle({ style: 1 })
+  .then(data => {
+    console.log('setLassoTitle success:', data);
+  })
+  .catch(error => {
+    console.error('setLassoTitle error:', error);
+  });
+```
+When creating a title, you only need to provide the title style (`style`).
+
+<Note>
+Before calling this API, you must create a lasso selection on the page; otherwise the API call fails.
+</Note>
+
+
+## Get Lasso Title Data
+
+Call [`PluginNoteAPI.getLassoTitles`](/en/api-reference/supernote-plugin/plugin-note-api/get-lasso-title) to get title data from the current lasso selection. Example:
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+PluginNoteAPI.getLassoTitles()
+  .then(data => {
+    console.log('getLassoTitles success:', data);
+  })
+  .catch(error => {
+    console.error('getLassoTitles error:', error);
+  });
+```
+[`PluginNoteAPI.getLassoTitles`](/en/api-reference/supernote-plugin/plugin-note-api/get-lasso-title)
+can only be called when a lasso context exists. It returns an [`APIResponse<Title[]>`](/en/api-reference/supernote-plugin/types/api-response).
+`result` is an array of [`Title`](/en/api-reference/supernote-plugin/types/title).
+
+The data structure of [`Title`](/en/api-reference/supernote-plugin/types/title):
+```ts wrap
+class Title {
+  public X: number = 0; // Top-left X
+  public Y: number = 0; // Top-left Y
+  public width: number = 0; // Width
+  public height: number = 0; // Height
+  public page: number = 0; // Page number
+  public num: number = 0; // Index within the page
+  /**
+   * Title style mapping:
+   * 0: remove title style
+   * 1: black background
+   * 2: gray-white
+   * 3: gray-black
+   * 4: shadow
+   */
+  public style: number = 0;
+  // Related stroke indices: which strokes belong to this title
+  public controlTrailNums: number[] = [];
+}
+```
+
+The comments above describe the meaning of each field.
+
+## Modify a Title
+
+After lasso-selecting a title, call [`PluginNoteAPI.modifyLassoTitle`](/en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-title) to modify the title data. Example:
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+PluginNoteAPI.modifyLassoTitle({ style: 2 })
+  .then(data => {
+    console.log('modifyLassoTitle success:', data);
+  })
+  .catch(error => {
+    console.error('modifyLassoTitle error:', error);
+  });
+```
+
+
+
+

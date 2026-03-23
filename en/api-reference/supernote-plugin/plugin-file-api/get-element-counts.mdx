@@ -1,0 +1,40 @@
+---
+title: "getElementCounts"
+description: "Get the number of elements on a note page."
+---
+
+```ts wrap
+static getElementCounts(notePath: string, page: number): Promise<APIResponse<number>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `notePath` | `string` | Note file path |
+| `page` | `number` | Page index (starting from 0) |
+
+**Returns**
+
+- [`APIResponse<number>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the element count on the page
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get the number of elements on a note page.
+ */
+export async function exampleGetElementCounts() {
+  const notePath = '/storage/emulated/0/Note/demo.note';
+  const page = 0;
+
+  const res = await PluginFileAPI.getElementCounts(notePath, page);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getElementCounts call failed');
+  }
+  return res.result;
+}
+```

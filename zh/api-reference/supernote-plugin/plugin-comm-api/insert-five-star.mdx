@@ -1,0 +1,45 @@
+---
+title: "insertFiveStar"
+description: "在当前文件当前页当前图层插入一个五角星。"
+---
+
+```ts wrap
+static insertFiveStar(starPoints: Point[]): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `starPoints` | [`Point[]`](/zh/api-reference/supernote-plugin/types/point) | 五角星点集（像素点坐标系），必须为 6 个点且首尾点相同 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示插入成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 插入五角星的示例（需要 6 个点且首尾一致）。
+ */
+export async function exampleInsertFiveStar() {
+  const starPoints = [
+    { x: 100, y: 20 },
+    { x: 120, y: 80 },
+    { x: 180, y: 80 },
+    { x: 130, y: 120 },
+    { x: 150, y: 180 },
+    { x: 100, y: 20 },
+  ];
+
+  const res = await PluginCommAPI.insertFiveStar(starPoints);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertFiveStar 调用失败');
+  }
+  return res.result;
+}
+```

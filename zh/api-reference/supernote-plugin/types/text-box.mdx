@@ -1,0 +1,18 @@
+---
+title: "TextBox"
+description: "笔记中的文本框数据结构。"
+---
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `fontSize` | `number` | 字体大小 |
+| `fontPath` | `string \| null` | 字体路径 |
+| `textContentFull` | `string \| null` | 文本框文字内容 |
+| `textRect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 文本框矩形区域（单位：像素） |
+| `textDigestData` | `string \| null` | 摘录数据，摘录文本框会有该数据，无法插入 |
+| `textAlign` | `number` | 对齐方式：`0` 居左，`1` 居中，`2` 居右 |
+| `textBold` | `number` | 是否粗体：`0` 正常，`1` 粗体 |
+| `textItalics` | `number` | 是否斜体：`0` 正常，`1` 倾斜 |
+| `textFrameWidthType` | `number` | 边框宽度类型：`0` 固定宽度，`1` 自适应宽度 |
+| `textFrameStyle` | `number` | 边框样式：`0` 无边框，`3` 描边 |
+| `textEditable` | `number` | 可编辑状态：`0` 可编辑，`1` 不可编辑 |

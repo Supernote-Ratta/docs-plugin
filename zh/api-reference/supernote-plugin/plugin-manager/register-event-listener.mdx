@@ -1,0 +1,45 @@
+---
+title: "registerEventListener"
+description: "注册插件事件监听。"
+---
+
+```ts
+registerEventListener(
+  event: string,
+  registerType: number,
+  penUpListener: PluginEventListener
+): PluginEventSubscription;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `event` | `string` | 事件类型（当前只支持 `event_pen_up`） |
+| `registerType` | `number` | 注册优先级：`0` 始终最前，`1` 普通排序，`2` 始终最后。这些类型是多个插件注册同一个事件时，不同插件会按照注册顺序排序，0类型的插件会在最前面，2类型的插件会在最后面。 |
+| `penUpListener` | `PluginEventListener` | 事件回调对象，实现 `onMsg(msg)`。<br />`msg` 数据结构与 `event` 类型对应。<br />当 `event` 为 `event_pen_up` 时，`msg` 为 [`Element`](/zh/api-reference/supernote-plugin/types/trail)[] 元素数组 |
+
+**返回**
+
+- `PluginEventSubscription`：订阅对象，调用 `remove()` 会注销事件注册并移除本地订阅
+
+## 示例
+
+```ts wrap
+import { PluginManager, type Element } from 'sn-plugin-lib';
+
+/**
+ * 注册笔抬起事件监听的示例。
+ * `event_pen_up` 回调的 `msg` 为 Element[]。
+ */
+export async function exampleRegisterEventListener() {
+  const sub = PluginManager.registerEventListener('event_pen_up', 1, {
+    onMsg(msg) {
+      const elements = msg as Element[];
+      console.log('pen_up elements length:', elements.length);
+      console.log('first element uuid:', elements[0]?.uuid);
+    },
+  });
+  return sub;
+}
+```

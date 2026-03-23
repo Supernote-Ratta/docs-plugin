@@ -1,0 +1,43 @@
+---
+title: "getTitles"
+description: "Get titles from a NOTE file."
+---
+
+<Note>
+Only NOTE files have title data; DOC files do not.
+</Note>
+
+```ts wrap
+static getTitles(NOTEPath: string, pageList: number[]): Promise<APIResponse<Title[]>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `NOTEPath` | `string` | NOTE file path |
+| `pageList` | `number[]` | Page index list (starts from `0`) |
+
+**Returns**
+
+- [`APIResponse<Title[]>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the title data array. See [`Title`](/en/api-reference/supernote-plugin/types/title).
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get titles of specified pages.
+ */
+export async function exampleGetTitles() {
+ const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const res = await PluginFileAPI.getTitles(NOTEPath, [0, 1, 2]);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'getTitles call failed');
+ }
+ return res.result;
+}
+```
+

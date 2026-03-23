@@ -1,0 +1,40 @@
+---
+title: "getLassoLinks"
+description: "获取套索链接数据。"
+---
+<Note>
+必须套索之后调用该接口，否则会调用失败。
+
+建议在点击套索工具栏按钮后进入的插件界面调用该接口。
+</Note>
+
+<Note>
+该接口是“读取”接口。返回的 `LassoLink.linkType` 可能包含 `6`（摘录链接），表示该链接会跳转到摘录。
+当前插件接口不支持把链接“创建/修改”为摘录链接（写入接口通常只允许 `linkType=0..4`），但可以读取到摘录链接的数据并做展示或识别。
+</Note>
+
+```ts
+static getLassoLinks(): Promise<APIResponse<LassoLink[]>>;
+```
+
+**返回**
+
+- [`APIResponse<LassoLink[]>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result` 为[`LassoLink`](/zh/api-reference/supernote-plugin/types/lasso-link)对象数组。
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取当前套索的链接数据示例。
+ */
+export async function exampleGetLassoLinks() {
+  const res = await PluginNoteAPI.getLassoLinks();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLassoLinks 调用失败');
+  }
+  return res.result;
+}
+```

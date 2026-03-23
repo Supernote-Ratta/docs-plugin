@@ -1,0 +1,16 @@
+---
+title: "ButtonSubscription"
+description: "按钮事件订阅对象类型。"
+---
+
+`ButtonSubscription` 是注册按钮监听后返回的订阅对象，可用于取消监听。
+
+```ts
+type ButtonSubscription = {
+  remove(): void;
+};
+```
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `remove` | `() => void` | 取消按钮事件监听 |

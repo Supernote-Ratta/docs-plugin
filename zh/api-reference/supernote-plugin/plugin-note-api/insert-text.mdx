@@ -1,0 +1,72 @@
+---
+title: "insertText"
+description: "插入文本框。"
+---
+
+<Note>
+文本框只能插入到主图层，无法插入到其他图层。该接口支持笔记中的撤销还原操作
+</Note>
+
+```ts
+static insertText(textBox: {
+  fontSize?: number;
+  fontPath?: string;
+  textContentFull: string;
+  textRect: Rect;
+  textAlign?: number;
+  textBold?: number;
+  textItalics?: number;
+  textFrameWidthType?: number;
+  textFrameStyle?: number;
+  textEditable?: number;
+}): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `textBox.textContentFull` | `string` | 文本内容（必填，非空） |
+| `textBox.textRect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 文本框矩形（必填，需为非零面积） |
+| `textBox.fontSize` | `number` | 字体大小（需为正数） |
+| `textBox.fontPath` | `string` | 字体路径（可选） |
+| `textBox.textAlign` | `number` | 对齐方式：0 居左，1 居中，2 居右 |
+| `textBox.textBold` | `number` | 是否粗体：0 正常，1 粗体 |
+| `textBox.textItalics` | `number` | 	是否斜体：0 正常，1 倾斜 |
+| `textBox.textFrameWidthType` | `number` | 边框宽度类型：0 固定宽度，1 自适应宽度 |
+| `textBox.textFrameStyle` | `number` | 	边框样式：0 无边框，3 描边 |
+| `textBox.textEditable` | `number` | 可编辑状态：0 可编辑，1 不可编辑 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result`为boolean型，表示是否插入成功
+
+## 示例
+
+```ts wrap
+import { PluginNoteAPI, type Rect } from 'sn-plugin-lib';
+
+/**
+ * 插入文本框的示例。
+ */
+export async function exampleInsertText() {
+  const textRect: Rect = { left: 100, top: 100, right: 320, bottom: 180 };
+  const res = await PluginNoteAPI.insertText({
+    textContentFull: 'Hello from plugin',
+    textRect,
+    fontSize: 32,
+    textAlign: 0,
+    textBold: 0,
+    textItalics: 0,
+    textFrameWidthType: 0,
+    textFrameStyle: 0,
+    textEditable: 0,
+  });
+
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'insertText 调用失败');
+  }
+  return res.result;
+}
+```

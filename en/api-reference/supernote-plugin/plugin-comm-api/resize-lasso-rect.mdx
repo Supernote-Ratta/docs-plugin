@@ -1,0 +1,56 @@
+---
+title: "resizeLassoRect"
+description: "Resize the lasso rectangle."
+---
+<Note>
+You must create a lasso selection before calling this API; otherwise the call fails.
+</Note>
+```ts
+static resizeLassoRect(rect: Rect): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Lasso rectangle (pixel coordinates) |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the resize succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI, type Rect } from 'sn-plugin-lib';
+
+/**
+ * Example: resize the lasso rectangle (proportional scaling).
+ */
+export async function exampleResizeLassoRect() {
+ const current = await PluginCommAPI.getLassoRect();
+ if (!current.success) {
+ throw new Error(current.error?.message ?? 'getLassoRect call failed');
+ }
+
+ const rect = current.result as Rect;
+ const w = rect.right - rect.left;
+ const h = rect.bottom - rect.top;
+ const cx = rect.left + w / 2;
+ const cy = rect.top + h / 2;
+ const scale = 1.2;
+ const nextRect: Rect = {
+ left: cx - (w * scale) / 2,
+ top: cy - (h * scale) / 2,
+ right: cx + (w * scale) / 2,
+ bottom: cy + (h * scale) / 2,
+ };
+
+ const res = await PluginCommAPI.resizeLassoRect(nextRect);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'resizeLassoRect call failed');
+ }
+ return res.result;
+}
+```

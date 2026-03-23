@@ -1,0 +1,19 @@
+---
+title: "LassoLink"
+description: "Link data structure returned from lasso selections."
+---
+
+<Note>
+`LassoLink.linkType` indicates the link type read from the lasso selection. Supported `linkType` ranges may differ across write APIs; for example, parameter validation in `insertTextLink` and `modifyLassoLink` currently only allows `0..4`.
+</Note>
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `category` | `number` | Link category: `0` text link, `1` stroke link |
+| `style` | `number` | Link style: `0` solid underline, `1` solid border, `2` dashed border |
+| `linkType` | `number` | Link type: `0` note page, `1` note file, `2` document, `3` image, `4` URL, `6` digest |
+| `destPath` | `string` | Destination path / URL: when `linkType === 4`, set this to the URL; otherwise set it to the destination file path |
+| `destPage` | `number` | Destination page |
+| `fullText` | `string` | Full text (only for text links) |
+| `showText` | `string` | Display text (only for text links) |
+| `italic` | `number` | Italic: `0` no, `1` yes |

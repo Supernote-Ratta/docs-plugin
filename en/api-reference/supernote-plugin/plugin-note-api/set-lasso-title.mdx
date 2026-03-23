@@ -1,0 +1,44 @@
+---
+title: "setLassoTitle"
+description: "Set lasso-selected strokes or geometries as a title."
+---
+
+<Note>
+This API supports undo/redo in NOTE.
+
+Only elements on the main lasso layer are supported (strokes, geometries, TextBox elements). Other layers are not supported.
+
+Recommended to call this API from the plugin UI entered via a lasso toolbar button.
+</Note>
+
+```ts
+static setLassoTitle(params: { style: number }): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `params.style` | `number` | Title style: `0` remove title, `1` black background, `2` gray-white, `3` gray-black, `4` shadow |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the call succeeded
+
+## Example
+
+```ts wrap
+import { PluginNoteAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: set title style for the lasso selection.
+ */
+export async function exampleSetLassoTitle() {
+ const res = await PluginNoteAPI.setLassoTitle({ style: 1 });
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'setLassoTitle call failed');
+ }
+ return res.result;
+}
+```

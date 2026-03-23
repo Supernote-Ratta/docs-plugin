@@ -1,0 +1,33 @@
+---
+title: "recognizeElements"
+description: "识别元素为文字。"
+---
+
+```ts wrap
+static recognizeElements(elements: Object[] | null | undefined, size: { width: number; height: number }): Promise<APIResponse<string>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `elements` | `Object[] \| null \| undefined` | 元素数组（当前仅支持识别普通笔划与文本框） |
+| `size` | `{ width: number; height: number }` | 元素所基于的笔记页宽高（像素） |
+
+**返回**
+
+- [`APIResponse<string>`](/zh/api-reference/supernote-plugin/types/api-response)：识别结果文字
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleRecognizeElements(elements, size) {
+  const res = await PluginCommAPI.recognizeElements(elements, size);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'recognizeElements 调用失败');
+  }
+  return res.result;
+}
+```

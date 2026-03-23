@@ -1,0 +1,51 @@
+---
+title: "getLassoElementTypeCounts"
+description: "获取套索元素类型数量统计。"
+---
+
+<Note>
+套索元素之后才能调用这个接口，否则会调用失败。
+</Note>
+
+```ts wrap
+static getLassoElementTypeCounts(): Promise<APIResponse<object>>;
+```
+
+**返回**
+
+- [`APIResponse<object>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为如下字段对象
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `trailNum` | `number` | 普通笔划数量 |
+| `trailLinkNum` | `number` | 笔划链接数量 |
+| `textLinkNum` | `number` | 文字普通链接数量 |
+| `todoLinkNum` | `number` | 待办链接数量 |
+| `titleNum` | `number` | 标题数量 |
+| `normalTextBoxNum` | `number` | 普通文本框数量 |
+| `digestTextBoxNum` | `number` | 不可编辑摘要文本框数量 |
+| `digestTextBoxEditableNum` | `number` | 可编辑摘要文本框数量 |
+| `geometryNum` | `number` | 几何图形总数量 |
+| `straightLineNum` | `number` | 直线数量 |
+| `circleNum` | `number` | 圆数量 |
+| `ellipseNum` | `number` | 椭圆数量 |
+| `polygonNum`| `number` | 多边形数量 |
+
+
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取套索元素类型数量统计的示例。
+ */
+export async function exampleGetLassoElementTypeCounts() {
+  const res = await PluginCommAPI.getLassoElementTypeCounts();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLassoElementTypeCounts 调用失败');
+  }
+  return res.result;
+}
+```

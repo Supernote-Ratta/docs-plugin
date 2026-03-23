@@ -1,0 +1,25 @@
+---
+title: "PluginDocAPI"
+sidebarTitle: "概览"
+description: "文档应用相关接口总目录。"
+---
+
+<Note>
+该目录的接口只能在文档应用中调用，笔记应用无法调用相关接口。
+</Note>
+
+## 导入
+
+```ts
+import { PluginDocAPI } from "sn-plugin-lib";
+```
+
+## 返回值约定
+
+多数异步接口返回 [`APIResponse<T>`](/zh/api-reference/supernote-plugin/types/api-response)。通常只在 `success === true` 时读取 `result`。
+
+## 方法列表
+
+- [getSelectedText](/zh/api-reference/supernote-plugin/plugin-doc-api/get-selected-text)
+- [getCurrentDocText](/zh/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text)
+- [getCurrentTotalPages](/zh/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages)

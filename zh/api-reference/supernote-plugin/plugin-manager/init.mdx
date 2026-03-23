@@ -1,0 +1,28 @@
+﻿---
+title: "init"
+description: "初始化插件环境。"
+---
+
+<Note>
+该接口必须调用，否则插件无法运行。建议在插件启动时尽早调用一次（多次调用会被忽略）。
+最好在AppRegistry.registerComponent之后立即调用
+</Note>
+
+```ts
+async init(): Promise<void>;
+```
+
+
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 初始化插件环境的示例。
+ */
+export async function exampleInit() {
+  await PluginManager.init();
+}
+```
