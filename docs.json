@@ -15,8 +15,237 @@
   "navigation": {
     "languages": [
       {
-        "language": "zh",
+        "language": "en",
         "default": true,
+        "banner": {
+          "content": "SDK docs version: v0.1.25",
+          "dismissible": false
+        },
+        "tabs": [
+          {
+            "tab": "Guides",
+            "groups": [
+              {
+                "group": "Getting started",
+                "pages": [
+                  "en/index",
+                  "en/principle"
+                ]
+              },
+              {
+                "group": "Developer Guide",
+                "pages": [
+                  "en/environment",
+                  "en/first-plugin",
+                  {
+                    "group": "Basics",
+                    "pages": [
+                      "en/plugin-base/coordinate-system",
+                      "en/plugin-base/plugin-ui",
+                      "en/plugin-base/lasso",
+                      {
+                        "group": "Notes",
+                        "pages": [
+                          "en/plugin-base/plugin-note/link",
+                          "en/plugin-base/plugin-note/title",
+                          "en/plugin-base/plugin-note/textbox"
+                        ]
+                      },
+                      {
+                        "group": "Documents",
+                        "pages": [
+                          "en/plugin-base/plugin-doc/translations"
+                        ]
+                      },
+                      {
+                        "group": "Common",
+                        "pages": [
+                          "en/plugin-base/plugin-comm/geometry"
+                        ]
+                      },
+                      {
+                        "group": "File Ops",
+                        "pages": [
+                          "en/plugin-base/file-op/element-op"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API reference",
+            "groups": [
+              {
+                "group": "Supernote Plugin SDK",
+                "pages": [
+                  {
+                    "group": "PluginCommAPI",
+                    "expanded": false,
+                    "pages": [
+                      "en/api-reference/supernote-plugin/plugin-comm-api/index",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/create-trail",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/recycle-trail",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/clear-trail-cache",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/save-sticker-by-lasso",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-sticker-size",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/generate-sticker-thumbnail",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/convert-trail2-sticker",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-sticker",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-pen-info",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/recognize-elements",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/reload-file",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-geometries",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-geometry",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-five-star"
+                    ]
+                  },
+                  {
+                    "group": "PluginNoteAPI",
+                    "expanded": false,
+                    "pages": [
+                      "en/api-reference/supernote-plugin/plugin-note-api/index",
+                      "en/api-reference/supernote-plugin/plugin-note-api/get-lasso-link",
+                      "en/api-reference/supernote-plugin/plugin-note-api/set-lasso-stroke-link",
+                      "en/api-reference/supernote-plugin/plugin-note-api/insert-text-link",
+                      "en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link",
+                      "en/api-reference/supernote-plugin/plugin-note-api/save-current-note",
+                      "en/api-reference/supernote-plugin/plugin-note-api/set-lasso-title",
+                      "en/api-reference/supernote-plugin/plugin-note-api/get-lasso-title",
+                      "en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-title",
+                      "en/api-reference/supernote-plugin/plugin-note-api/get-lasso-text",
+                      "en/api-reference/supernote-plugin/plugin-note-api/insert-text",
+                      "en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-text",
+                      "en/api-reference/supernote-plugin/plugin-note-api/insert-image"
+                    ]
+                  },
+                  {
+                    "group": "PluginDocAPI",
+                    "expanded": false,
+                    "pages": [
+                      "en/api-reference/supernote-plugin/plugin-doc-api/index",
+                      "en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text",
+                      "en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text",
+                      "en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages"
+                    ]
+                  },
+                  {
+                    "group": "PluginFileAPI",
+                    "expanded": false,
+                    "pages": [
+                      "en/api-reference/supernote-plugin/plugin-file-api/index",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-page-trails",
+                      "en/api-reference/supernote-plugin/plugin-file-api/replace-trails",
+                      "en/api-reference/supernote-plugin/plugin-file-api/insert-trails",
+                      "en/api-reference/supernote-plugin/plugin-file-api/modify-trails",
+                      "en/api-reference/supernote-plugin/plugin-file-api/delete-elements",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-titles",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-key-words",
+                      "en/api-reference/supernote-plugin/plugin-file-api/insert-key-word",
+                      "en/api-reference/supernote-plugin/plugin-file-api/delete-key-word",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-note-total-page-num",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-page-size",
+                      "en/api-reference/supernote-plugin/plugin-file-api/generate-note-png",
+                      "en/api-reference/supernote-plugin/plugin-file-api/search-five-stars",
+                      "en/api-reference/supernote-plugin/plugin-file-api/create-note",
+                      "en/api-reference/supernote-plugin/plugin-file-api/remove-note-page",
+                      "en/api-reference/supernote-plugin/plugin-file-api/insert-note-page",
+                      "en/api-reference/supernote-plugin/plugin-file-api/clear-page-layer-data",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-layers",
+                      "en/api-reference/supernote-plugin/plugin-file-api/modify-layers",
+                      "en/api-reference/supernote-plugin/plugin-file-api/insert-layer",
+                      "en/api-reference/supernote-plugin/plugin-file-api/delete-layers",
+                      "en/api-reference/supernote-plugin/plugin-file-api/sort-layers",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-mark-pages",
+                      "en/api-reference/supernote-plugin/plugin-file-api/generate-mark-thumbnails",
+                      "en/api-reference/supernote-plugin/plugin-file-api/clear-mark-trails",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-note-page-template",
+                      "en/api-reference/supernote-plugin/plugin-file-api/generate-note-template-png",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-note-type",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-file-machine-type",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-element-counts",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-element-num-list",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-element",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-last-element"
+                    ]
+                  },
+                  {
+                    "group": "PluginManager",
+                    "expanded": false,
+                    "pages": [
+                      "en/api-reference/supernote-plugin/plugin-manager/index",
+                      "en/api-reference/supernote-plugin/plugin-manager/init",
+                      "en/api-reference/supernote-plugin/plugin-manager/register-lang-listener",
+                      "en/api-reference/supernote-plugin/plugin-manager/register-event-listener",
+                      "en/api-reference/supernote-plugin/plugin-manager/register-button",
+                      "en/api-reference/supernote-plugin/plugin-manager/unregister-button",
+                      "en/api-reference/supernote-plugin/plugin-manager/get-button-state",
+                      "en/api-reference/supernote-plugin/plugin-manager/set-button-state",
+                      "en/api-reference/supernote-plugin/plugin-manager/register-config-button",
+                      "en/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path",
+                      "en/api-reference/supernote-plugin/plugin-manager/get-plugin-name",
+                      "en/api-reference/supernote-plugin/plugin-manager/get-device-type",
+                      "en/api-reference/supernote-plugin/plugin-manager/close-plugin-view"
+                    ]
+                  },
+                  {
+                    "group": "Utils",
+                    "expanded": false,
+                    "pages": [
+                      "en/api-reference/supernote-plugin/utils/point-utils/index",
+                      "en/api-reference/supernote-plugin/utils/point-utils/android-point2-emr",
+                      "en/api-reference/supernote-plugin/utils/point-utils/emr-point2-android"
+                    ]
+                  },
+                  {
+                    "group": "Types",
+                    "expanded": false,
+                    "pages": [
+                      "en/api-reference/supernote-plugin/types/index",
+                      "en/api-reference/supernote-plugin/types/api-response",
+                      "en/api-reference/supernote-plugin/types/point",
+                      "en/api-reference/supernote-plugin/types/rect",
+                      "en/api-reference/supernote-plugin/types/size",
+                      "en/api-reference/supernote-plugin/types/trail-data-accessor",
+                      "en/api-reference/supernote-plugin/types/stroke",
+                      "en/api-reference/supernote-plugin/types/pen-info",
+                      "en/api-reference/supernote-plugin/types/recogn-data",
+                      "en/api-reference/supernote-plugin/types/recog-result-data",
+                      "en/api-reference/supernote-plugin/types/geometry",
+                      "en/api-reference/supernote-plugin/types/picture",
+                      "en/api-reference/supernote-plugin/types/template",
+                      "en/api-reference/supernote-plugin/types/key-word",
+                      "en/api-reference/supernote-plugin/types/layer",
+                      "en/api-reference/supernote-plugin/types/trail",
+                      "en/api-reference/supernote-plugin/types/text-link",
+                      "en/api-reference/supernote-plugin/types/link",
+                      "en/api-reference/supernote-plugin/types/lasso-link",
+                      "en/api-reference/supernote-plugin/types/title",
+                      "en/api-reference/supernote-plugin/types/text-box",
+                      "en/api-reference/supernote-plugin/types/plugin-button"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "zh",
         "banner": {
           "content": "SDK 文档版本：v0.1.25",
           "dismissible": false
@@ -237,235 +466,6 @@
                       "zh/api-reference/supernote-plugin/types/text-box",
                       "zh/api-reference/supernote-plugin/types/button-listener",
                       "zh/api-reference/supernote-plugin/types/button-subscription"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "language": "en",
-        "banner": {
-          "content": "SDK docs version: v0.1.25",
-          "dismissible": false
-        },
-        "tabs": [
-          {
-            "tab": "Guides",
-            "groups": [
-              {
-                "group": "Getting started",
-                "pages": [
-                  "en/index",
-                  "en/principle"
-                ]
-              },
-              {
-                "group": "Developer Guide",
-                "pages": [
-                  "en/environment",
-                  "en/first-plugin",
-                  {
-                    "group": "Basics",
-                    "pages": [
-                      "en/plugin-base/coordinate-system",
-                      "en/plugin-base/plugin-ui",
-                      "en/plugin-base/lasso",
-                      {
-                        "group": "Notes",
-                        "pages": [
-                          "en/plugin-base/plugin-note/link",
-                          "en/plugin-base/plugin-note/title",
-                          "en/plugin-base/plugin-note/textbox"
-                        ]
-                      },
-                      {
-                        "group": "Documents",
-                        "pages": [
-                          "en/plugin-base/plugin-doc/translations"
-                        ]
-                      },
-                      {
-                        "group": "Common",
-                        "pages": [
-                          "en/plugin-base/plugin-comm/geometry"
-                        ]
-                      },
-                      {
-                        "group": "File Ops",
-                        "pages": [
-                          "en/plugin-base/file-op/element-op"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "tab": "API reference",
-            "groups": [
-              {
-                "group": "Supernote Plugin SDK",
-                "pages": [
-                  {
-                    "group": "PluginCommAPI",
-                    "expanded": false,
-                    "pages": [
-                      "en/api-reference/supernote-plugin/plugin-comm-api/index",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/create-trail",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/recycle-trail",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/clear-trail-cache",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/save-sticker-by-lasso",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-sticker-size",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/generate-sticker-thumbnail",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/convert-trail2-sticker",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-sticker",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-pen-info",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/recognize-elements",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/reload-file",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-geometries",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-geometry",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-five-star"
-                    ]
-                  },
-                  {
-                    "group": "PluginNoteAPI",
-                    "expanded": false,
-                    "pages": [
-                      "en/api-reference/supernote-plugin/plugin-note-api/index",
-                      "en/api-reference/supernote-plugin/plugin-note-api/get-lasso-link",
-                      "en/api-reference/supernote-plugin/plugin-note-api/set-lasso-stroke-link",
-                      "en/api-reference/supernote-plugin/plugin-note-api/insert-text-link",
-                      "en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-link",
-                      "en/api-reference/supernote-plugin/plugin-note-api/save-current-note",
-                      "en/api-reference/supernote-plugin/plugin-note-api/set-lasso-title",
-                      "en/api-reference/supernote-plugin/plugin-note-api/get-lasso-title",
-                      "en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-title",
-                      "en/api-reference/supernote-plugin/plugin-note-api/get-lasso-text",
-                      "en/api-reference/supernote-plugin/plugin-note-api/insert-text",
-                      "en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-text",
-                      "en/api-reference/supernote-plugin/plugin-note-api/insert-image"
-                    ]
-                  },
-                  {
-                    "group": "PluginDocAPI",
-                    "expanded": false,
-                    "pages": [
-                      "en/api-reference/supernote-plugin/plugin-doc-api/index",
-                      "en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text",
-                      "en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text",
-                      "en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages"
-                    ]
-                  },
-                  {
-                    "group": "PluginFileAPI",
-                    "expanded": false,
-                    "pages": [
-                      "en/api-reference/supernote-plugin/plugin-file-api/index",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-page-trails",
-                      "en/api-reference/supernote-plugin/plugin-file-api/replace-trails",
-                      "en/api-reference/supernote-plugin/plugin-file-api/insert-trails",
-                      "en/api-reference/supernote-plugin/plugin-file-api/modify-trails",
-                      "en/api-reference/supernote-plugin/plugin-file-api/delete-elements",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-titles",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-key-words",
-                      "en/api-reference/supernote-plugin/plugin-file-api/insert-key-word",
-                      "en/api-reference/supernote-plugin/plugin-file-api/delete-key-word",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-note-total-page-num",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-page-size",
-                      "en/api-reference/supernote-plugin/plugin-file-api/generate-note-png",
-                      "en/api-reference/supernote-plugin/plugin-file-api/search-five-stars",
-                      "en/api-reference/supernote-plugin/plugin-file-api/create-note",
-                      "en/api-reference/supernote-plugin/plugin-file-api/remove-note-page",
-                      "en/api-reference/supernote-plugin/plugin-file-api/insert-note-page",
-                      "en/api-reference/supernote-plugin/plugin-file-api/clear-page-layer-data",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-layers",
-                      "en/api-reference/supernote-plugin/plugin-file-api/modify-layers",
-                      "en/api-reference/supernote-plugin/plugin-file-api/insert-layer",
-                      "en/api-reference/supernote-plugin/plugin-file-api/delete-layers",
-                      "en/api-reference/supernote-plugin/plugin-file-api/sort-layers",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-mark-pages",
-                      "en/api-reference/supernote-plugin/plugin-file-api/generate-mark-thumbnails",
-                      "en/api-reference/supernote-plugin/plugin-file-api/clear-mark-trails",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-note-page-template",
-                      "en/api-reference/supernote-plugin/plugin-file-api/generate-note-template-png",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-note-type",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-file-machine-type",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-element-counts",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-element-num-list",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-element",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-last-element"
-                    ]
-                  },
-                  {
-                    "group": "PluginManager",
-                    "expanded": false,
-                    "pages": [
-                      "en/api-reference/supernote-plugin/plugin-manager/index",
-                      "en/api-reference/supernote-plugin/plugin-manager/init",
-                      "en/api-reference/supernote-plugin/plugin-manager/register-lang-listener",
-                      "en/api-reference/supernote-plugin/plugin-manager/register-event-listener",
-                      "en/api-reference/supernote-plugin/plugin-manager/register-button",
-                      "en/api-reference/supernote-plugin/plugin-manager/unregister-button",
-                      "en/api-reference/supernote-plugin/plugin-manager/get-button-state",
-                      "en/api-reference/supernote-plugin/plugin-manager/set-button-state",
-                      "en/api-reference/supernote-plugin/plugin-manager/register-config-button",
-                      "en/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path",
-                      "en/api-reference/supernote-plugin/plugin-manager/get-plugin-name",
-                      "en/api-reference/supernote-plugin/plugin-manager/get-device-type",
-                      "en/api-reference/supernote-plugin/plugin-manager/close-plugin-view"
-                    ]
-                  },
-                  {
-                    "group": "Utils",
-                    "expanded": false,
-                    "pages": [
-                      "en/api-reference/supernote-plugin/utils/point-utils/index",
-                      "en/api-reference/supernote-plugin/utils/point-utils/android-point2-emr",
-                      "en/api-reference/supernote-plugin/utils/point-utils/emr-point2-android"
-                    ]
-                  },
-                  {
-                    "group": "Types",
-                    "expanded": false,
-                    "pages": [
-                      "en/api-reference/supernote-plugin/types/index",
-                      "en/api-reference/supernote-plugin/types/api-response",
-                      "en/api-reference/supernote-plugin/types/point",
-                      "en/api-reference/supernote-plugin/types/rect",
-                      "en/api-reference/supernote-plugin/types/size",
-                      "en/api-reference/supernote-plugin/types/trail-data-accessor",
-                      "en/api-reference/supernote-plugin/types/stroke",
-                      "en/api-reference/supernote-plugin/types/pen-info",
-                      "en/api-reference/supernote-plugin/types/recogn-data",
-                      "en/api-reference/supernote-plugin/types/recog-result-data",
-                      "en/api-reference/supernote-plugin/types/geometry",
-                      "en/api-reference/supernote-plugin/types/picture",
-                      "en/api-reference/supernote-plugin/types/template",
-                      "en/api-reference/supernote-plugin/types/key-word",
-                      "en/api-reference/supernote-plugin/types/layer",
-                      "en/api-reference/supernote-plugin/types/trail",
-                      "en/api-reference/supernote-plugin/types/text-link",
-                      "en/api-reference/supernote-plugin/types/link",
-                      "en/api-reference/supernote-plugin/types/lasso-link",
-                      "en/api-reference/supernote-plugin/types/title",
-                      "en/api-reference/supernote-plugin/types/text-box",
-                      "en/api-reference/supernote-plugin/types/plugin-button"
                     ]
                   }
                 ]
