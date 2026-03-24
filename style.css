@@ -1,0 +1,5 @@
+/* Hide the default Mintlify footer across the docs site. */
+#footer,
+footer {
+  display: none !important;
+}
