@@ -3,9 +3,15 @@
   "theme": "mint",
   "name": "Supernote",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#368BC1",
+    "light": "#5AA3D1",
+    "dark": "#2A6E99"
+  },
+  "background": {
+    "color": {
+      "light": "#EFEFEF",
+      "dark": "#1B1B1B"
+    }
   },
   "favicon": "/favicon.svg",
   "banner": {
@@ -479,19 +485,6 @@
   "logo": {
     "light": "/logo/light.svg",
     "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
   },
   "contextual": {
     "options": [
