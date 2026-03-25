@@ -14,19 +14,11 @@
     }
   },
   "favicon": "/favicon.svg",
-  "banner": {
-    "content": "SDK docs version: v0.1.28",
-    "dismissible": false
-  },
   "navigation": {
     "languages": [
       {
         "language": "en",
         "default": true,
-        "banner": {
-          "content": "SDK docs version: v0.1.25",
-          "dismissible": false
-        },
         "tabs": [
           {
             "tab": "Guides",
