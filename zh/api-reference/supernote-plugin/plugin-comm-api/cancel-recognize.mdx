@@ -1,0 +1,26 @@
+---
+title: "cancelRecognize"
+description: "取消当前正在进行的由 [recognizeElements](/zh/api-reference/supernote-plugin/plugin-comm-api/recognize-elements) 发起的识别任务"
+---
+
+```ts
+static cancelRecognize(): Promise<APIResponse<boolean>>;
+```
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示取消成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleCancelRecognize() {
+  const res = await PluginCommAPI.cancelRecognize();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'cancelRecognize 调用失败');
+  }
+  return res.result;
+}
+```

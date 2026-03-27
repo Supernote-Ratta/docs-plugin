@@ -1,0 +1,26 @@
+---
+title: "cancelRecognize"
+description: "Cancel the ongoing recognition task initiated by [recognizeElements](/en/api-reference/supernote-plugin/plugin-comm-api/recognize-elements)."
+---
+
+```ts
+static cancelRecognize(): Promise<APIResponse<boolean>>;
+```
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response): `result === true` means canceled successfully
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+export async function exampleCancelRecognize() {
+  const res = await PluginCommAPI.cancelRecognize();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'cancelRecognize call failed');
+  }
+  return res.result;
+}
+```
