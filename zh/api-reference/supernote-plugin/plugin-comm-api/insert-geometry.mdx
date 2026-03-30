@@ -15,7 +15,7 @@ static insertGeometry(geometry: Geometry): Promise<APIResponse<boolean>>;
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `geometry` | [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry) | 几何图形参数 |
+| `geometry` | [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry) | 几何图形参数；可通过 `showLassoAfterInsert` 控制插入后是否自动显示套索状态 |
 
 **返回**
 
@@ -32,6 +32,7 @@ import { PluginCommAPI, type Geometry } from 'sn-plugin-lib';
  */
 export async function exampleInsertGeometry() {
   const geometry: Geometry = {
+    showLassoAfterInsert: false,
     penColor: 0x9d,
     penType: 10,
     penWidth: 200, // 最小值 100

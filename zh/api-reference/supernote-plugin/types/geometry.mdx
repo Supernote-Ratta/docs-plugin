@@ -16,6 +16,7 @@ description: "几何图形数据。"
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
+| `showLassoAfterInsert` | `boolean` | 仅在 [`insertGeometry`](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-geometry) 中生效，用于控制插入后是否自动显示套索状态；其他接口会忽略该字段 |
 | `penColor` | `number` | 笔颜色，0x00:黑色，0x9D:深灰，0xC9：浅灰，0xFE：白色 |
 | `penType` | `number` | 笔类型，10：针管笔，1：压力笔，11：马克笔，14：书法笔 |
 | `penWidth` | `number` | 笔宽度（最小值 `100`） |
