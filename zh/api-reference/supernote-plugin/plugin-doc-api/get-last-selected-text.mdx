@@ -1,0 +1,33 @@
+---
+title: "getLastSelectedText"
+description: "获取最近一次选中的文本内容。"
+---
+
+<Note>
+必须先在文档应用中选中文本后才能调用该接口，否则调用会失败。
+</Note>
+
+```ts
+static getLastSelectedText(): Promise<APIResponse<string>>;
+```
+
+**返回**
+
+- [`APIResponse<string>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为最近一次选中的文本内容
+
+## 示例
+
+```ts wrap
+import { PluginDocAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取最近一次选中文本的示例。
+ */
+export async function exampleGetLastSelectedText() {
+  const res = await PluginDocAPI.getLastSelectedText();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLastSelectedText 调用失败');
+  }
+  return res.result;
+}
+```

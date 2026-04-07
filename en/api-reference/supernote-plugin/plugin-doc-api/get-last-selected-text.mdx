@@ -1,0 +1,34 @@
+---
+title: "getLastSelectedText"
+description: "Get the last selected text content."
+---
+
+<Note>
+You must select text in DOC before calling this API; otherwise the call will fail.
+</Note>
+
+```ts
+static getLastSelectedText(): Promise<APIResponse<string>>;
+```
+
+**Returns**
+
+- [`APIResponse<string>`](/en/api-reference/supernote-plugin/types/api-response):
+`result` is the last selected text content
+
+## Example
+
+```ts wrap
+import { PluginDocAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get the last selected text.
+ */
+export async function exampleGetLastSelectedText() {
+  const res = await PluginDocAPI.getLastSelectedText();
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getLastSelectedText call failed');
+  }
+  return res.result;
+}
+```

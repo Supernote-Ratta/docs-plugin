@@ -136,7 +136,7 @@
                     "expanded": false,
                     "pages": [
                       "en/api-reference/supernote-plugin/plugin-doc-api/index",
-                      "en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text",
+                      "en/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text",
                       "en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text",
                       "en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages"
                     ]
@@ -366,7 +366,7 @@
                     "expanded": false,
                     "pages": [
                       "zh/api-reference/supernote-plugin/plugin-doc-api/index",
-                      "zh/api-reference/supernote-plugin/plugin-doc-api/get-selected-text",
+                      "zh/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text",
                       "zh/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text",
                       "zh/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages"
                     ]
