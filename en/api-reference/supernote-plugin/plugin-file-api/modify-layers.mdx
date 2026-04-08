@@ -7,6 +7,10 @@ description: "Modify page layer data (non-existent layers are ignored)."
 Only NOTE files have layer data; other file types do not.
 </Note>
 
+<Note>
+The main layer and background layer do not support renaming. Even if you pass a new `name`, it will not take effect, and the default name will still be shown in the UI.
+</Note>
+
 ```ts wrap
 static modifyLayers(NOTEPath: string, page: number, layers: Layer[]): Promise<APIResponse<boolean>>;
 ```
@@ -17,7 +21,7 @@ static modifyLayers(NOTEPath: string, page: number, layers: Layer[]): Promise<AP
 | --- | --- | --- |
 | `NOTEPath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
-| `layers` | [`Layer[]`](/en/api-reference/supernote-plugin/types/layer) | Existing layer data array |
+| `layers` | [`Layer[]`](/en/api-reference/supernote-plugin/types/layer) | Existing layer data array. The `name` of the main layer and background layer cannot be modified |
 
 **Returns**
 

@@ -7,6 +7,10 @@ description: "修改页面图层数据（不存在的图层不会修改）。"
 只有笔记文件才有图层数据，其他文件没有图层数据。
 </Note>
 
+<Note>
+主图层和背景图层不支持修改图层名称。即使传入新的 `name`，也不会生效，界面中仍会显示默认名称。
+</Note>
+
 ```ts wrap
 static modifyLayers(notePath: string, page: number, layers: Layer[]): Promise<APIResponse<boolean>>;
 ```
@@ -17,7 +21,7 @@ static modifyLayers(notePath: string, page: number, layers: Layer[]): Promise<AP
 | --- | --- | --- |
 | `notePath` | `string` | 笔记文件路径 |
 | `page` | `number` | 页面索引（从 0 开始） |
-| `layers` | [`Layer[]`](/zh/api-reference/supernote-plugin/types/layer) | 已存在的图层数据数组 |
+| `layers` | [`Layer[]`](/zh/api-reference/supernote-plugin/types/layer) | 已存在的图层数据数组。主图层和背景图层的 `name` 不支持修改 |
 
 **返回**
 
