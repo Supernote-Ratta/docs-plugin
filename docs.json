@@ -245,10 +245,6 @@
       },
       {
         "language": "zh",
-        "banner": {
-          "content": "SDK 文档版本：v0.1.25",
-          "dismissible": false
-        },
         "tabs": [
           {
             "tab": "Guides",
