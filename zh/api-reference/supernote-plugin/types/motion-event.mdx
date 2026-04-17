@@ -1,0 +1,27 @@
+---
+title: "MotionEvent"
+description: "触摸移动事件回调数据。"
+---
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `pointers` | `Pointer[]` | 当前事件中的触点数据列表 |
+| `pressure` | `number` | 当前主触点压力值 |
+| `y` | `number` | 当前主触点 Y 坐标 |
+| `eventTime` | `number` | 事件发生时间 |
+| `pointerCount` | `number` | 当前触点数量 |
+| `x` | `number` | 当前主触点 X 坐标 |
+| `toolType` | `number` | 输入工具类型：`0` 表示未知，`1` 表示手指触摸事件，`2` 表示电磁笔触摸事件 |
+| `downTime` | `number` | 按下开始时间 |
+| `actionIndex` | `number` | 当前动作对应的触点索引 |
+| `action` | `number` | 当前动作类型，取值与 Android 原生 `MotionEvent` 一致：`0=ACTION_DOWN`（按下）、`1=ACTION_UP`（抬起）、`2=ACTION_MOVE`（移动）、`3=ACTION_CANCEL`（取消） |
+
+## Pointer
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `x` | `number` | 触点 X 坐标（屏幕像素点坐标） |
+| `y` | `number` | 触点 Y 坐标（屏幕像素点坐标） |
+| `pressure` | `number` | 触点压力值 |
+| `toolType` | `number` | 输入工具类型：`0` 表示未知，`1` 表示手指触摸事件，`2` 表示电磁笔触摸事件 |
+| `pointerId` | `number` | 触点唯一标识 |

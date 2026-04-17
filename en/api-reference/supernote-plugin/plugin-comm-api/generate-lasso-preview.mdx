@@ -1,0 +1,41 @@
+---
+title: "generateLassoPreview"
+description: "Generate preview image data for lasso elements."
+---
+
+```ts wrap
+static generateLassoPreview(imagePath: string): Promise<APIResponse<LassoPreview>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `imagePath` | `string` | Output path for the preview image |
+
+**Returns**
+
+- [`APIResponse<T>`](/en/api-reference/supernote-plugin/types/api-response): `result` is a lasso preview object with the following structure:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `imagePath` | `string` | Path of the generated preview image |
+| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Lasso area |
+| `rotateDegree` | `number` | Rotation angle |
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: generate a preview image for lasso elements.
+ */
+export async function exampleGenerateLassoPreview() {
+  const res = await PluginCommAPI.generateLassoPreview('/storage/emulated/0/Note/out/lasso-preview.png');
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateLassoPreview call failed');
+  }
+  return res.result;
+}
+```

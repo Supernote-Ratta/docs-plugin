@@ -1,0 +1,53 @@
+---
+title: "generateLayerPreviewImage"
+description: "生成图层缩略图。"
+---
+
+<Note>
+该接口依赖图层能力，通常用于笔记文件页面。
+</Note>
+
+```ts wrap
+static generateLayerPreviewImage(
+  notePath: string,
+  page: number,
+  layer: number,
+  imagePath: string
+): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `notePath` | `string` | 笔记文件路径 |
+| `page` | `number` | 页码（从 `0` 开始） |
+| `layer` | `number` | 图层索引。`-1` 表示背景图层，`0` 表示主图层，`1~3` 表示自定义图层 |
+| `imagePath` | `string` | 缩略图输出路径 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示图层缩略图生成成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 生成图层缩略图的示例。
+ */
+export async function exampleGenerateLayerPreviewImage() {
+  const res = await PluginCommAPI.generateLayerPreviewImage(
+    '/storage/emulated/0/Note/demo.note',
+    0,
+    0,
+    '/storage/emulated/0/Note/out/layer-preview.png'
+  );
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateLayerPreviewImage 调用失败');
+  }
+  return res.result;
+}
+```

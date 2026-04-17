@@ -1,0 +1,27 @@
+---
+title: "MotionEvent"
+description: "Touch move event callback data."
+---
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `pointers` | `Pointer[]` | Pointer data list in the current event |
+| `pressure` | `number` | Pressure value of the primary pointer |
+| `y` | `number` | Y coordinate of the primary pointer |
+| `eventTime` | `number` | Event time |
+| `pointerCount` | `number` | Current pointer count |
+| `x` | `number` | X coordinate of the primary pointer |
+| `toolType` | `number` | Input tool type: `0` unknown, `1` finger touch event, `2` EMR pen touch event |
+| `downTime` | `number` | Down start time |
+| `actionIndex` | `number` | Pointer index for the current action |
+| `action` | `number` | Current action type. Values are the same as Android native `MotionEvent`: `0=ACTION_DOWN` (down), `1=ACTION_UP` (up), `2=ACTION_MOVE` (move), `3=ACTION_CANCEL` (cancel) |
+
+## Pointer
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `x` | `number` | Pointer X coordinate (screen pixel coordinates) |
+| `y` | `number` | Pointer Y coordinate (screen pixel coordinates) |
+| `pressure` | `number` | Pointer pressure |
+| `toolType` | `number` | Input tool type: `0` unknown, `1` finger touch event, `2` EMR pen touch event |
+| `pointerId` | `number` | Unique pointer identifier |

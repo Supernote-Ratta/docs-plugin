@@ -1,0 +1,53 @@
+---
+title: "generateLayerPreviewImage"
+description: "Generate a thumbnail image for a layer."
+---
+
+<Note>
+This API depends on layer capability and is typically used on NOTE pages.
+</Note>
+
+```ts wrap
+static generateLayerPreviewImage(
+  notePath: string,
+  page: number,
+  layer: number,
+  imagePath: string
+): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `notePath` | `string` | NOTE file path |
+| `page` | `number` | Page index (starts from `0`) |
+| `layer` | `number` | Layer index. `-1` indicates the background layer, `0` indicates the main layer, and `1~3` indicate custom layers |
+| `imagePath` | `string` | Output path for the thumbnail image |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the layer thumbnail image was generated successfully
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: generate a thumbnail image for a layer.
+ */
+export async function exampleGenerateLayerPreviewImage() {
+  const res = await PluginCommAPI.generateLayerPreviewImage(
+    '/storage/emulated/0/Note/demo.note',
+    0,
+    0,
+    '/storage/emulated/0/Note/out/layer-preview.png'
+  );
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateLayerPreviewImage call failed');
+  }
+  return res.result;
+}
+```

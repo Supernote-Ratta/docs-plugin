@@ -1,0 +1,40 @@
+---
+title: "fillRegionByPoint"
+description: "Fill the color of a closed region by point."
+---
+
+```ts wrap
+static fillRegionByPoint(
+  point: { x: number; y: number },
+  color: number
+): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `point` | [`Point`](/en/api-reference/supernote-plugin/types/point) | Fill point coordinates in pixels |
+| `color` | `number` | Fill color: `0x00` black, `0x9D` dark gray, `0xC9` light gray, `0xFE` white |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the fill succeeded
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: fill a closed region by point.
+ */
+export async function exampleFillRegionByPoint() {
+  const res = await PluginCommAPI.fillRegionByPoint({ x: 300, y: 240 }, 0x00);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'fillRegionByPoint call failed');
+  }
+  return res.result;
+}
+```

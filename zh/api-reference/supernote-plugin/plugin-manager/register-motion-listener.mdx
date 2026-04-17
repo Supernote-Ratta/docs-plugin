@@ -1,0 +1,42 @@
+---
+title: "registerMotionListener"
+description: "注册触摸移动事件监听。"
+---
+
+```ts
+registerMotionListener(
+  registerType: number,
+  listener: PluginEventListener
+): PluginEventSubscription;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `registerType` | `number` | 注册优先级：`0` 始终最前，`1` 普通排序，`2` 始终最后 |
+| `listener` | `PluginEventListener` | 事件回调对象，实现 `onMsg(msg)`；该方法内部等价于注册 `motion_event` 触摸移动事件监听。回调中的 `msg` 为 [`MotionEvent`](/zh/api-reference/supernote-plugin/types/motion-event) |
+
+**返回**
+
+- `PluginEventSubscription`：订阅对象，调用 `remove()` 会注销监听并移除本地订阅
+
+## 示例
+
+```ts wrap
+import { PluginManager, type MotionEvent } from 'sn-plugin-lib';
+
+/**
+ * 注册触摸移动事件监听的示例。
+ */
+export async function exampleRegisterMotionListener() {
+  const sub = PluginManager.registerMotionListener(1, {
+    onMsg(msg) {
+      const motion = msg as MotionEvent;
+      console.log('touch move pointer count:', motion.pointerCount);
+      console.log('first pointer id:', motion.pointers[0]?.pointerId);
+    },
+  });
+  return sub;
+}
+```
