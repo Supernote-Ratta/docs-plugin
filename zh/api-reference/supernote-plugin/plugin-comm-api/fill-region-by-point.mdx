@@ -1,0 +1,40 @@
+---
+title: "fillRegionByPoint"
+description: "通过点位填充闭合区域颜色。"
+---
+
+```ts wrap
+static fillRegionByPoint(
+  point: { x: number; y: number },
+  color: number
+): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `point` | [`Point`](/zh/api-reference/supernote-plugin/types/point) | 填充点位坐标，单位为像素 |
+| `color` | `number` | 填充颜色：`0x00` 黑色，`0x9D` 深灰，`0xC9` 浅灰，`0xFE` 白色 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示填充成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 通过点位填充闭合区域颜色的示例。
+ */
+export async function exampleFillRegionByPoint() {
+  const res = await PluginCommAPI.fillRegionByPoint({ x: 300, y: 240 }, 0x00);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'fillRegionByPoint 调用失败');
+  }
+  return res.result;
+}
+```

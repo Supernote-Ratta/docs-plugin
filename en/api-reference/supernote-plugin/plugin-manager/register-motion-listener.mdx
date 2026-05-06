@@ -1,0 +1,42 @@
+---
+title: "registerMotionListener"
+description: "Register a touch move event listener."
+---
+
+```ts
+registerMotionListener(
+  registerType: number,
+  listener: PluginEventListener
+): PluginEventSubscription;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `registerType` | `number` | Registration priority: `0` always first, `1` normal order, `2` always last |
+| `listener` | `PluginEventListener` | Event callback object that implements `onMsg(msg)`. Internally, this method is equivalent to registering a `motion_event` touch move event listener. The callback `msg` is [`MotionEvent`](/en/api-reference/supernote-plugin/types/motion-event) |
+
+**Returns**
+
+- `PluginEventSubscription`: subscription object. Calling `remove()` unregisters the listener and removes the local subscription.
+
+## Example
+
+```ts wrap
+import { PluginManager, type MotionEvent } from 'sn-plugin-lib';
+
+/**
+ * Example: register a touch move event listener.
+ */
+export async function exampleRegisterMotionListener() {
+  const sub = PluginManager.registerMotionListener(1, {
+    onMsg(msg) {
+      const motion = msg as MotionEvent;
+      console.log('touch move pointer count:', motion.pointerCount);
+      console.log('first pointer id:', motion.pointers[0]?.pointerId);
+    },
+  });
+  return sub;
+}
+```

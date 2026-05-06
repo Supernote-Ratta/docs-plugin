@@ -109,7 +109,10 @@
                       "en/api-reference/supernote-plugin/plugin-comm-api/insert-geometry",
                       "en/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-five-star"
+                      "en/api-reference/supernote-plugin/plugin-comm-api/insert-five-star",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/generate-lasso-preview",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/generate-layer-preview-image",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/fill-region-by-point"
                     ]
                   },
                   {
@@ -189,6 +192,7 @@
                       "en/api-reference/supernote-plugin/plugin-manager/init",
                       "en/api-reference/supernote-plugin/plugin-manager/register-lang-listener",
                       "en/api-reference/supernote-plugin/plugin-manager/register-event-listener",
+                      "en/api-reference/supernote-plugin/plugin-manager/register-motion-listener",
                       "en/api-reference/supernote-plugin/plugin-manager/register-button",
                       "en/api-reference/supernote-plugin/plugin-manager/unregister-button",
                       "en/api-reference/supernote-plugin/plugin-manager/get-button-state",
@@ -234,7 +238,8 @@
                       "en/api-reference/supernote-plugin/types/lasso-link",
                       "en/api-reference/supernote-plugin/types/title",
                       "en/api-reference/supernote-plugin/types/text-box",
-                      "en/api-reference/supernote-plugin/types/plugin-button"
+                      "en/api-reference/supernote-plugin/types/plugin-button",
+                      "en/api-reference/supernote-plugin/types/motion-event"
                     ]
                   }
                 ]
@@ -335,7 +340,10 @@
                       "zh/api-reference/supernote-plugin/plugin-comm-api/insert-geometry",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates",
-                      "zh/api-reference/supernote-plugin/plugin-comm-api/insert-five-star"
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/insert-five-star",
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/generate-lasso-preview",
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/generate-layer-preview-image",
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/fill-region-by-point"
                     ]
                   },
                   {
@@ -415,6 +423,7 @@
                       "zh/api-reference/supernote-plugin/plugin-manager/init",
                       "zh/api-reference/supernote-plugin/plugin-manager/register-lang-listener",
                       "zh/api-reference/supernote-plugin/plugin-manager/register-event-listener",
+                      "zh/api-reference/supernote-plugin/plugin-manager/register-motion-listener",
                       "zh/api-reference/supernote-plugin/plugin-manager/register-button",
                       "zh/api-reference/supernote-plugin/plugin-manager/unregister-button",
                       "zh/api-reference/supernote-plugin/plugin-manager/get-button-state",
@@ -461,7 +470,8 @@
                       "zh/api-reference/supernote-plugin/types/title",
                       "zh/api-reference/supernote-plugin/types/text-box",
                       "zh/api-reference/supernote-plugin/types/button-listener",
-                      "zh/api-reference/supernote-plugin/types/button-subscription"
+                      "zh/api-reference/supernote-plugin/types/button-subscription",
+                      "zh/api-reference/supernote-plugin/types/motion-event"
                     ]
                   }
                 ]
