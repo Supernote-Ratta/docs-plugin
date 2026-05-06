@@ -1,0 +1,48 @@
+---
+title: "requestPermission"
+description: "申请指定权限，并返回用户的授权选择结果。"
+---
+
+```ts
+requestPermission(permission: string): Promise<number>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `permission` | `string` | 权限名称，支持：`plugin.permission.FILE:WRITE`、`plugin.permission.FILE:DELETE`、`plugin.permission.INTERNET` |
+
+<Note>
+关于文件访问权限：
+1. 插件默认拥有私有目录 `/data/data/com.ratta.supernote.pluginhost/files/plugins/<pluginID>` 的读取、写入、删除权限。
+2. 插件默认拥有 `sdcard` 目录下 `Document`、`EXPORT`、`INBOX`、`MyStyle`、`Note`、`SCREENSHOT` 这几个目录的读取权限，其他目录默认不具备读取权限。
+3. 当插件申请写入或删除权限后，可获得 `sdcard` 目录下 `Document`、`EXPORT`、`INBOX`、`MyStyle`、`Note`、`SCREENSHOT` 这几个目录的写入和删除权限；其他目录即使申请相关权限，也无法获得对应的写入和删除权限。
+</Note>
+
+**返回**
+
+- `Promise<number>`：用户授权结果，`0` 表示拒绝，`1` 表示使用时允许，`2` 表示始终允许
+
+**说明**
+
+- 宿主可能会弹出授权对话框，供用户在“拒绝 / 使用时允许 / 始终允许”之间选择
+
+**异常**
+
+- 当 `permission` 不是非空字符串时，会抛出参数校验异常
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 申请网络权限的示例。
+ */
+export async function exampleRequestPermission() {
+  const permission = 'plugin.permission.INTERNET';
+  const result = await PluginManager.requestPermission(permission);
+  return result;
+}
+```

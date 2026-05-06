@@ -1,0 +1,39 @@
+---
+title: "getPathEncryptionStatus"
+description: "获取文件或目录的加密状态。"
+---
+
+```ts wrap
+static getPathEncryptionStatus(filePath: string): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `filePath` | `string` | 文件或目录路径 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示该路径已加密，`result === false` 表示该路径未加密
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 查询文件或目录加密状态的示例。
+ */
+export async function exampleGetPathEncryptionStatus() {
+  const filePath = '/storage/emulated/0/Note/demo.note';
+
+  const res = await PluginFileAPI.getPathEncryptionStatus(filePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'getPathEncryptionStatus 调用失败');
+  }
+
+  return res.result;
+}
+```
