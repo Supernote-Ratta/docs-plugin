@@ -181,7 +181,9 @@
                       "en/api-reference/supernote-plugin/plugin-file-api/get-element-counts",
                       "en/api-reference/supernote-plugin/plugin-file-api/get-element-num-list",
                       "en/api-reference/supernote-plugin/plugin-file-api/get-element",
-                      "en/api-reference/supernote-plugin/plugin-file-api/get-last-element"
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-last-element",
+                      "en/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status",
+                      "en/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password"
                     ]
                   },
                   {
@@ -201,7 +203,9 @@
                       "en/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path",
                       "en/api-reference/supernote-plugin/plugin-manager/get-plugin-name",
                       "en/api-reference/supernote-plugin/plugin-manager/get-device-type",
-                      "en/api-reference/supernote-plugin/plugin-manager/close-plugin-view"
+                      "en/api-reference/supernote-plugin/plugin-manager/close-plugin-view",
+                      "en/api-reference/supernote-plugin/plugin-manager/has-permission",
+                      "en/api-reference/supernote-plugin/plugin-manager/request-permission"
                     ]
                   },
                   {
@@ -412,7 +416,9 @@
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-element-counts",
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-element-num-list",
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-element",
-                      "zh/api-reference/supernote-plugin/plugin-file-api/get-last-element"
+                      "zh/api-reference/supernote-plugin/plugin-file-api/get-last-element",
+                      "zh/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status",
+                      "zh/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password"
                     ]
                   },
                   {
@@ -432,7 +438,9 @@
                       "zh/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path",
                       "zh/api-reference/supernote-plugin/plugin-manager/get-plugin-name",
                       "zh/api-reference/supernote-plugin/plugin-manager/get-device-type",
-                      "zh/api-reference/supernote-plugin/plugin-manager/close-plugin-view"
+                      "zh/api-reference/supernote-plugin/plugin-manager/close-plugin-view",
+                      "zh/api-reference/supernote-plugin/plugin-manager/has-permission",
+                      "zh/api-reference/supernote-plugin/plugin-manager/request-permission"
                     ]
                   },
                   {

@@ -1,0 +1,46 @@
+---
+title: "hasPermission"
+description: "查询插件是否已拥有指定权限。"
+---
+
+```ts
+hasPermission(permission: string): Promise<number>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `permission` | `string` | 权限名称，支持：`plugin.permission.FILE:WRITE`、`plugin.permission.FILE:DELETE`、`plugin.permission.INTERNET` |
+
+<Note>
+关于文件访问权限：
+1. 插件默认拥有私有目录 `/data/data/com.ratta.supernote.pluginhost/files/plugins/<pluginID>` 的读取、写入、删除权限。
+2. 插件默认拥有 `sdcard` 目录下 `Document`、`EXPORT`、`INBOX`、`MyStyle`、`Note`、`SCREENSHOT` 这几个目录的读取权限，其他目录默认不具备读取权限。
+3. 当插件申请写入或删除权限后，可获得 `sdcard` 目录下 `Document`、`EXPORT`、`INBOX`、`MyStyle`、`Note`、`SCREENSHOT` 这几个目录的写入和删除权限；其他目录即使申请相关权限，也无法获得对应的写入和删除权限。
+</Note>
+
+
+
+**返回**
+
+- `Promise<number>`：权限状态，`0` 表示未授予，`1` 表示使用时允许，`2` 表示始终允许
+
+**异常**
+
+- 当 `permission` 不是非空字符串时，会抛出参数校验异常
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 查询插件写文件权限状态的示例。
+ */
+export async function exampleHasPermission() {
+  const permission = 'plugin.permission.FILE:WRITE';
+  const status = await PluginManager.hasPermission(permission);
+  return status;
+}
+```

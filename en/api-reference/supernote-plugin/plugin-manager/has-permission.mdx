@@ -1,0 +1,44 @@
+---
+title: "hasPermission"
+description: "Check whether the plugin already has a specific permission."
+---
+
+```ts
+hasPermission(permission: string): Promise<number>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `permission` | `string` | Permission name. Supported values: `plugin.permission.FILE:WRITE`, `plugin.permission.FILE:DELETE`, `plugin.permission.INTERNET` |
+
+<Note>
+Regarding file access permissions:
+1. The plugin has read, write, and delete access to its private directory by default: `/data/data/com.ratta.supernote.pluginhost/files/plugins/<pluginID>`.
+2. The plugin has read access by default only to these directories under shared storage: `Document`, `EXPORT`, `INBOX`, `MyStyle`, `Note`, and `SCREENSHOT`. Other directories are not readable.
+3. After requesting write or delete permission, the plugin can write to and delete files only in `Document`, `EXPORT`, `INBOX`, `MyStyle`, `Note`, and `SCREENSHOT` under shared storage. Other directories still do not grant write or delete access even after permission is requested.
+</Note>
+
+**Returns**
+
+- `Promise<number>`: permission status, where `0` means not granted, `1` means allowed while in use, and `2` means always allowed
+
+**Throws**
+
+- Throws a parameter validation error when `permission` is not a non-empty string
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Example: check the write-file permission status.
+ */
+export async function exampleHasPermission() {
+  const permission = 'plugin.permission.FILE:WRITE';
+  const status = await PluginManager.hasPermission(permission);
+  return status;
+}
+```
