@@ -1,0 +1,28 @@
+---
+title: "showPluginView"
+description: "Show the plugin UI."
+---
+
+This API shows the current plugin UI.
+
+```ts
+showPluginView(): Promise<boolean>;
+```
+
+**Returns**
+
+- `Promise<boolean>`: whether the UI was shown successfully
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Example: show the plugin UI.
+ */
+export async function exampleShowPluginView() {
+  const ok = await PluginManager.showPluginView();
+  return ok;
+}
+```

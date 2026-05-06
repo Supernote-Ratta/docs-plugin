@@ -1,0 +1,28 @@
+---
+title: "showPluginView"
+description: "显示插件界面。"
+---
+
+调用该接口会显示当前插件的界面。
+
+```ts
+showPluginView(): Promise<boolean>;
+```
+
+**返回**
+
+- `Promise<boolean>`：是否成功显示
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 显示插件界面的示例。
+ */
+export async function exampleShowPluginView() {
+  const ok = await PluginManager.showPluginView();
+  return ok;
+}
+```

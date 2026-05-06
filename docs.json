@@ -201,7 +201,8 @@
                       "en/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path",
                       "en/api-reference/supernote-plugin/plugin-manager/get-plugin-name",
                       "en/api-reference/supernote-plugin/plugin-manager/get-device-type",
-                      "en/api-reference/supernote-plugin/plugin-manager/close-plugin-view"
+                      "en/api-reference/supernote-plugin/plugin-manager/close-plugin-view",
+                      "en/api-reference/supernote-plugin/plugin-manager/show-plugin-view"
                     ]
                   },
                   {
@@ -432,7 +433,8 @@
                       "zh/api-reference/supernote-plugin/plugin-manager/get-plugin-dir-path",
                       "zh/api-reference/supernote-plugin/plugin-manager/get-plugin-name",
                       "zh/api-reference/supernote-plugin/plugin-manager/get-device-type",
-                      "zh/api-reference/supernote-plugin/plugin-manager/close-plugin-view"
+                      "zh/api-reference/supernote-plugin/plugin-manager/close-plugin-view",
+                      "zh/api-reference/supernote-plugin/plugin-manager/show-plugin-view"
                     ]
                   },
                   {
