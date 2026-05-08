@@ -1,0 +1,43 @@
+---
+title: "getCacheElement"
+description: "根据元素 uuid 获取缓存的 Element 数据（包含笔划、链接、标题、几何图形与文本框等）。"
+---
+
+该接口会根据元素 uuid 获取缓存的 Element 数据（包含笔划、链接、标题、几何图形与文本框等）。
+
+<Note>
+调用 `clearElementCache()` 清空缓存后，旧的 Element 对象/uuid 将无法再用于读取缓存数据。
+</Note>
+
+```ts
+static getCacheElement(uuid: string): Promise<APIResponse<Element>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `uuid` | `string` | 元素 UUID |
+
+**返回**
+
+- [`APIResponse<Element>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为 [`Element`](/zh/api-reference/supernote-plugin/types/trail)（未命中缓存时 `result` 可能为空）
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 根据 uuid 获取缓存 Element 的示例。
+ */
+export async function exampleGetCacheElement(uuid: string) {
+  const res = (await PluginCommAPI.getCacheElement(uuid)) as any;
+  if (!res.success) {
+    console.log('getCacheElement failed', res.error);
+    throw new Error(res.error?.message ?? 'getCacheElement 调用失败');
+  }
+  console.log('getCacheElement result', res.result);
+  return res.result;
+}
+```

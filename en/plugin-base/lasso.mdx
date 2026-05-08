@@ -29,7 +29,7 @@ The selected element list can be obtained via [`PluginCommAPI.getLassoElements()
 | Create lasso selection | [`lassoElements(rect)`](/en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | Creates a lasso selection from a rectangle (pixel coordinates) |
 | Resize lasso rectangle | [`resizeLassoRect(rect)`](/en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | Resizes the lasso rectangle. Currently only proportional scaling is supported |
 | Get selected elements | [`getLassoElements()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | Returns `Element[]` (accessor fields are filled on success) |
-| Control lasso box | [`setLassoBoxState(state)`](/en/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` show, `1` hide, `2` remove completely |
+| Control lasso box | [`setLassoBoxState(state)`](/en/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` show, `1` hide, `2` remove completely, `3` fully hide (including lasso elements) |
 
 <Tip>
 The lasso rectangle is a UI interaction rectangle and is typically expressed in the pixel coordinate system, while stroke point data uses the EMR coordinate system.
@@ -127,8 +127,9 @@ export async function fetchLassoElementsAndDispatch(): Promise<void> {
  * - 0: show
  * - 1: hide
  * - 2: remove completely
+ * - 3: fully hide (including lasso elements)
  */
-export async function setLassoBoxState(state: 0 | 1 | 2): Promise<boolean> {
+export async function setLassoBoxState(state: 0 | 1 | 2 | 3): Promise<boolean> {
   const res = await PluginCommAPI.setLassoBoxState(state);
   return !!res?.success && !!res.result;
 }
@@ -139,3 +140,4 @@ export async function setLassoBoxState(state: 0 | 1 | 2): Promise<boolean> {
 - `resizeLassoRect` currently only supports proportional scaling: call `getLassoRect` first, scale around the center, then submit the resize
 - `getLassoElements` may return elements with accessor fields: do not assume point sets are fully in JS; use accessors to fetch data on demand
 - `setLassoBoxState(2)` removes the lasso state completely: typically used at the end of an operation; after removal, the lasso toolbar will close on the user side
+- `setLassoBoxState(3)` fully hides the lasso box (including lasso elements): typically used for custom toolbars/UI so the plugin can control the presentation

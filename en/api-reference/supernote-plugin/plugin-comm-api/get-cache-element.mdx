@@ -1,0 +1,43 @@
+---
+title: "getCacheElement"
+description: "Get cached Element data by uuid (including strokes, links, titles, geometries, and text boxes)."
+---
+
+This API gets cached Element data by element uuid, including strokes, links, titles, geometries, and text boxes.
+
+<Note>
+After calling `clearElementCache()`, previously obtained Element objects/uuids can no longer be used to read cached data.
+</Note>
+
+```ts
+static getCacheElement(uuid: string): Promise<APIResponse<Element>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `uuid` | `string` | Element UUID |
+
+**Returns**
+
+- [`APIResponse<Element>`](/en/api-reference/supernote-plugin/types/api-response): `result` is [`Element`](/en/api-reference/supernote-plugin/types/trail) (`result` may be empty when the cache is missed)
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get cached Element by uuid.
+ */
+export async function exampleGetCacheElement(uuid: string) {
+ const res = (await PluginCommAPI.getCacheElement(uuid)) as any;
+ if (!res.success) {
+ console.log('getCacheElement failed', res.error);
+ throw new Error(res.error?.message ?? 'getCacheElement call failed');
+ }
+ console.log('getCacheElement result', res.result);
+ return res.result;
+}
+```
