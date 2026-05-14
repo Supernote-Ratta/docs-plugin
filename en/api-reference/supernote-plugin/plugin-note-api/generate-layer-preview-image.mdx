@@ -4,7 +4,7 @@ description: "Generate a thumbnail image for a layer."
 ---
 
 <Note>
-This API depends on layer capability and is typically used on NOTE pages.
+This API belongs to `PluginNoteAPI` and can only be called in NOTE.
 </Note>
 
 ```ts wrap
@@ -33,13 +33,13 @@ static generateLayerPreviewImage(
 ## Example
 
 ```ts wrap
-import { PluginCommAPI } from 'sn-plugin-lib';
+import { PluginNoteAPI } from 'sn-plugin-lib';
 
 /**
  * Example: generate a thumbnail image for a layer.
  */
 export async function exampleGenerateLayerPreviewImage() {
-  const res = await PluginCommAPI.generateLayerPreviewImage(
+  const res = await PluginNoteAPI.generateLayerPreviewImage(
     '/storage/emulated/0/Note/demo.note',
     0,
     0,

@@ -111,9 +111,7 @@
                       "en/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates",
                       "en/api-reference/supernote-plugin/plugin-comm-api/insert-five-star",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/generate-lasso-preview",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/generate-layer-preview-image",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/fill-region-by-point"
+                      "en/api-reference/supernote-plugin/plugin-comm-api/generate-lasso-preview"
                     ]
                   },
                   {
@@ -132,7 +130,8 @@
                       "en/api-reference/supernote-plugin/plugin-note-api/get-lasso-text",
                       "en/api-reference/supernote-plugin/plugin-note-api/insert-text",
                       "en/api-reference/supernote-plugin/plugin-note-api/modify-lasso-text",
-                      "en/api-reference/supernote-plugin/plugin-note-api/insert-image"
+                      "en/api-reference/supernote-plugin/plugin-note-api/insert-image",
+                      "en/api-reference/supernote-plugin/plugin-note-api/generate-layer-preview-image"
                     ]
                   },
                   {
@@ -344,9 +343,7 @@
                       "zh/api-reference/supernote-plugin/plugin-comm-api/modify-lasso-geometry",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-note-system-templates",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/insert-five-star",
-                      "zh/api-reference/supernote-plugin/plugin-comm-api/generate-lasso-preview",
-                      "zh/api-reference/supernote-plugin/plugin-comm-api/generate-layer-preview-image",
-                      "zh/api-reference/supernote-plugin/plugin-comm-api/fill-region-by-point"
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/generate-lasso-preview"
                     ]
                   },
                   {
@@ -365,7 +362,8 @@
                       "zh/api-reference/supernote-plugin/plugin-note-api/get-lasso-text",
                       "zh/api-reference/supernote-plugin/plugin-note-api/insert-text",
                       "zh/api-reference/supernote-plugin/plugin-note-api/modify-lasso-text",
-                      "zh/api-reference/supernote-plugin/plugin-note-api/insert-image"
+                      "zh/api-reference/supernote-plugin/plugin-note-api/insert-image",
+                      "zh/api-reference/supernote-plugin/plugin-note-api/generate-layer-preview-image"
                     ]
                   },
                   {

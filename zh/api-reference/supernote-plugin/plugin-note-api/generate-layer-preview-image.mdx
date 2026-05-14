@@ -4,7 +4,7 @@ description: "生成图层缩略图。"
 ---
 
 <Note>
-该接口依赖图层能力，通常用于笔记文件页面。
+该接口属于 `PluginNoteAPI`，只能在笔记应用中调用。
 </Note>
 
 ```ts wrap
@@ -33,13 +33,13 @@ static generateLayerPreviewImage(
 ## 示例
 
 ```ts wrap
-import { PluginCommAPI } from 'sn-plugin-lib';
+import { PluginNoteAPI } from 'sn-plugin-lib';
 
 /**
  * 生成图层缩略图的示例。
  */
 export async function exampleGenerateLayerPreviewImage() {
-  const res = await PluginCommAPI.generateLayerPreviewImage(
+  const res = await PluginNoteAPI.generateLayerPreviewImage(
     '/storage/emulated/0/Note/demo.note',
     0,
     0,
