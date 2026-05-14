@@ -52,7 +52,7 @@ export async function exampleInsertElements() {
  element.thickness = 2;
  if (element.stroke) {
  element.stroke.penColor = 0;
- element.stroke.penType = 1;
+ element.stroke.penType = 16;
  await element.stroke.points.setRange(0, points.length - 1, points);
  await element.stroke.pressures.setRange(0, pressures.length - 1, pressures);
  }
