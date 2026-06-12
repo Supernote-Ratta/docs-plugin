@@ -1,0 +1,42 @@
+---
+title: "jumpToPage"
+description: "Jump to the specified page in the current file."
+---
+
+```ts
+static jumpToPage(page: number): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `page` | `number` | Target page index, starting from `0` |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the jump succeeded
+
+**Throws**
+
+- Throws a parameter validation error when `page` is not an integer greater than or equal to `0`
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: jump to a specific page.
+ */
+export async function exampleJumpToPage() {
+  const res = await PluginCommAPI.jumpToPage(2);
+  if (!res.success) {
+    console.log('jumpToPage failed', res.error);
+    throw new Error(res.error?.message ?? 'jumpToPage call failed');
+  }
+  console.log('jumpToPage result', res.result);
+  return res.result;
+}
+```

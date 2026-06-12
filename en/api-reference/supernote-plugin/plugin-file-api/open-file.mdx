@@ -1,0 +1,46 @@
+---
+title: "openFile"
+description: "Open the specified document or note file."
+---
+
+<Note>
+Currently supported file formats are: `pdf`, `epub`, `cbz`, `xps`, `fb2`, and `note`.
+</Note>
+
+```ts
+static openFile(filePath: string): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `filePath` | `string` | File path to open |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates the file was opened successfully
+
+**Throws**
+
+- Throws a parameter validation error when `filePath` is not a non-empty string
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: open a file.
+ */
+export async function exampleOpenFile() {
+  const res = await PluginFileAPI.openFile('/storage/emulated/0/Document/demo.pdf');
+  if (!res.success) {
+    console.log('openFile failed', res.error);
+    throw new Error(res.error?.message ?? 'openFile call failed');
+  }
+  console.log('openFile result', res.result);
+  return res.result;
+}
+```

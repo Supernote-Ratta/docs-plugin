@@ -24,7 +24,7 @@ hasPermission(permission: string): Promise<number>;
 
 **返回**
 
-- `Promise<number>`：权限状态，`0` 表示未授予，`1` 表示使用时允许，`2` 表示始终允许
+- `Promise<number>`：返回权限状态，`0` 表示未授予该权限，无法使用；`1` 表示已授予该权限，可以使用
 
 **异常**
 

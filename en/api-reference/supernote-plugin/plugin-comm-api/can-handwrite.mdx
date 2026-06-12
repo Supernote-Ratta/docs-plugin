@@ -1,0 +1,32 @@
+---
+title: "canHandwrite"
+description: "Check whether the current view supports handwriting."
+---
+
+```ts
+static canHandwrite(): Promise<APIResponse<boolean>>;
+```
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` means the current view supports handwriting, and `result === false` means it does not support handwriting
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: check whether the current view supports handwriting.
+ */
+export async function exampleCanHandwrite() {
+  const res = await PluginCommAPI.canHandwrite();
+  if (!res.success) {
+    console.log('canHandwrite failed', res.error);
+    throw new Error(res.error?.message ?? 'canHandwrite call failed');
+  }
+  console.log('canHandwrite result', res.result);
+  return res.result;
+}
+```

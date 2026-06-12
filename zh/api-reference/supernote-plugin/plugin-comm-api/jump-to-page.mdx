@@ -1,0 +1,42 @@
+---
+title: "jumpToPage"
+description: "跳转到当前文件的指定页。"
+---
+
+```ts
+static jumpToPage(page: number): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `page` | `number` | 目标页码，从 `0` 开始 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示跳转成功
+
+**异常**
+
+- 当 `page` 不是大于等于 `0` 的整数时，会抛出参数校验异常
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 跳转到指定页的示例。
+ */
+export async function exampleJumpToPage() {
+  const res = await PluginCommAPI.jumpToPage(2);
+  if (!res.success) {
+    console.log('jumpToPage failed', res.error);
+    throw new Error(res.error?.message ?? 'jumpToPage 调用失败');
+  }
+  console.log('jumpToPage result', res.result);
+  return res.result;
+}
+```

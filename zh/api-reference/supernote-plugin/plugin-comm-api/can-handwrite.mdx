@@ -1,0 +1,32 @@
+---
+title: "canHandwrite"
+description: "检查当前视图是否支持手写。"
+---
+
+```ts
+static canHandwrite(): Promise<APIResponse<boolean>>;
+```
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示当前视图支持手写，`result === false` 表示当前视图不支持手写
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 检查当前视图是否支持手写的示例。
+ */
+export async function exampleCanHandwrite() {
+  const res = await PluginCommAPI.canHandwrite();
+  if (!res.success) {
+    console.log('canHandwrite failed', res.error);
+    throw new Error(res.error?.message ?? 'canHandwrite 调用失败');
+  }
+  console.log('canHandwrite result', res.result);
+  return res.result;
+}
+```

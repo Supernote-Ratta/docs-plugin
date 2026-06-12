@@ -101,6 +101,8 @@
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
                       "en/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/can-handwrite",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/jump-to-page",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-pen-info",
                       "en/api-reference/supernote-plugin/plugin-comm-api/recognize-elements",
@@ -182,6 +184,7 @@
                       "en/api-reference/supernote-plugin/plugin-file-api/get-element-num-list",
                       "en/api-reference/supernote-plugin/plugin-file-api/get-element",
                       "en/api-reference/supernote-plugin/plugin-file-api/get-last-element",
+                      "en/api-reference/supernote-plugin/plugin-file-api/open-file",
                       "en/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status",
                       "en/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password"
                     ]
@@ -337,6 +340,8 @@
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num",
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/can-handwrite",
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/jump-to-page",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-pen-info",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/recognize-elements",
@@ -418,6 +423,7 @@
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-element-num-list",
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-element",
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-last-element",
+                      "zh/api-reference/supernote-plugin/plugin-file-api/open-file",
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status",
                       "zh/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password"
                     ]

@@ -1,0 +1,46 @@
+---
+title: "openFile"
+description: "打开指定文档和笔记文件。"
+---
+
+<Note>
+当前支持打开的文件格式有：`pdf`、`epub`、`cbz`、`xps`、`fb2`、`note`。
+</Note>
+
+```ts
+static openFile(filePath: string): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `filePath` | `string` | 要打开的文件路径 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示文件打开成功
+
+**异常**
+
+- 当 `filePath` 不是非空字符串时，会抛出参数校验异常
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 打开文件的示例。
+ */
+export async function exampleOpenFile() {
+  const res = await PluginFileAPI.openFile('/storage/emulated/0/Document/demo.pdf');
+  if (!res.success) {
+    console.log('openFile failed', res.error);
+    throw new Error(res.error?.message ?? 'openFile 调用失败');
+  }
+  console.log('openFile result', res.result);
+  return res.result;
+}
+```
