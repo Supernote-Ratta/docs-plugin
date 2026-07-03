@@ -8,7 +8,7 @@ description: "打开指定文档和笔记文件。"
 </Note>
 
 ```ts
-static openFile(filePath: string): Promise<APIResponse<boolean>>;
+static openFile(filePath: string, page: number): Promise<APIResponse<boolean>>;
 ```
 
 **参数**
@@ -16,6 +16,7 @@ static openFile(filePath: string): Promise<APIResponse<boolean>>;
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
 | `filePath` | `string` | 要打开的文件路径 |
+| `page` | `number` | 页面索引，`0` 及以上表示跳转到指定页面，`-1` 表示不跳转页面，打开文件后显示上次浏览的页面 |
 
 **返回**
 
@@ -25,6 +26,7 @@ static openFile(filePath: string): Promise<APIResponse<boolean>>;
 **异常**
 
 - 当 `filePath` 不是非空字符串时，会抛出参数校验异常
+- 当 `page` 不是大于等于 `-1` 的整数时，会抛出参数校验异常
 
 ## 示例
 
@@ -35,7 +37,8 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * 打开文件的示例。
  */
 export async function exampleOpenFile() {
-  const res = await PluginFileAPI.openFile('/storage/emulated/0/Document/demo.pdf');
+  const page = -1;
+  const res = await PluginFileAPI.openFile('/storage/emulated/0/Document/demo.pdf', page);
   if (!res.success) {
     console.log('openFile failed', res.error);
     throw new Error(res.error?.message ?? 'openFile 调用失败');

@@ -1,0 +1,52 @@
+---
+title: "deletePageElements"
+description: "Delete elements from the specified page in the current file."
+---
+
+```ts wrap
+static deletePageElements(
+  numsInPage: number[],
+  page: number,
+  layer: number
+): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `numsInPage` | `number[]` | In-page element indices to delete |
+| `page` | `number` | Page index, starting from `0` |
+| `layer` | `number` | Layer index. Valid values are `0-3`. The parameter is ignored for DOC files |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response): `result === true` indicates the deletion succeeded
+
+**Throws**
+
+- Throws a parameter validation error when `numsInPage` is not a valid integer array
+- Throws a parameter validation error when `page` is not an integer greater than or equal to `0`
+- Throws a parameter validation error when `layer` is not an integer in the range `0-3`
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: delete elements from a specified page in the current file.
+ */
+export async function exampleDeletePageElements() {
+  const numsInPage = [0, 1];
+  const page = 0;
+  const layer = 0;
+  const res = await PluginCommAPI.deletePageElements(numsInPage, page, layer);
+  if (!res.success) {
+    console.log('deletePageElements failed', res.error);
+    throw new Error(res.error?.message ?? 'deletePageElements call failed');
+  }
+  console.log('deletePageElements result', res.result);
+  return res.result;
+}
+```

@@ -1,0 +1,36 @@
+---
+title: "getPageDisplaySize"
+description: "Get the display size of the current page."
+---
+
+<Note>
+This API returns the display size of the currently opened page and is intended for current-page element operations such as `batchUpdatePageElements`, `insertPageElements`, and `modifyPageElements`.
+When these APIs operate on the current page, call `getPageDisplaySize` to get the current page display size instead of calling [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size), otherwise the position data may not match.
+</Note>
+
+```ts
+static getPageDisplaySize(): Promise<APIResponse<Size>>;
+```
+
+**Returns**
+
+- [`APIResponse<Size>`](/en/api-reference/supernote-plugin/types/api-response): `result` is the display size of the current page. See [`Size`](/en/api-reference/supernote-plugin/types/size)
+
+## Example
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: get the display size of the current page.
+ */
+export async function exampleGetPageDisplaySize() {
+  const res = await PluginCommAPI.getPageDisplaySize();
+  if (!res.success) {
+    console.log('getPageDisplaySize failed', res.error);
+    throw new Error(res.error?.message ?? 'getPageDisplaySize call failed');
+  }
+  console.log('getPageDisplaySize result', res.result);
+  return res.result;
+}
+```

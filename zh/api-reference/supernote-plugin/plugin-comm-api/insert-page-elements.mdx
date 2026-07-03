@@ -1,0 +1,55 @@
+---
+title: "insertPageElements"
+description: "向当前文件指定页面插入元素。"
+---
+
+```ts wrap
+static insertPageElements(
+  elements: Element[],
+  page: number,
+  layer: number
+): Promise<APIResponse<boolean>>;
+```
+
+<Note>
+当该接口操作的是当前页时，请先调用 [`getPageDisplaySize`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size) 获取当前页面显示尺寸，不要调用 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 获取文件页面尺寸，否则位置数据可能对不上。
+</Note>
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `elements` | [`Element[]`](/zh/api-reference/supernote-plugin/types/trail) | 要插入的元素数组 |
+| `page` | `number` | 页面索引，从 `0` 开始 |
+| `layer` | `number` | 图层索引，取值范围为 `0-3`；文档文件会忽略该参数 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：`result === true` 表示插入成功
+
+**异常**
+
+- 当 `elements` 不是合法的元素数组时，会抛出参数校验异常
+- 当 `page` 不是大于等于 `0` 的整数时，会抛出参数校验异常
+- 当 `layer` 不是 `0-3` 的整数时，会抛出参数校验异常
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI, type Element } from 'sn-plugin-lib';
+
+/**
+ * 向当前文件指定页面插入元素的示例。
+ */
+export async function exampleInsertPageElements(elements: Element[]) {
+  const page = 0;
+  const layer = 0;
+  const res = await PluginCommAPI.insertPageElements(elements, page, layer);
+  if (!res.success) {
+    console.log('insertPageElements failed', res.error);
+    throw new Error(res.error?.message ?? 'insertPageElements 调用失败');
+  }
+  console.log('insertPageElements result', res.result);
+  return res.result;
+}
+```

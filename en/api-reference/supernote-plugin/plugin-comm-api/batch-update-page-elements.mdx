@@ -1,0 +1,59 @@
+---
+title: "batchUpdatePageElements"
+description: "Batch update elements on the specified page in the current file."
+---
+
+```ts wrap
+static batchUpdatePageElements(
+  deleteNumList: number[],
+  elements: Element[],
+  page: number,
+  layer: number
+): Promise<APIResponse<boolean>>;
+```
+
+<Note>
+When this API operates on the current page, call [`getPageDisplaySize`](/en/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size) first to get the current page display size. Do not call [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size) to get the file page size, otherwise the position data may not match.
+</Note>
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `deleteNumList` | `number[]` | In-page element indices to delete |
+| `elements` | [`Element[]`](/en/api-reference/supernote-plugin/types/trail) | New elements to insert |
+| `page` | `number` | Page index, starting from `0` |
+| `layer` | `number` | Layer index. Valid values are `0-3`. The parameter is ignored for DOC files |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response): `result === true` indicates the batch update succeeded
+
+**Throws**
+
+- Throws a parameter validation error when `deleteNumList` is not a valid integer array
+- Throws a parameter validation error when `elements` is not a valid element array
+- Throws a parameter validation error when `page` is not an integer greater than or equal to `0`
+- Throws a parameter validation error when `layer` is not an integer in the range `0-3`
+
+## Example
+
+```ts wrap
+import { PluginCommAPI, type Element } from 'sn-plugin-lib';
+
+/**
+ * Example: batch update elements on a specified page in the current file.
+ */
+export async function exampleBatchUpdatePageElements(elements: Element[]) {
+  const deleteNumList = [0, 1];
+  const page = 0;
+  const layer = 0;
+  const res = await PluginCommAPI.batchUpdatePageElements(deleteNumList, elements, page, layer);
+  if (!res.success) {
+    console.log('batchUpdatePageElements failed', res.error);
+    throw new Error(res.error?.message ?? 'batchUpdatePageElements call failed');
+  }
+  console.log('batchUpdatePageElements result', res.result);
+  return res.result;
+}
+```

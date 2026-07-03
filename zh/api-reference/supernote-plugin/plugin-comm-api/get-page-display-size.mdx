@@ -1,0 +1,36 @@
+---
+title: "getPageDisplaySize"
+description: "获取当前页面的显示尺寸。"
+---
+
+<Note>
+该接口返回当前打开页面的显示尺寸，适用于 `batchUpdatePageElements`、`insertPageElements`、`modifyPageElements` 等当前页元素操作。
+如果这些接口操作的是当前页，请调用 `getPageDisplaySize` 获取当前页面显示尺寸，不要调用 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 获取文件页面尺寸，否则位置数据可能对不上。
+</Note>
+
+```ts
+static getPageDisplaySize(): Promise<APIResponse<Size>>;
+```
+
+**返回**
+
+- [`APIResponse<Size>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为当前页面的显示尺寸，见 [`Size`](/zh/api-reference/supernote-plugin/types/size)
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 获取当前页面显示尺寸的示例。
+ */
+export async function exampleGetPageDisplaySize() {
+  const res = await PluginCommAPI.getPageDisplaySize();
+  if (!res.success) {
+    console.log('getPageDisplaySize failed', res.error);
+    throw new Error(res.error?.message ?? 'getPageDisplaySize 调用失败');
+  }
+  console.log('getPageDisplaySize result', res.result);
+  return res.result;
+}
+```

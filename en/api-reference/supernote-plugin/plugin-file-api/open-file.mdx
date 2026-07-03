@@ -8,7 +8,7 @@ Currently supported file formats are: `pdf`, `epub`, `cbz`, `xps`, `fb2`, and `n
 </Note>
 
 ```ts
-static openFile(filePath: string): Promise<APIResponse<boolean>>;
+static openFile(filePath: string, page: number): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
@@ -16,6 +16,7 @@ static openFile(filePath: string): Promise<APIResponse<boolean>>;
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `filePath` | `string` | File path to open |
+| `page` | `number` | Page index. `0` or greater jumps to the specified page, and `-1` keeps the last viewed page when opening the file |
 
 **Returns**
 
@@ -25,6 +26,7 @@ static openFile(filePath: string): Promise<APIResponse<boolean>>;
 **Throws**
 
 - Throws a parameter validation error when `filePath` is not a non-empty string
+- Throws a parameter validation error when `page` is not an integer greater than or equal to `-1`
 
 ## Example
 
@@ -35,7 +37,8 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: open a file.
  */
 export async function exampleOpenFile() {
-  const res = await PluginFileAPI.openFile('/storage/emulated/0/Document/demo.pdf');
+  const page = -1;
+  const res = await PluginFileAPI.openFile('/storage/emulated/0/Document/demo.pdf', page);
   if (!res.success) {
     console.log('openFile failed', res.error);
     throw new Error(res.error?.message ?? 'openFile call failed');
