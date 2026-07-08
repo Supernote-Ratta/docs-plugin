@@ -45,7 +45,7 @@ description: "笔记/文档中“可见元素”的统一数据结构。"
 | `userData` | `string` | 用于存储用户数据 |
 | `angles` | [`ElementDataAccessor<Point>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 角度点，数据量太大，RN端持有的是索引，原始数据存在Android端 |
 | `status` | `number` | 元素状态值 |
-| `numInPage` | `number` | 元素在页内的序号（从 `0` 开始） |
+| `numInPage` | `number` | 元素在页内的序号（从 `1` 开始） |
 | `contoursSrc` | [`ElementDataAccessor<Point[]>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 轮廓点（像素坐标），数据量太大，RN端持有的是索引，原始数据存在Android端 |
 | `stroke` | [`Stroke \| null`](/zh/api-reference/supernote-plugin/types/stroke) | 笔画数据（仅 `type === 0` 时存在） |
 | `title` | [`Title \| null`](/zh/api-reference/supernote-plugin/types/title) | 标题数据（仅 `type === 100` 时存在） |
@@ -53,7 +53,7 @@ description: "笔记/文档中“可见元素”的统一数据结构。"
 | `geometry` | [`Geometry \| null`](/zh/api-reference/supernote-plugin/types/geometry) | 几何图形数据（仅 `type === 700` 时存在） |
 | `link` | [`Link \| null`](/zh/api-reference/supernote-plugin/types/link) | 链接数据（仅 `type === 600` 时存在） |
 | `fiveStar` | `FiveStar \| null` | 五角星数据（仅 `type === 800` 时存在；见下方“FiveStar”） |
-| `picture` | [`Picture \| null`](/zh/api-reference/supernote-plugin/types/picture) | 图片数据（仅 `type === 200` 时存在） |
+| `picture` | [`Picture \| null`](/zh/api-reference/supernote-plugin/types/picture) | 图片数据（仅 `type === 200` 时存在；其中 `picturePath` 仅支持 `png`、`jpg`、`jpeg` 格式） |
 
 <Note>
 `angles` 与 `contoursSrc` 是访问器对象，不是完整数组。需要通过 `size()/get()/getRange()` 等方法异步取数，避免一次性把大规模点集传到 RN 端导致内存问题。

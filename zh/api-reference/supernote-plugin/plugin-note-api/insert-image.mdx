@@ -4,7 +4,7 @@ description: "在当前打开的笔记当前页的当前图层插入图片。"
 ---
 
 <Note>
-该接口只能在 NOTE（笔记）中调用。`pngPath` 需指向存在且可读的图片文件。
+该接口只能在 NOTE（笔记）中调用。`pngPath` 需指向存在且可读的图片文件，且仅支持 `png`、`jpg`、`jpeg` 这三种格式。
 </Note>
 
 ```ts
@@ -15,7 +15,7 @@ static insertImage(pngPath: string): Promise<APIResponse<boolean>>;
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `pngPath` | `string` | 图片文件路径（需存在且可读） |
+| `pngPath` | `string` | 图片文件路径（需存在且可读，且仅支持 `png`、`jpg`、`jpeg` 格式） |
 
 **返回**
 

@@ -5,6 +5,7 @@ description: "Create a lasso selection for elements in a rectangle."
 
 <Note>
 This API creates or updates the current lasso selection using a rectangle (pixel coordinates). After calling it successfully, you can call other lasso-related APIs (for example `getLassoRect()` / `getLassoElements()`).
+The input `rect` must stay within the page size: `left` and `top` can be `0`, and `right` and `bottom` can be equal to the maximum page size, but they must not exceed the page bounds. Get the page size through [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size).
 </Note>
 
 ```ts
@@ -15,7 +16,7 @@ static lassoElements(rect: Rect): Promise<APIResponse<boolean>>;
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Selection rectangle (pixel coordinates) |
+| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Selection rectangle (pixel coordinates). The rectangle must stay within the page size. `left/top` can be `0`, and `right/bottom` can be equal to the maximum page size |
 
 **Returns**
 

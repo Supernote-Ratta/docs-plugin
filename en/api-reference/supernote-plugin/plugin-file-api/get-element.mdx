@@ -13,7 +13,7 @@ static getElement(notePath: string, page: number, num: number): Promise<APIRespo
 | --- | --- | --- |
 | `notePath` | `string` | Note file path |
 | `page` | `number` | Page index (starting from 0) |
-| `num` | `number` | Element index within the page (starting from 0) |
+| `num` | `number` | Element index within the page (starting from `1`) |
 
 **Returns**
 
@@ -31,7 +31,7 @@ import { PluginFileAPI } from 'sn-plugin-lib';
 export async function exampleGetElement() {
   const notePath = '/storage/emulated/0/Note/demo.note';
   const page = 0;
-  const num = 0;
+  const num = 1;
 
   const res = await PluginFileAPI.getElement(notePath, page, num);
   if (!res.success) {

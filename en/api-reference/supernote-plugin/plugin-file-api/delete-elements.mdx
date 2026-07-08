@@ -13,7 +13,7 @@ static deleteElements(NOTEPath: string, page: number, numsInPage: number[]): Pro
 | --- | --- | --- |
 | `NOTEPath` | `string` | NOTE/DOC file path |
 | `page` | `number` | Page index (starts from `0`) |
-| `numsInPage` | `number[]` | Element indices in the page to delete |
+| `numsInPage` | `number[]` | Element indices in the page to delete, starting from `1` |
 
 **Returns**
 
@@ -27,7 +27,7 @@ import { PluginFileAPI } from 'sn-plugin-lib';
 export async function exampleDeleteElements() {
  const NOTEPath = '/storage/emulated/0/Note/demo.note';
  const page = 0;
- const numsInPage = [0, 1];
+ const numsInPage = [1, 2];
  const res = await PluginFileAPI.deleteElements(NOTEPath, page, numsInPage);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'deleteElements call failed');

@@ -6,7 +6,10 @@ description: "Resize the lasso rectangle."
 You must create a lasso selection before calling this API; otherwise the call fails.
 </Note>
 ```ts
-static resizeLassoRect(rect: Rect): Promise<APIResponse<boolean>>;
+static resizeLassoRect(
+  rect: Rect,
+  rotationDegree?: number
+): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
@@ -14,6 +17,13 @@ static resizeLassoRect(rect: Rect): Promise<APIResponse<boolean>>;
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Lasso rectangle (pixel coordinates) |
+| `rotationDegree` | `number` | Optional rotation angle in degrees, as an integer. Omit it to keep the current rotation; when provided, supported elements in the current lasso selection rotate by this angle |
+
+**Notes**
+
+- `rotationDegree` applies only to strokes and geometries; other element types are not rotated
+- Among lasso data, only titles, strokes, and geometries support stretch resizing; all other element types support proportional scaling only
+- Omit `rotationDegree` when rotation is not needed
 
 **Returns**
 
@@ -26,9 +36,9 @@ static resizeLassoRect(rect: Rect): Promise<APIResponse<boolean>>;
 import { PluginCommAPI, type Rect } from 'sn-plugin-lib';
 
 /**
- * Example: resize the lasso rectangle (proportional scaling).
+ * Example: resize the lasso rectangle and optionally rotate supported elements.
  */
-export async function exampleResizeLassoRect() {
+export async function exampleResizeLassoRect(rotationDegree?: number) {
  const current = await PluginCommAPI.getLassoRect();
  if (!current.success) {
  throw new Error(current.error?.message ?? 'getLassoRect call failed');
@@ -47,10 +57,12 @@ export async function exampleResizeLassoRect() {
  bottom: cy + (h * scale) / 2,
  };
 
- const res = await PluginCommAPI.resizeLassoRect(nextRect);
+ console.log('resizeLassoRect nextRect:', nextRect, 'rotationDegree:', rotationDegree);
+ const res = await PluginCommAPI.resizeLassoRect(nextRect, rotationDegree);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'resizeLassoRect call failed');
  }
+ console.log('resizeLassoRect result:', res.result);
  return res.result;
 }
 ```

@@ -5,6 +5,7 @@ description: "按矩形区域创建套索选择。"
 
 <Note>
 该接口使用矩形区域（像素坐标）创建或更新当前套索选择。调用成功后，可继续调用 `getLassoRect()` / `getLassoElements()` 等套索相关接口。
+传入的 `rect` 必须位于页面尺寸范围内：`left` 和 `top` 可以等于 `0`，`right` 和 `bottom` 可以等于页面最大尺寸，但不能超出页面边界。页面尺寸请通过 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 获取。
 </Note>
 
 ```ts
@@ -15,7 +16,7 @@ static lassoElements(rect: Rect): Promise<APIResponse<boolean>>;
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 套索矩形（像素坐标） |
+| `rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 套索矩形（像素坐标）。矩形区域必须在页面尺寸范围内，`left/top` 可等于 `0`，`right/bottom` 可等于页面最大尺寸 |
 
 **返回**
 

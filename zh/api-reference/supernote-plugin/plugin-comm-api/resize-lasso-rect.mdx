@@ -6,7 +6,10 @@ description: "调整套索框矩形大小。"
 必须套索之后才能调用该接口，否则会调用失败。
 </Note>
 ```ts
-static resizeLassoRect(rect: Rect): Promise<APIResponse<boolean>>;
+static resizeLassoRect(
+  rect: Rect,
+  rotationDegree?: number
+): Promise<APIResponse<boolean>>;
 ```
 
 **参数**
@@ -14,6 +17,13 @@ static resizeLassoRect(rect: Rect): Promise<APIResponse<boolean>>;
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
 | `rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 套索框矩形（像素坐标） |
+| `rotationDegree` | `number` | 可选旋转角度，整数。省略时不旋转；传入后按该角度旋转当前套索中支持旋转的元素 |
+
+**说明**
+
+- `rotationDegree` 仅对笔划和几何图形生效，其他元素不会旋转
+- 套索数据中，只有笔划标题、笔划、几何图形支持拉伸缩放；其他元素只支持等比例缩放
+- 当不需要旋转时，直接省略 `rotationDegree`
 
 **返回**
 
@@ -26,9 +36,9 @@ static resizeLassoRect(rect: Rect): Promise<APIResponse<boolean>>;
 import { PluginCommAPI, type Rect } from 'sn-plugin-lib';
 
 /**
- * 按等比例缩放调整套索框矩形的示例。
+ * 按等比例缩放调整套索框矩形，并可选旋转支持元素的示例。
  */
-export async function exampleResizeLassoRect() {
+export async function exampleResizeLassoRect(rotationDegree?: number) {
   const current = await PluginCommAPI.getLassoRect();
   if (!current.success) {
     throw new Error(current.error?.message ?? 'getLassoRect 调用失败');
@@ -47,10 +57,12 @@ export async function exampleResizeLassoRect() {
     bottom: cy + (h * scale) / 2,
   };
 
-  const res = await PluginCommAPI.resizeLassoRect(nextRect);
+  console.log('resizeLassoRect nextRect:', nextRect, 'rotationDegree:', rotationDegree);
+  const res = await PluginCommAPI.resizeLassoRect(nextRect, rotationDegree);
   if (!res.success) {
     throw new Error(res.error?.message ?? 'resizeLassoRect 调用失败');
   }
+  console.log('resizeLassoRect result:', res.result);
   return res.result;
 }
 ```

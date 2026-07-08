@@ -7,17 +7,21 @@ description: "删除当前文件指定页面中的元素。"
 static deletePageElements(
   numsInPage: number[],
   page: number,
-  layer: number
+  layer?: number | null
 ): Promise<APIResponse<boolean>>;
 ```
+
+<Note>
+`layer` 的使用规则与其它页面元素操作接口一致：笔记文件（`.note`）不传时使用当前图层；识别笔记和文档文件都只有一个图层，因此不管传不传都不会使用该参数。
+</Note>
 
 **参数**
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `numsInPage` | `number[]` | 要删除的元素页内序号列表 |
+| `numsInPage` | `number[]` | 要删除的元素页内序号列表，序号从 `1` 开始 |
 | `page` | `number` | 页面索引，从 `0` 开始 |
-| `layer` | `number` | 图层索引，取值范围为 `0-3`；文档文件会忽略该参数 |
+| `layer` | `number \| null` | 可选图层参数。笔记文件（`.note`）不传时使用当前图层；如果是识别笔记，不管传不传都不会使用该参数，因为识别笔记只有一个图层；文档文件（`.pdf`、`.epub` 等）不管传不传都不会使用该参数，因为文档文件只有一个图层。传值时取值范围为 `0-3` |
 
 **返回**
 
@@ -27,7 +31,7 @@ static deletePageElements(
 
 - 当 `numsInPage` 不是合法的整数数组时，会抛出参数校验异常
 - 当 `page` 不是大于等于 `0` 的整数时，会抛出参数校验异常
-- 当 `layer` 不是 `0-3` 的整数时，会抛出参数校验异常
+- 当 `layer` 传值且不是 `0-3` 的整数时，会抛出参数校验异常
 
 ## 示例
 
@@ -38,7 +42,7 @@ import { PluginCommAPI } from 'sn-plugin-lib';
  * 删除当前文件指定页面元素的示例。
  */
 export async function exampleDeletePageElements() {
-  const numsInPage = [0, 1];
+  const numsInPage = [1, 2];
   const page = 0;
   const layer = 0;
   const res = await PluginCommAPI.deletePageElements(numsInPage, page, layer);

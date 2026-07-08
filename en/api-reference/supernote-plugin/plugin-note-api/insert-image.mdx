@@ -4,7 +4,7 @@ description: "Insert an image into the current layer of the current note page."
 ---
 
 <Note>
-This API can only be called in NOTE. `pngPath` must point to an existing, readable image file.
+This API can only be called in NOTE. `pngPath` must point to an existing, readable image file, and only `png`, `jpg`, and `jpeg` formats are supported.
 </Note>
 
 ```ts
@@ -15,7 +15,7 @@ static insertImage(pngPath: string): Promise<APIResponse<boolean>>;
 
 | Parameter | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `pngPath` | `string` | Yes | - | Image file path (must exist and be readable) |
+| `pngPath` | `string` | Yes | - | Image file path (must exist and be readable, and only `png`, `jpg`, and `jpeg` formats are supported) |
 
 **Returns**
 

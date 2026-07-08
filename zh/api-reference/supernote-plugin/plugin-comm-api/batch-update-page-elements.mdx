@@ -8,7 +8,7 @@ static batchUpdatePageElements(
   deleteNumList: number[],
   elements: Element[],
   page: number,
-  layer: number
+  layer?: number | null
 ): Promise<APIResponse<boolean>>;
 ```
 
@@ -20,10 +20,10 @@ static batchUpdatePageElements(
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `deleteNumList` | `number[]` | 要删除的元素页内序号列表 |
+| `deleteNumList` | `number[]` | 要删除的元素页内序号列表，序号从 `1` 开始 |
 | `elements` | [`Element[]`](/zh/api-reference/supernote-plugin/types/trail) | 要插入的新元素数组 |
 | `page` | `number` | 页面索引，从 `0` 开始 |
-| `layer` | `number` | 图层索引，取值范围为 `0-3`；文档文件会忽略该参数 |
+| `layer` | `number \| null` | 可选图层参数。笔记文件（`.note`）不传时使用当前图层；如果是识别笔记，不管传不传都不会使用该参数，因为识别笔记只有一个图层；文档文件（`.pdf`、`.epub` 等）不管传不传都不会使用该参数，因为文档文件只有一个图层。传值时取值范围为 `0-3` |
 
 **返回**
 
@@ -34,7 +34,7 @@ static batchUpdatePageElements(
 - 当 `deleteNumList` 不是合法的整数数组时，会抛出参数校验异常
 - 当 `elements` 不是合法的元素数组时，会抛出参数校验异常
 - 当 `page` 不是大于等于 `0` 的整数时，会抛出参数校验异常
-- 当 `layer` 不是 `0-3` 的整数时，会抛出参数校验异常
+- 当 `layer` 传值且不是 `0-3` 的整数时，会抛出参数校验异常
 
 ## 示例
 
@@ -45,7 +45,7 @@ import { PluginCommAPI, type Element } from 'sn-plugin-lib';
  * 批量更新当前文件指定页面元素的示例。
  */
 export async function exampleBatchUpdatePageElements(elements: Element[]) {
-  const deleteNumList = [0, 1];
+  const deleteNumList = [1, 2];
   const page = 0;
   const layer = 0;
   const res = await PluginCommAPI.batchUpdatePageElements(deleteNumList, elements, page, layer);

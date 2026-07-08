@@ -7,7 +7,7 @@ description: "修改当前文件指定页面中的已有元素。"
 static modifyPageElements(
   elements: Element[],
   page: number,
-  layer: number
+  layer?: number | null
 ): Promise<APIResponse<number[]>>;
 ```
 
@@ -21,17 +21,17 @@ static modifyPageElements(
 | --- | --- | --- |
 | `elements` | [`Element[]`](/zh/api-reference/supernote-plugin/types/trail) | 要修改的元素数组，必须是指定页面中已存在的元素 |
 | `page` | `number` | 页面索引，从 `0` 开始 |
-| `layer` | `number` | 图层索引，取值范围为 `0-3`；文档文件会忽略该参数 |
+| `layer` | `number \| null` | 可选图层参数。笔记文件（`.note`）不传时使用当前图层；如果是识别笔记，不管传不传都不会使用该参数，因为识别笔记只有一个图层；文档文件（`.pdf`、`.epub` 等）不管传不传都不会使用该参数，因为文档文件只有一个图层。传值时取值范围为 `0-3` |
 
 **返回**
 
-- [`APIResponse<number[]>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为修改成功的元素页内序号列表
+- [`APIResponse<number[]>`](/zh/api-reference/supernote-plugin/types/api-response)：`result` 为修改成功的元素页内序号列表，序号从 `1` 开始
 
 **异常**
 
 - 当 `elements` 不是合法的元素数组时，会抛出参数校验异常
 - 当 `page` 不是大于等于 `0` 的整数时，会抛出参数校验异常
-- 当 `layer` 不是 `0-3` 的整数时，会抛出参数校验异常
+- 当 `layer` 传值且不是 `0-3` 的整数时，会抛出参数校验异常
 
 ## 示例
 

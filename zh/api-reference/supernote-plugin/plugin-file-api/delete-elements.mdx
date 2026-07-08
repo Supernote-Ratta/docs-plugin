@@ -13,7 +13,7 @@ static deleteElements(notePath: string, page: number, numsInPage: number[]): Pro
 | --- | --- | --- |
 | `notePath` | `string` | 笔记/文档文件路径 |
 | `page` | `number` | 页面索引（从 `0` 开始） |
-| `numsInPage` | `number[]` | 要删除的元素在页面内的序号列表 |
+| `numsInPage` | `number[]` | 要删除的元素在页面内的序号列表，序号从 `1` 开始 |
 
 **返回**
 
@@ -27,7 +27,7 @@ import { PluginFileAPI } from 'sn-plugin-lib';
 export async function exampleDeleteElements() {
   const notePath = '/storage/emulated/0/Note/demo.note';
   const page = 0;
-  const numsInPage = [0, 1];
+  const numsInPage = [1, 2];
   const res = await PluginFileAPI.deleteElements(notePath, page, numsInPage);
   if (!res.success) {
     throw new Error(res.error?.message ?? 'deleteElements 调用失败');
