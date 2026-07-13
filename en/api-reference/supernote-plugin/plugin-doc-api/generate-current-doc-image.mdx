@@ -1,0 +1,48 @@
+---
+title: "generateCurrentDocImage"
+description: "Generate a PNG image for a specified page of the current document."
+---
+
+```ts wrap
+static generateCurrentDocImage(
+  page: number,
+  pngPath: string,
+  size: Size
+): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `page` | `number` | Page index (starts from `0`) |
+| `pngPath` | `string` | Output PNG path |
+| `size` | [`Size`](/en/api-reference/supernote-plugin/types/size) | Output image size. Both `width` and `height` must be integers in the range `1-5120` |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` indicates generation succeeded
+
+## Example
+
+```ts wrap
+import { PluginDocAPI, type Size } from 'sn-plugin-lib';
+
+/**
+ * Example: generate a PNG image for a specified page of the current document.
+ */
+export async function exampleGenerateCurrentDocImage() {
+ const page = 0;
+ const pngPath = '/storage/emulated/0/Download/current-doc-page-0.png';
+ const size: Size = { width: 1080, height: 1440 };
+
+ console.log('generateCurrentDocImage params:', { page, pngPath, size });
+ const res = await PluginDocAPI.generateCurrentDocImage(page, pngPath, size);
+ if (!res.success) {
+ throw new Error(res.error?.message ?? 'generateCurrentDocImage call failed');
+ }
+ console.log('generateCurrentDocImage result:', res.result);
+ return res.result;
+}
+```

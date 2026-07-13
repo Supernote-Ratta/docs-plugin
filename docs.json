@@ -97,7 +97,7 @@
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect",
                       "en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements",
                       "en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/flip-lasso-elements",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
                       "en/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
@@ -149,7 +149,8 @@
                       "en/api-reference/supernote-plugin/plugin-doc-api/index",
                       "en/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text",
                       "en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text",
-                      "en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages"
+                      "en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages",
+                      "en/api-reference/supernote-plugin/plugin-doc-api/generate-current-doc-image"
                     ]
                   },
                   {
@@ -342,7 +343,7 @@
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect",
-                      "zh/api-reference/supernote-plugin/plugin-comm-api/flip-lasso-elements",
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
@@ -394,7 +395,8 @@
                       "zh/api-reference/supernote-plugin/plugin-doc-api/index",
                       "zh/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text",
                       "zh/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text",
-                      "zh/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages"
+                      "zh/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages",
+                      "zh/api-reference/supernote-plugin/plugin-doc-api/generate-current-doc-image"
                     ]
                   },
                   {

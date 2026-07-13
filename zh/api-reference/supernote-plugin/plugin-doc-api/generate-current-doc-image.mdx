@@ -1,0 +1,48 @@
+---
+title: "generateCurrentDocImage"
+description: "生成当前文档指定页面的 PNG 图片。"
+---
+
+```ts wrap
+static generateCurrentDocImage(
+  page: number,
+  pngPath: string,
+  size: Size
+): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `page` | `number` | 页码（从 `0` 开始） |
+| `pngPath` | `string` | 输出 PNG 路径 |
+| `size` | [`Size`](/zh/api-reference/supernote-plugin/types/size) | 生成图片的尺寸，`width` 和 `height` 都必须是整数，且取值范围为 `1-5120` |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示生成成功
+
+## 示例
+
+```ts wrap
+import { PluginDocAPI, type Size } from 'sn-plugin-lib';
+
+/**
+ * 生成当前文档指定页面 PNG 图片的示例。
+ */
+export async function exampleGenerateCurrentDocImage() {
+  const page = 0;
+  const pngPath = '/storage/emulated/0/Download/current-doc-page-0.png';
+  const size: Size = { width: 1080, height: 1440 };
+
+  console.log('generateCurrentDocImage params:', { page, pngPath, size });
+  const res = await PluginDocAPI.generateCurrentDocImage(page, pngPath, size);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'generateCurrentDocImage 调用失败');
+  }
+  console.log('generateCurrentDocImage result:', res.result);
+  return res.result;
+}
+```

@@ -1,0 +1,48 @@
+---
+title: "duplicateFlipLassoElements"
+description: "复制当前套索中的元素并翻转新生成的元素。"
+---
+<Note>
+必须套索之后才能调用该接口，否则会调用失败。
+</Note>
+
+```ts
+static duplicateFlipLassoElements(flipType: number): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `flipType` | `number` | 翻转类型，仅支持 `1` 和 `2`。`1` 表示水平翻转，`2` 表示垂直翻转 |
+
+**说明**
+
+- 该接口会复制当前套索中的支持元素，并对新生成的元素执行翻转
+- 原有元素保持不变，不会被原地翻转
+- 仅支持翻转笔划和几何图形，其他元素不会参与复制翻转
+- 当前只支持水平翻转和垂直翻转两种方式
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示复制翻转成功
+
+## 示例
+
+```ts wrap
+import { PluginCommAPI } from 'sn-plugin-lib';
+
+/**
+ * 复制当前套索中的支持元素并执行水平或垂直翻转。
+ */
+export async function exampleDuplicateFlipLassoElements(flipType: 1 | 2) {
+  console.log('duplicateFlipLassoElements flipType:', flipType);
+  const res = await PluginCommAPI.duplicateFlipLassoElements(flipType);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'duplicateFlipLassoElements 调用失败');
+  }
+  console.log('duplicateFlipLassoElements result:', res.result);
+  return res.result;
+}
+```

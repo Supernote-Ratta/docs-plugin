@@ -28,7 +28,7 @@ description: '介绍套索交互的工作流、数据模型与常用接口（获
 | 获取套索框位置 | [`getLassoRect()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect) | 返回套索框矩形（`Rect`） |
 | 创建套索选择 | [`lassoElements(rect)`](/zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | 通过矩形区域创建套索选择（像素坐标） |
 | 调整套索框大小 | [`resizeLassoRect(rect, rotationDegree?)`](/zh/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | 调整套索框矩形大小；可选旋转支持的元素 |
-| 翻转套索元素 | [`flipLassoElements(flipType)`](/zh/api-reference/supernote-plugin/plugin-comm-api/flip-lasso-elements) | 翻转当前套索中的支持元素，`1` 为水平翻转，`2` 为垂直翻转 |
+| 复制并翻转套索元素 | [`duplicateFlipLassoElements(flipType)`](/zh/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements) | 复制当前套索中的支持元素后翻转新元素，`1` 为水平翻转，`2` 为垂直翻转 |
 | 获取套索元素列表 | [`getLassoElements()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | 返回 `Element[]`（成功时会补齐访问器字段） |
 | 控制套索框状态 | [`setLassoBoxState(state)`](/zh/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` 显示，`1` 隐藏，`2` 完全移除，`3` 完全隐藏（包含套索元素） |
 
@@ -140,7 +140,8 @@ export async function setLassoBoxState(state: 0 | 1 | 2 | 3): Promise<boolean> {
 
 - `resizeLassoRect` 可选传入 `rotationDegree`：省略时不旋转；传入后仅笔划和几何图形会按角度旋转
 - `resizeLassoRect` 调整时，只有笔划标题、笔划、几何图形支持拉伸缩放；其他元素只支持等比例缩放
-- `flipLassoElements` 仅支持翻转笔划和几何图形，且当前只支持水平和垂直翻转
+- `duplicateFlipLassoElements` 会先复制支持的元素，再翻转新生成的元素；原元素保持不变
+- `duplicateFlipLassoElements` 仅支持笔划和几何图形，且当前只支持水平和垂直翻转
 - `getLassoElements` 返回的元素可能包含访问器字段：不要假设点集已完整在 JS 侧，必要时通过访问器按需取数
 - `setLassoBoxState(2)` 表示完全移除套索状态：通常用于“操作结束”场景，移除后用户侧套索工具栏会被关闭
 - `setLassoBoxState(3)` 表示完全隐藏套索框（包含套索元素）：通常用于“自定义工具条/界面”场景，隐藏后插件可以自行控制 UI 呈现
