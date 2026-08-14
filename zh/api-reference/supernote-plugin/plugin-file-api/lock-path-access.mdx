@@ -1,0 +1,45 @@
+---
+title: "lockPathAccess"
+description: "将已解密文件或目录的解密状态重置为未解密。"
+---
+
+```ts wrap
+static lockPathAccess(filePath: string): Promise<APIResponse<boolean>>;
+```
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `filePath` | `string` | 文件或目录路径 |
+
+**返回**
+
+- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
+`result === true` 表示重置操作成功
+
+**说明**
+
+- 会清除当前插件会话中该路径的解锁记录。如果该路径此前已通过 [`unlockPathWithPassword`](/zh/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password) 解密，调用本接口后会将其重置为未解密状态。
+- 调用后，[`getPathEncryptionStatus`](/zh/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status) 对该路径的返回值会由 `2` 变为 `1`；若该路径仍处于加密状态，后续对该路径的文件相关接口调用需要重新调用 `unlockPathWithPassword` 解密。
+- 对未加密的路径调用本接口无影响。
+
+## 示例
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 将已解密文件重置为未解密状态的示例。
+ */
+export async function exampleLockPathAccess() {
+  const filePath = '/storage/emulated/0/Note/demo.note';
+
+  const res = await PluginFileAPI.lockPathAccess(filePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'lockPathAccess 调用失败');
+  }
+
+  return res.result;
+}
+```

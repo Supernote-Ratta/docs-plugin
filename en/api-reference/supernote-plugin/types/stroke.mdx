@@ -5,7 +5,7 @@ description: "Raw stroke data (present when an Element is a stroke)."
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `penColor` | `number` | Pen color: `0x00` (black), `0x9D` (dark gray), `0xC9` (light gray), `0xFE` (white) |
+| `penColor` | `number` | Pen color: `0` (`0x00`) black, `157` (`0x9D`) dark gray, `201` (`0xC9`) light gray, `254` (`0xFE`) white |
 | `penType` | `number` | Pen type: `10` technical pen, `16` pressure pen, `11` marker pen, `15` calligraphy |
 | `points` | [`ElementDataAccessor<Point>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Sample points (EMR coordinates) |
 | `pressures` | [`ElementDataAccessor<number>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Pressure data (`0..4096`) |

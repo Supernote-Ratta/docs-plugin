@@ -7,7 +7,8 @@ description: "生成当前文档指定页面的 PNG 图片。"
 static generateCurrentDocImage(
   page: number,
   pngPath: string,
-  size: Size
+  size: Size,
+  type: number
 ): Promise<APIResponse<boolean>>;
 ```
 
@@ -18,6 +19,7 @@ static generateCurrentDocImage(
 | `page` | `number` | 页码（从 `0` 开始） |
 | `pngPath` | `string` | 输出 PNG 路径 |
 | `size` | [`Size`](/zh/api-reference/supernote-plugin/types/size) | 生成图片的尺寸，`width` 和 `height` 都必须是整数，且取值范围为 `1-5120` |
+| `type` | `number` | 图片生成类型：`0` 生成不包含文本选中样式的默认图片；`1` 生成包含高亮、下划线等文本选中信息的图片 |
 
 **返回**
 
@@ -36,9 +38,10 @@ export async function exampleGenerateCurrentDocImage() {
   const page = 0;
   const pngPath = '/storage/emulated/0/Download/current-doc-page-0.png';
   const size: Size = { width: 1080, height: 1440 };
+  const type = 0;
 
-  console.log('generateCurrentDocImage params:', { page, pngPath, size });
-  const res = await PluginDocAPI.generateCurrentDocImage(page, pngPath, size);
+  console.log('generateCurrentDocImage params:', { page, pngPath, size, type });
+  const res = await PluginDocAPI.generateCurrentDocImage(page, pngPath, size, type);
   if (!res.success) {
     throw new Error(res.error?.message ?? 'generateCurrentDocImage 调用失败');
   }

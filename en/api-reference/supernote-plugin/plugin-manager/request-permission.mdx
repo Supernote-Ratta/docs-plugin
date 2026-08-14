@@ -4,7 +4,7 @@ description: "Request a specific permission and return the user's authorization 
 ---
 
 ```ts
-requestPermission(permission: string): Promise<number>;
+requestPermission(permission: string, desc?: string): Promise<number>;
 ```
 
 **Parameters**
@@ -12,6 +12,7 @@ requestPermission(permission: string): Promise<number>;
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `permission` | `string` | Permission name. Supported values: `plugin.permission.FILE:WRITE`, `plugin.permission.FILE:DELETE`, `plugin.permission.INTERNET` |
+| `desc` | `string` | Optional custom description. It is used only when the current permission status is denied (`0`) and the host shows the "denied" dialog. If omitted or empty, the host uses the default description. This parameter is ignored in other permission states |
 
 <Note>
 Regarding file access permissions:
@@ -27,10 +28,11 @@ Regarding file access permissions:
 **Description**
 
 - The host may show a permission dialog for the user to choose among "Deny / Allow while in use / Always allow"
+- `desc` customizes only the description shown in the denied-state dialog. It does not change the permission status or the user's choice options.
 
 **Throws**
 
-- Throws a parameter validation error when `permission` is not a non-empty string
+- Throws a parameter validation error when `permission` is not a non-empty string or `desc` is provided with a non-string value
 
 ## Example
 
@@ -42,7 +44,8 @@ import { PluginManager } from 'sn-plugin-lib';
  */
 export async function exampleRequestPermission() {
   const permission = 'plugin.permission.INTERNET';
-  const result = await PluginManager.requestPermission(permission);
+  const desc = 'Internet access is required to sync plugin data.';
+  const result = await PluginManager.requestPermission(permission, desc);
   return result;
 }
 ```

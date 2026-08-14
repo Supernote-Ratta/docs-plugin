@@ -4,7 +4,7 @@ description: "获取文件或目录的加密状态。"
 ---
 
 ```ts wrap
-static getPathEncryptionStatus(filePath: string): Promise<APIResponse<boolean>>;
+static getPathEncryptionStatus(filePath: string): Promise<APIResponse<number>>;
 ```
 
 **参数**
@@ -15,8 +15,10 @@ static getPathEncryptionStatus(filePath: string): Promise<APIResponse<boolean>>;
 
 **返回**
 
-- [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
-`result === true` 表示该路径已加密，`result === false` 表示该路径未加密
+- [`APIResponse<number>`](/zh/api-reference/supernote-plugin/types/api-response)，`result` 取值：
+  - `0`：文件未加密
+  - `1`：文件已加密，但当前插件会话中尚未解密
+  - `2`：文件已加密，且已在当前插件会话中解密
 
 ## 示例
 

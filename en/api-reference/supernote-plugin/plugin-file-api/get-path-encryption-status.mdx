@@ -4,7 +4,7 @@ description: "Get the encryption status of a file or directory."
 ---
 
 ```ts wrap
-static getPathEncryptionStatus(filePath: string): Promise<APIResponse<boolean>>;
+static getPathEncryptionStatus(filePath: string): Promise<APIResponse<number>>;
 ```
 
 **Parameters**
@@ -15,8 +15,10 @@ static getPathEncryptionStatus(filePath: string): Promise<APIResponse<boolean>>;
 
 **Returns**
 
-- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
-`result === true` means the path is encrypted, and `result === false` means it is not encrypted
+- [`APIResponse<number>`](/en/api-reference/supernote-plugin/types/api-response), where `result` is one of:
+  - `0`: not encrypted
+  - `1`: encrypted and locked (not unlocked in the current plugin session)
+  - `2`: encrypted and unlocked in the current plugin session
 
 ## Example
 

@@ -1,0 +1,45 @@
+---
+title: "lockPathAccess"
+description: "Reset the unlock state of an encrypted file or directory back to locked."
+---
+
+```ts wrap
+static lockPathAccess(filePath: string): Promise<APIResponse<boolean>>;
+```
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `filePath` | `string` | File or directory path |
+
+**Returns**
+
+- [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
+`result === true` means the lock operation succeeded
+
+**Description**
+
+- Clears the unlocked record for this path in the current plugin session. If the path was previously unlocked via [`unlockPathWithPassword`](/en/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password), calling this resets it back to the locked (not unlocked) state.
+- After calling this, [`getPathEncryptionStatus`](/en/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status) returns `1` for this path instead of `2`, and subsequent file-related API calls on this exact path require unlocking again via `unlockPathWithPassword` if the path is still encrypted.
+- Has no effect on a path that is not encrypted.
+
+## Example
+
+```ts wrap
+import { PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Example: reset the unlock state of an encrypted file back to locked.
+ */
+export async function exampleLockPathAccess() {
+  const filePath = '/storage/emulated/0/Note/demo.note';
+
+  const res = await PluginFileAPI.lockPathAccess(filePath);
+  if (!res.success) {
+    throw new Error(res.error?.message ?? 'lockPathAccess call failed');
+  }
+
+  return res.result;
+}
+```

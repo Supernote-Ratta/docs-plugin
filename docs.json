@@ -97,7 +97,7 @@
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect",
                       "en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements",
                       "en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect",
-                      "en/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements",
+                      "en/api-reference/supernote-plugin/plugin-comm-api/flip-lasso-elements",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data",
                       "en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
                       "en/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
@@ -193,7 +193,8 @@
                       "en/api-reference/supernote-plugin/plugin-file-api/get-last-element",
                       "en/api-reference/supernote-plugin/plugin-file-api/open-file",
                       "en/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status",
-                      "en/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password"
+                      "en/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password",
+                      "en/api-reference/supernote-plugin/plugin-file-api/lock-path-access"
                     ]
                   },
                   {
@@ -343,7 +344,7 @@
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect",
-                      "zh/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements",
+                      "zh/api-reference/supernote-plugin/plugin-comm-api/flip-lasso-elements",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data-type-counts",
                       "zh/api-reference/supernote-plugin/plugin-comm-api/delete-lasso-data",
@@ -439,7 +440,8 @@
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-last-element",
                       "zh/api-reference/supernote-plugin/plugin-file-api/open-file",
                       "zh/api-reference/supernote-plugin/plugin-file-api/get-path-encryption-status",
-                      "zh/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password"
+                      "zh/api-reference/supernote-plugin/plugin-file-api/unlock-path-with-password",
+                      "zh/api-reference/supernote-plugin/plugin-file-api/lock-path-access"
                     ]
                   },
                   {

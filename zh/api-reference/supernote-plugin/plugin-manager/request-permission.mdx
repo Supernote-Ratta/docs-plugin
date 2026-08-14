@@ -4,7 +4,7 @@ description: "申请指定权限，并返回用户的授权选择结果。"
 ---
 
 ```ts
-requestPermission(permission: string): Promise<number>;
+requestPermission(permission: string, desc?: string): Promise<number>;
 ```
 
 **参数**
@@ -12,6 +12,7 @@ requestPermission(permission: string): Promise<number>;
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
 | `permission` | `string` | 权限名称，支持：`plugin.permission.FILE:WRITE`、`plugin.permission.FILE:DELETE`、`plugin.permission.INTERNET` |
+| `desc` | `string` | 可选自定义说明。仅当当前权限状态为拒绝（`0`）且宿主弹出“已拒绝”弹框时使用；未传或为空时使用宿主默认描述。其它权限状态会忽略该参数 |
 
 <Note>
 关于文件访问权限：
@@ -27,10 +28,11 @@ requestPermission(permission: string): Promise<number>;
 **说明**
 
 - 宿主可能会弹出授权对话框，供用户在“拒绝 / 使用时允许 / 始终允许”之间选择
+- `desc` 只用于自定义拒绝状态弹框中的说明文案，不会改变权限状态或用户可选择的授权选项。
 
 **异常**
 
-- 当 `permission` 不是非空字符串时，会抛出参数校验异常
+- 当 `permission` 不是非空字符串，或传入的 `desc` 不是字符串时，会抛出参数校验异常
 
 ## 示例
 
@@ -42,7 +44,8 @@ import { PluginManager } from 'sn-plugin-lib';
  */
 export async function exampleRequestPermission() {
   const permission = 'plugin.permission.INTERNET';
-  const result = await PluginManager.requestPermission(permission);
+  const desc = '需要网络权限来同步插件数据。';
+  const result = await PluginManager.requestPermission(permission, desc);
   return result;
 }
 ```
