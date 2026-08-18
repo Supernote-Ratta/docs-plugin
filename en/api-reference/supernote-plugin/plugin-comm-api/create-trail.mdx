@@ -4,7 +4,7 @@ description: "Create a new Element object."
 ---
 Some fields in [`Element`](/en/api-reference/supernote-plugin/types/trail) can be very large (e.g. stroke sample points, pressure points, angle points, contour points).
 To avoid RN-side memory issues caused by loading large datasets at once, the SDK uses an accessor design. Therefore you should create elements via `createElement`.
-For details, see [`Element`](/en/api-reference/supernote-plugin/types/trail).
+For details, see [`Element`](/en/api-reference/supernote-plugin/types/trail). The created `Element` is cached on the native side — remember to release it with [`recycleElement`](/en/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) or `element.recycle()` once you're done; see [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for the full workflow.
 
 ```ts
 static createElement(

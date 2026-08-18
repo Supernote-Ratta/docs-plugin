@@ -5,6 +5,8 @@ description: "大体量点数据的访问器，以及访问的点数据类型。
 
 点数据通常由原生端缓存，RN 侧通过访问器按需取数。
 
+`ElementDataAccessor` 自身在 RN 侧还维护了一份更小的缓存：`get`/`getRange` 等读取方法会把取到的数据顺带缓存下来，避免重复跨端读取；`add`/`set`/`setRange` 等写入方法成功后会清空这份缓存，保证下次读到的是最新数据。这层 RN 侧缓存和 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放) 中介绍的原生侧 `Element` 缓存是两回事：释放整份 `Element`（`recycleElement`/`clearElementCache`）会连带清空其下所有 accessor 的这层缓存，但反过来单独调用 accessor 的 `clearCache()` 不会影响原生侧的 `Element` 缓存。
+
 | 方法 | 返回 | 说明 |
 | --- | --- | --- |
 | `size()` | `Promise<number>` | 获取数据长度 |
@@ -17,6 +19,10 @@ description: "大体量点数据的访问器，以及访问的点数据类型。
 | `getCacheStats()` | `{ cachedCount: number; totalSize: number }` | 获取缓存统计信息 |
 | `preload(startIndex, count)` | `Promise<void>` | 预加载指定范围的数据到缓存 |
 | `isCached(index)` | `boolean` | 判断指定下标是否已在缓存中 |
+
+<Tip>
+如果明确知道接下来要连续读取某一段点数据（例如渲染一段笔画），可以先调用 `preload(startIndex, count)` 预热缓存，再用 `get`/`getRange` 读取，减少多次跨端调用的开销。
+</Tip>
 
 
 ## ElementPointDataType

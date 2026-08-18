@@ -3,6 +3,8 @@ title: "recognizeElements"
 description: "Recognize elements as text."
 ---
 
+The `elements` you pass in are typically existing elements (with `uuid`) obtained from `getElements`/`getLassoElements`, etc.; `uuid` stays the same before and after recognition. This API requires those elements to still be present in the native cache — elements that can't be found in the cache are silently skipped instead of causing a separate error. See [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
+
 ```ts wrap
 static recognizeElements(elements: Object[] | null | undefined, size: { width: number; height: number }): Promise<APIResponse<string>>;
 ```

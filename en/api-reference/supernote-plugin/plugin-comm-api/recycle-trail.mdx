@@ -3,6 +3,8 @@ title: "recycleElement"
 description: "Recycle an Element object and release native Android cache on the native side."
 ---
 
+This API only releases the cache for the single Element identified by `uuid`, without affecting other elements. Compared to [`clearElementCache`](/en/api-reference/supernote-plugin/plugin-comm-api/clear-trail-cache), which clears the entire cache, this is the recommended way to release an element promptly once you're done with it.
+
 ```ts
 static recycleElement(uuid: string): void;
 ```

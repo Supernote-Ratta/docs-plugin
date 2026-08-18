@@ -5,6 +5,8 @@ description: "Get cached Element data by uuid (including strokes, links, titles,
 
 This API gets cached Element data by element uuid, including strokes, links, titles, geometries, and text boxes.
 
+Typical use case: you've only kept an element's `uuid` (e.g. after receiving it from `createElement`/`getElements` and releasing the full object), and later need to fetch its cached `Element` data again without re-querying the whole page.
+
 <Note>
 After calling `clearElementCache()`, previously obtained Element objects/uuids can no longer be used to read cached data.
 </Note>

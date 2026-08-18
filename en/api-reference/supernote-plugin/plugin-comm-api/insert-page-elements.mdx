@@ -15,6 +15,8 @@ static insertPageElements(
 When this API operates on the current page, call [`getPageDisplaySize`](/en/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size) first to get the current page display size. Do not call [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size) to get the file page size, otherwise the position data may not match.
 </Note>
 
+The `elements` you pass in typically come from [`createElement`](/en/api-reference/supernote-plugin/plugin-comm-api/create-trail) or existing elements read from elsewhere; `uuid` stays the same before and after insertion. This API requires those elements to still be present in the native cache — elements that can't be found in the cache are silently skipped instead of causing a separate error. See [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
+
 **Parameters**
 
 | Parameter | Type | Description |

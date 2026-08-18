@@ -37,6 +37,30 @@ description: '在笔记/文档文件中获取、创建、插入、修改与替�
 
 文档文件不能插入**文本框/标题/链接**，强行插入会被校验拒绝。
 
+### 4) Element 缓存与释放
+
+`Element` 里的点数据（笔画采样点、压力点、角度点、轮廓点等）体量可能很大，一次性都传到 RN 侧不仅有内存压力，数据量大时传输/转换耗时也会明显变长。因此原生侧会按 `uuid` 缓存 `Element`，RN 侧拿到的是引用（`uuid` + 访问器），需要时再按需取数。
+
+围绕这份缓存，有一套完整的创建 → 读取 → 写入 → 释放流程：
+
+| 操作 | 方法 | 说明 |
+| --- | --- | --- |
+| 创建 | [`createElement`](/zh/api-reference/supernote-plugin/plugin-comm-api/create-trail) | 建立缓存并返回带 `uuid` 的 `Element` |
+| 读取 | [`getElements`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-trails) / [`getElement`](/zh/api-reference/supernote-plugin/plugin-file-api/get-element) / [`getLastElement`](/zh/api-reference/supernote-plugin/plugin-file-api/get-last-element) / [`getLassoElements`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) / [`getCacheElement(uuid)`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-cache-element) | 前四者拿整页/单个/最后一个/套索选中，都会建立或刷新缓存；`getCacheElement` 按 `uuid` 单独取回已缓存的数据，不产生新读取 |
+| 写入/处理 | [`insertElements`](/zh/api-reference/supernote-plugin/plugin-file-api/insert-trails) / [`modifyElements`](/zh/api-reference/supernote-plugin/plugin-file-api/modify-trails) / [`replaceElements`](/zh/api-reference/supernote-plugin/plugin-file-api/replace-trails) / [`recognizeElements`](/zh/api-reference/supernote-plugin/plugin-comm-api/recognize-elements) / [`convertElement2Sticker`](/zh/api-reference/supernote-plugin/plugin-comm-api/convert-trail2-sticker) / [`modifyPageElements`](/zh/api-reference/supernote-plugin/plugin-comm-api/modify-page-elements) / [`insertPageElements`](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-page-elements) / [`batchUpdatePageElements`](/zh/api-reference/supernote-plugin/plugin-comm-api/batch-update-page-elements) | 要求元素当前仍在缓存中（`uuid` 找得到），处理前后 `uuid` 不变；缓存中找不到的元素会被跳过，不会单独报错 |
+| 单个释放 | [`recycleElement(uuid)`](/zh/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) / `element.recycle()` | 只释放这一个元素，二选一，效果相同 |
+| 全部释放 | [`clearElementCache()`](/zh/api-reference/supernote-plugin/plugin-comm-api/clear-trail-cache) | 一次性清空**所有** `Element` 缓存，旧 `uuid`/`Element` 对象全部失效，慎用 |
+
+几个需要注意的点：
+
+- **写入类接口依赖缓存仍然存在**：`insertElements`/`modifyElements`/`replaceElements`/`recognizeElements`/`convertElement2Sticker`/`modifyPageElements`/`insertPageElements`/`batchUpdatePageElements` 这些接口都要求传入元素的 `uuid` 此刻还在原生缓存里；这和"元素是否已经存在于页面里"（例如 `modifyElements` 要求修改目标已存在于该页）是两回事——缓存查不到 `uuid` 会在更早的阶段被直接跳过，根本不会走到"页面里是否已存在"这一步。
+- **缓存不保证一直有效**：`clearElementCache()` 需要插件主动调用才会执行，SDK 不会替插件自动触发；但反过来，宿主环境在资源紧张等情况下也可能自动回收部分或全部缓存，不建议假设某个 `uuid` 会一直有效，用完应尽快释放。
+- **和 `ElementDataAccessor` 是两层不同粒度的缓存**：`angles`/`contoursSrc` 等大体量点字段是"缓存里的 `Element` 之上"再套了一层按需分页访问器；accessor 自身在 RN 侧也维护了一份更小的缓存——`get`/`getRange` 等读取方法会把取到的数据顺带缓存下来，`add`/`set`/`setRange` 等写入方法成功后会自动清空这份缓存，另外还提供 `preload`/`isCached`/`getCacheStats`/`clearCache` 用于手动预热、查询和清理。释放整份 `Element` 时会连带清理其下所有 accessor 的这层缓存，详见 [`ElementDataAccessor`](/zh/api-reference/supernote-plugin/types/trail-data-accessor)。
+
+<Tip>
+`ElementDataAccessor` 在 RN 侧维护的小缓存和这里说的原生侧 Element 缓存是两回事，具体差异见 [`ElementDataAccessor`](/zh/api-reference/supernote-plugin/types/trail-data-accessor)。
+</Tip>
+
 ## 获取页面元素
 
 当你需要读取某一页的全部元素（用于展示、筛选、二次编辑、复制等），使用 `getElements`：

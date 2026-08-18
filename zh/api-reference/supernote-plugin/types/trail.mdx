@@ -72,3 +72,7 @@ description: "笔记/文档中“可见元素”的统一数据结构。"
 | 方法 | 返回 | 说明 |
 | --- | --- | --- |
 | `recycle()` | `Promise<void>` | 回收该元素对应的原生缓存数据，并清理访问器缓存 |
+
+<Tip>
+`element.recycle()` 等价于 `PluginCommAPI.recycleElement(element.uuid)`，只是换成了在 `Element` 实例上直接调用，二者选其一即可，详见 [`recycleElement`](/zh/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) 与 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。
+</Tip>

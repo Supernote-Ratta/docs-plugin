@@ -3,6 +3,8 @@ title: "recycleElement"
 description: "回收 Element 对象并释放原生Android端的缓存。"
 ---
 
+该接口只释放指定 `uuid` 对应的这一个 Element 缓存，不影响其他元素，相比会清空全部缓存的 [`clearElementCache`](/zh/api-reference/supernote-plugin/plugin-comm-api/clear-trail-cache)，日常用完某个元素后更推荐用它及时释放。
+
 ```ts
 static recycleElement(uuid: string): void;
 ```

@@ -15,6 +15,8 @@ static modifyPageElements(
 When this API operates on the current page, call [`getPageDisplaySize`](/en/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size) first to get the current page display size. Do not call [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size) to get the file page size, otherwise the position data may not match.
 </Note>
 
+The `elements` you pass in typically come from existing elements (with `uuid`) obtained via `getElements`, etc.; `uuid` stays the same before and after modification. Two checks apply here as well: the `uuid` must still be present in the native cache (if not found, the item is silently skipped without a separate error), and the element must already exist on the page; a missing cache entry is caught at the earlier stage and never reaches the "does it already exist on the page" check. See [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
+
 **Parameters**
 
 | Parameter | Type | Description |

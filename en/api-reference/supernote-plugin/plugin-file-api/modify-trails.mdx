@@ -3,6 +3,8 @@ title: "modifyElements"
 description: "Modify existing page elements (only existing elements can be modified)."
 ---
 
+It's recommended to first fetch the target elements with `getElements`, modify their fields, and pass those same objects back in, which keeps `uuid` unchanged. A modification goes through two independent checks: first, the element's `uuid` must still be present in the native cache — if it can't be found, that item is silently skipped without a separate error; second, the element must already exist on the target page (the "must already exist" requirement in the description above), which is a business-level check performed by the API itself. These two checks happen in sequence and are independent of each other — a `uuid` that can't be found in the cache is skipped at the earlier stage and never reaches the "does it already exist on the page" check. See [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
+
 ```ts wrap
 static modifyElements(NOTEPath: string, page: number, elements: Element[]): Promise<APIResponse<number[]>>;
 ```

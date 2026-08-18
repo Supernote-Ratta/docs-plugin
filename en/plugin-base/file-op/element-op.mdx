@@ -37,6 +37,30 @@ Therefore, when creating a new element, it is recommended to call `PluginCommAPI
 
 Document files do not allow inserting **TextBox elements / titles / links**. Forcing insertion will be rejected by validation.
 
+### 4) Element Caching and Release
+
+Some fields in `Element` (stroke sample points, pressure points, angle points, contour points, etc.) can hold a large amount of data. Transferring all of it to the RN side at once not only creates memory pressure, but transfer/conversion time also grows noticeably as the data size grows. Because of this, the native side caches each `Element` by `uuid`, and the RN side only holds a reference (`uuid` + accessors), fetching data on demand.
+
+Around this cache there is a full create → read → write → release flow:
+
+| Operation | Method | Description |
+| --- | --- | --- |
+| Create | [`createElement`](/en/api-reference/supernote-plugin/plugin-comm-api/create-trail) | Creates a cache entry and returns an `Element` with a `uuid` |
+| Read | [`getElements`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-trails) / [`getElement`](/en/api-reference/supernote-plugin/plugin-file-api/get-element) / [`getLastElement`](/en/api-reference/supernote-plugin/plugin-file-api/get-last-element) / [`getLassoElements`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) / [`getCacheElement(uuid)`](/en/api-reference/supernote-plugin/plugin-comm-api/get-cache-element) | The first four fetch a whole page / a single element / the last element / lasso-selected elements, and all create or refresh the cache; `getCacheElement` fetches already-cached data by `uuid` without producing a new read |
+| Write / process | [`insertElements`](/en/api-reference/supernote-plugin/plugin-file-api/insert-trails) / [`modifyElements`](/en/api-reference/supernote-plugin/plugin-file-api/modify-trails) / [`replaceElements`](/en/api-reference/supernote-plugin/plugin-file-api/replace-trails) / [`recognizeElements`](/en/api-reference/supernote-plugin/plugin-comm-api/recognize-elements) / [`convertElement2Sticker`](/en/api-reference/supernote-plugin/plugin-comm-api/convert-trail2-sticker) / [`modifyPageElements`](/en/api-reference/supernote-plugin/plugin-comm-api/modify-page-elements) / [`insertPageElements`](/en/api-reference/supernote-plugin/plugin-comm-api/insert-page-elements) / [`batchUpdatePageElements`](/en/api-reference/supernote-plugin/plugin-comm-api/batch-update-page-elements) | Require that the element's `uuid` is still present in the cache; `uuid` does not change before/after the call; elements no longer in the cache are silently skipped instead of causing a separate error |
+| Release one | [`recycleElement(uuid)`](/en/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) / `element.recycle()` | Releases only this one element; either form works the same way |
+| Release all | [`clearElementCache()`](/en/api-reference/supernote-plugin/plugin-comm-api/clear-trail-cache) | Clears **all** `Element` caches at once; every previous `uuid`/`Element` object becomes invalid, so use with caution |
+
+A few things worth noting:
+
+- **Write APIs depend on the cache still existing**: `insertElements`/`modifyElements`/`replaceElements`/`recognizeElements`/`convertElement2Sticker`/`modifyPageElements`/`insertPageElements`/`batchUpdatePageElements` all require that the passed-in element's `uuid` is currently present in the native cache. This is a different check from "the element already exists on the page" (for example, `modifyElements` requires the target to already exist on that page) — a `uuid` that can't be found in the cache is skipped at an earlier stage, before the "does it already exist on the page" check even happens.
+- **The cache is not guaranteed to live forever**: `clearElementCache()` only runs when a plugin calls it; the SDK never triggers it automatically on the plugin's behalf. Conversely, the host environment may also automatically reclaim part or all of the cache under memory pressure, so you shouldn't assume a `uuid` stays valid indefinitely — release elements as soon as you're done with them.
+- **This is a different, coarser-grained cache than `ElementDataAccessor`**: large point fields such as `angles`/`contoursSrc` add another on-demand paging accessor layer on top of the cached `Element`. The accessor itself also keeps a smaller cache on the RN side — read methods such as `get`/`getRange` cache the values they fetch, while write methods such as `add`/`set`/`setRange` automatically clear that cache on success; `preload`/`isCached`/`getCacheStats`/`clearCache` are also available for manual warm-up, inspection, and clearing. Releasing the whole `Element` also clears its accessor caches. See [`ElementDataAccessor`](/en/api-reference/supernote-plugin/types/trail-data-accessor) for details.
+
+<Tip>
+The small cache that `ElementDataAccessor` keeps on the RN side is different from the native-side Element cache described here; see [`ElementDataAccessor`](/en/api-reference/supernote-plugin/types/trail-data-accessor) for the distinction.
+</Tip>
+
 ## Get Page Elements
 
 When you need to read all elements on a page (for display, filtering, editing, copying, etc.), use `getElements`:

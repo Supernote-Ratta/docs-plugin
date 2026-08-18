@@ -3,6 +3,8 @@ title: "convertElement2Sticker"
 description: "元素（Element）转换为贴纸。"
 ---
 
+传入的 `elements` 通常是从 `getLassoElements`/`getElements` 等接口拿到的既有元素（带 `uuid`），转换前后 `uuid` 保持不变。该接口依赖这些元素当前仍在原生缓存中，缓存中找不到的元素会被直接跳过，不会单独报错，详见 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。
+
 ```ts
 static convertElement2Sticker(
   params: {

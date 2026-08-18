@@ -3,9 +3,15 @@ title: "clearElementCache"
 description: "清除 Element 的 Android 本地缓存；清除后旧的 Element 对象将无法使用。"
 ---
 
+该接口会一次性清空**所有**通过 `createElement`/`getElements` 等接口产生的 Element 缓存，而不只是某一个元素，调用前请确认没有其他地方还依赖这些缓存。
+
 ```ts
 static clearElementCache(): void;
 ```
+
+<Warning>
+即使插件从不主动调用 `clearElementCache()`，宿主环境也可能在资源紧张等情况下自动回收缓存，不要假设缓存会一直保留。如果只是想释放某一个用完的元素，优先使用 [`recycleElement`](/zh/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) 或 `element.recycle()`，避免影响插件里其他还在使用的元素。
+</Warning>
 
 ## 示例
 

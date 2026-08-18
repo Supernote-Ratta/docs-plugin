@@ -3,6 +3,8 @@ title: "replaceElements"
 description: "替换指定页面元素数据。"
 ---
 
+传入的 `elements` 中，凡是携带既有 `uuid` 的元素（例如从 `getElements` 读出来复用的元素），该 `uuid` 必须还在原生缓存中，否则这一条会被直接跳过、不会单独报错；新创建（如 `createElement`）尚未插入过的元素不受此限制。替换前后沿用的元素 `uuid` 保持不变，详见 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。
+
 ```ts wrap
 static replaceElements(notePath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
 ```

@@ -3,6 +3,8 @@ title: "insertElements"
 description: "Insert elements into a NOTE/DOC file page."
 ---
 
+The `elements` you pass in typically come from [`createElement`](/en/api-reference/supernote-plugin/plugin-comm-api/create-trail) or existing elements read from elsewhere; `uuid` stays the same before and after insertion. This API requires those elements to still be present in the native cache — if an element's `uuid` can no longer be found in the cache (e.g. already released via `recycleElement`/`clearElementCache`), that item is silently skipped instead of causing a separate error. See [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
+
 ```ts wrap
 static insertElements(NOTEPath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
 ```

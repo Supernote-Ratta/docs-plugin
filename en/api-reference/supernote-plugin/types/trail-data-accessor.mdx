@@ -5,6 +5,8 @@ description: "Accessor for large point datasets and the point data types it prov
 
 Point data is typically cached on the native side. On the RN side, you fetch data on demand via an accessor.
 
+`ElementDataAccessor` also keeps a smaller cache of its own on the RN side: read methods such as `get`/`getRange` cache the values they fetch to avoid repeated cross-boundary reads, while write methods such as `add`/`set`/`setRange` clear that cache on success so subsequent reads see the latest data. This RN-side cache is separate from the native-side `Element` cache described in [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release): releasing a whole `Element` (`recycleElement`/`clearElementCache`) also clears the accessor-level cache underneath it, but calling an accessor's own `clearCache()` does not affect the native-side `Element` cache.
+
 | Method | Returns | Description |
 | --- | --- | --- |
 | `size()` | `Promise<number>` | Get the dataset length |
@@ -17,6 +19,10 @@ Point data is typically cached on the native side. On the RN side, you fetch dat
 | `getCacheStats()` | `{ cachedCount: number; totalSize: number }` | Get cache stats |
 | `preload(startIndex, count)` | `Promise<void>` | Preload a range into cache |
 | `isCached(index)` | `boolean` | Whether an item is already cached |
+
+<Tip>
+If you know in advance that you'll read a contiguous range of point data (e.g. rendering a stroke segment), call `preload(startIndex, count)` first to warm the cache, then read with `get`/`getRange` to reduce the number of cross-boundary calls.
+</Tip>
 
 
 ## ElementPointDataType

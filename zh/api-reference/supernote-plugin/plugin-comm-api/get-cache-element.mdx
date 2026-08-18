@@ -5,6 +5,8 @@ description: "根据元素 uuid 获取缓存的 Element 数据（包含笔划、
 
 该接口会根据元素 uuid 获取缓存的 Element 数据（包含笔划、链接、标题、几何图形与文本框等）。
 
+典型用途：只保存了某个元素的 `uuid`（例如上一次 `createElement`/`getElements` 拿到后又释放了完整对象），后续需要时可以用它重新取回缓存中的 `Element` 数据，而不用重新查一遍整页。
+
 <Note>
 调用 `clearElementCache()` 清空缓存后，旧的 Element 对象/uuid 将无法再用于读取缓存数据。
 </Note>

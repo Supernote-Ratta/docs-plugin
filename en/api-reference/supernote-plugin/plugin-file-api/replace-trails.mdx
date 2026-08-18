@@ -3,6 +3,8 @@ title: "replaceElements"
 description: "Replace all elements on a page."
 ---
 
+For any element in `elements` that carries an existing `uuid` (e.g. an element read via `getElements` and reused), that `uuid` must still be present in the native cache, otherwise the item is silently skipped without a separate error; newly created elements (e.g. via `createElement`) that haven't been inserted anywhere yet aren't subject to this restriction. A reused element's `uuid` stays the same before and after the replacement. See [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
+
 ```ts wrap
 static replaceElements(NOTEPath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
 ```

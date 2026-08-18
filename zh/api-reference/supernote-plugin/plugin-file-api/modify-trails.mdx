@@ -3,6 +3,8 @@ title: "modifyElements"
 description: "修改已存在的页面元素数据（必须是已存在的数据，否则不会生效）。"
 ---
 
+调用前建议先用 `getElements` 拿到目标元素再修改字段后传入，这样能保证 `uuid` 不变。修改会经过两层校验：一是元素的 `uuid` 必须还在原生缓存中，找不到会被直接跳过、不会单独报错；二是该元素必须已经存在于目标页面（即接口描述里"必须是已存在的数据"），这一层是接口本身的业务校验。两层是独立的先后关系——`uuid` 在缓存里找不到会在更早阶段被跳过，根本走不到"是否已存在于页面"这一步，详见 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。
+
 ```ts wrap
 static modifyElements(notePath: string, page: number, elements: Element[]): Promise<APIResponse<number[]>>;
 ```

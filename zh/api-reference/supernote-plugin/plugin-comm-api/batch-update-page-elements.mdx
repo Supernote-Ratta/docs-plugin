@@ -16,6 +16,8 @@ static batchUpdatePageElements(
 当该接口操作的是当前页时，请先调用 [`getPageDisplaySize`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size) 获取当前页面显示尺寸，不要调用 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 获取文件页面尺寸，否则位置数据可能对不上。
 </Note>
 
+`deleteNumList` 按页内序号（`numInPage`）删除，不涉及缓存；`elements` 部分是插入新元素，通常来自 [`createElement`](/zh/api-reference/supernote-plugin/plugin-comm-api/create-trail) 或从别处读取到的既有元素，插入前后 `uuid` 保持不变，且依赖这些元素当前仍在原生缓存中——缓存中找不到的元素会被直接跳过，不会单独报错，详见 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。
+
 **参数**
 
 | 参数 | 类型 | 说明 |

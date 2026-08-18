@@ -72,3 +72,7 @@ When `type === 800`, the `fiveStar` field provides the point set of the five-sta
 | Method | Returns | Description |
 | --- | --- | --- |
 | `recycle()` | `Promise<void>` | Recycle native cached data for this element and clear accessor caches |
+
+<Tip>
+`element.recycle()` is equivalent to `PluginCommAPI.recycleElement(element.uuid)` — it's just called directly on the `Element` instance instead. Either form works; see [`recycleElement`](/en/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) and [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
+</Tip>

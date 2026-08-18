@@ -3,9 +3,15 @@ title: "clearElementCache"
 description: "Clear the Android local cache for Elements. After clearing, previously obtained Element objects can no longer be used."
 ---
 
+This API clears **all** Element caches produced by `createElement`/`getElements`, etc. at once, not just a single element — make sure nothing else still depends on these caches before calling it.
+
 ```ts
 static clearElementCache(): void;
 ```
+
+<Warning>
+Even if a plugin never calls `clearElementCache()` itself, the host environment may still automatically reclaim the cache under memory pressure or similar conditions, so don't assume the cache is guaranteed to persist. If you only need to release a single element you're done with, prefer [`recycleElement`](/en/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) or `element.recycle()` instead, so you don't affect other elements still in use elsewhere in the plugin.
+</Warning>
 
 ## Example
 

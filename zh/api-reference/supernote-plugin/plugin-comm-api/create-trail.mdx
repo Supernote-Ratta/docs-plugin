@@ -4,7 +4,7 @@ description: "创建一个新的元素对象（Element）。"
 ---
 [`Element`](/zh/api-reference/supernote-plugin/types/trail)里有一些字段数据量很大（例如笔画采样点、压力点、角度点、轮廓点等）。
 为了避免 RN 侧一次性承载大数据导致内存问题，SDK 采用了“访问器”设计，所以需要通过createElement创建。
-详细原因见[`Element`](/zh/api-reference/supernote-plugin/types/trail)。
+详细原因见[`Element`](/zh/api-reference/supernote-plugin/types/trail)。创建出的 `Element` 会被缓存在原生侧，用完记得调用 [`recycleElement`](/zh/api-reference/supernote-plugin/plugin-comm-api/recycle-trail) 或 `element.recycle()` 释放，完整流程见 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。
 
 ```ts
 static createElement(

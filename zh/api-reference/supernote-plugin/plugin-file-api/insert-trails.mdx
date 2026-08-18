@@ -3,6 +3,8 @@ title: "insertElements"
 description: "插入元素数据到笔记/文档文件页面中。"
 ---
 
+传入的 `elements` 通常来自 [`createElement`](/zh/api-reference/supernote-plugin/plugin-comm-api/create-trail) 或从别处读取到的既有元素，插入前后 `uuid` 保持不变。该接口依赖这些元素当前仍在原生缓存中：如果某个元素的 `uuid` 在缓存里已经找不到（例如已被 `recycleElement`/`clearElementCache` 释放），这一条会被直接跳过，不会单独报错，详见 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。
+
 ```ts wrap
 static insertElements(notePath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
 ```
