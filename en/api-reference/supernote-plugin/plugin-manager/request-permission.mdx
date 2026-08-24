@@ -11,28 +11,34 @@ requestPermission(permission: string, desc?: string): Promise<number>;
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `permission` | `string` | Permission name. Supported values: `plugin.permission.FILE:WRITE`, `plugin.permission.FILE:DELETE`, `plugin.permission.INTERNET` |
-| `desc` | `string` | Optional custom description. It is used only when the current permission status is denied (`0`) and the host shows the "denied" dialog. If omitted or empty, the host uses the default description. This parameter is ignored in other permission states |
+| `permission` | `string` | Permission name. Supported values: `plugin.permission.FILE:READ`, `plugin.permission.FILE:WRITE`, `plugin.permission.FILE:DELETE`, `plugin.permission.INTERNET` |
+| `desc` | `string` | Optional custom description. It is used only when the current permission status is "don't allow" (`0`) and the host shows that dialog. If omitted or empty, the host uses the default description. This parameter is ignored in other permission states |
 
 <Note>
 Regarding file access permissions:
 1. The plugin has read, write, and delete access to its private directory by default: `/data/data/com.ratta.supernote.pluginhost/files/plugins/<pluginID>`.
-2. The plugin has read access by default only to these directories under shared storage: `Document`, `EXPORT`, `INBOX`, `MyStyle`, `Note`, and `SCREENSHOT`. Other directories are not readable.
-3. After requesting write or delete permission, the plugin can write to and delete files only in `Document`, `EXPORT`, `INBOX`, `MyStyle`, `Note`, and `SCREENSHOT` under shared storage. Other directories still do not grant write or delete access even after permission is requested.
+2. None of the read, write, or delete permissions are granted by default for the `Document`, `EXPORT`, `INBOX`, `MyStyle`, `Note`, and `SCREENSHOT` directories under shared storage (`sdcard`); each must be requested separately via `plugin.permission.FILE:READ`, `plugin.permission.FILE:WRITE`, and `plugin.permission.FILE:DELETE`. External SD cards, OTG storage, and other removable storage are likewise governed by these same permissions. Any other directory cannot be read, written, or deleted regardless of whether the corresponding permission is requested.
 </Note>
+
+Before calling this API, you must first declare the permission in the `uses-permissions` field of the plugin's `PluginConfig.json` (see [How to Declare Permissions](/en/plugin-base/permission#how-to-declare-permissions)); otherwise the call will fail.
 
 **Returns**
 
-- `Promise<number>`: user choice, where `0` means denied, `1` means allowed while in use, and `2` means always allowed
+- `Promise<number>`: user choice, where `0` means "don't allow", `1` means "allow this time only", `2` means "always allow", and `-1` means the user closed the dialog without choosing (treated as "don't allow"; the dialog will show again on the next call)
 
 **Description**
 
-- The host may show a permission dialog for the user to choose among "Deny / Allow while in use / Always allow"
-- `desc` customizes only the description shown in the denied-state dialog. It does not change the permission status or the user's choice options.
+- The host may show a permission dialog for the user to choose among "Allow this time only / Always allow / Don't allow" (the dialog defaults to "Allow this time only")
+- `desc` customizes only the description shown in the "don't allow" dialog. It does not change the permission status or the user's choice options.
+- "Allow this time only" is valid only for the current plugin session and is revoked when the plugin exits or is closed. Only "Always allow" is persisted and remains valid after restarting the plugin. See [How to Request Permissions](/en/plugin-base/permission#how-to-request-permissions)
 
 **Throws**
 
 - Throws a parameter validation error when `permission` is not a non-empty string or `desc` is provided with a non-string value
+- Throws an error when `permission` is not in the supported list (error code `1502`)
+- Throws an error when the plugin has not declared this permission in `uses-permissions` in `PluginConfig.json` (error code `1500`)
+
+See [Plugin Permissions](/en/plugin-base/permission#common-error-codes) for more permission-related error codes.
 
 ## Example
 

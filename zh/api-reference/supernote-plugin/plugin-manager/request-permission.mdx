@@ -11,28 +11,34 @@ requestPermission(permission: string, desc?: string): Promise<number>;
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `permission` | `string` | 权限名称，支持：`plugin.permission.FILE:WRITE`、`plugin.permission.FILE:DELETE`、`plugin.permission.INTERNET` |
-| `desc` | `string` | 可选自定义说明。仅当当前权限状态为拒绝（`0`）且宿主弹出“已拒绝”弹框时使用；未传或为空时使用宿主默认描述。其它权限状态会忽略该参数 |
+| `permission` | `string` | 权限名称，支持：`plugin.permission.FILE:READ`、`plugin.permission.FILE:WRITE`、`plugin.permission.FILE:DELETE`、`plugin.permission.INTERNET` |
+| `desc` | `string` | 可选自定义说明。仅当当前权限状态为不允许（`0`）且宿主弹出提示框时使用；未传或为空时使用宿主默认描述。其它权限状态会忽略该参数 |
 
 <Note>
 关于文件访问权限：
 1. 插件默认拥有私有目录 `/data/data/com.ratta.supernote.pluginhost/files/plugins/<pluginID>` 的读取、写入、删除权限。
-2. 插件默认拥有 `sdcard` 目录下 `Document`、`EXPORT`、`INBOX`、`MyStyle`、`Note`、`SCREENSHOT` 这几个目录的读取权限，其他目录默认不具备读取权限。
-3. 当插件申请写入或删除权限后，可获得 `sdcard` 目录下 `Document`、`EXPORT`、`INBOX`、`MyStyle`、`Note`、`SCREENSHOT` 这几个目录的写入和删除权限；其他目录即使申请相关权限，也无法获得对应的写入和删除权限。
+2. `sdcard` 目录下 `Document`、`EXPORT`、`INBOX`、`MyStyle`、`Note`、`SCREENSHOT` 这几个目录，读取、写入、删除权限默认都不具备，需要分别申请 `plugin.permission.FILE:READ`、`plugin.permission.FILE:WRITE`、`plugin.permission.FILE:DELETE` 后才能使用；外接 SD 卡、OTG 等外部存储设备的访问同样受这三种权限管控；除此之外的其他目录，无论是否申请相关权限，都无法获得读取、写入、删除权限。
 </Note>
+
+调用本接口前，需要先在插件的 `PluginConfig.json` 中通过 `uses-permissions` 字段声明该权限（参考[插件权限](/zh/plugin-base/permission#如何声明权限)），否则会调用失败。
 
 **返回**
 
-- `Promise<number>`：用户授权结果，`0` 表示拒绝，`1` 表示使用时允许，`2` 表示始终允许
+- `Promise<number>`：用户授权结果，`0` 表示不允许，`1` 表示仅本次允许，`2` 表示始终允许，`-1` 表示用户直接关闭了申请弹框（未做选择，效果等同不允许，下次调用会重新弹框）
 
 **说明**
 
-- 宿主可能会弹出授权对话框，供用户在“拒绝 / 使用时允许 / 始终允许”之间选择
-- `desc` 只用于自定义拒绝状态弹框中的说明文案，不会改变权限状态或用户可选择的授权选项。
+- 宿主可能会弹出授权对话框，供用户在“仅本次允许 / 始终允许 / 不允许”之间选择（默认选中“仅本次允许”）
+- `desc` 只用于自定义“不允许”状态弹框中的说明文案，不会改变权限状态或用户可选择的授权选项。
+- “仅本次允许”只在本次插件会话内有效，插件退出或关闭后会失效；只有“始终允许”会被持久化保存，重启插件后依然有效，详见[插件权限](/zh/plugin-base/permission#如何申请权限)
 
 **异常**
 
 - 当 `permission` 不是非空字符串，或传入的 `desc` 不是字符串时，会抛出参数校验异常
+- 当 `permission` 不在支持列表内时，会抛出异常（错误码 `1502`）
+- 当插件未在 `PluginConfig.json` 的 `uses-permissions` 中声明该权限时，会抛出异常（错误码 `1500`）
+
+更多权限相关错误码参见[插件权限](/zh/plugin-base/permission#常见错误码)。
 
 ## 示例
 

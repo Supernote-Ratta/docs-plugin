@@ -41,6 +41,7 @@
                       "en/plugin-base/coordinate-system",
                       "en/plugin-base/plugin-ui",
                       "en/plugin-base/lasso",
+                      "en/plugin-base/permission",
                       {
                         "group": "Notes",
                         "pages": [
@@ -289,6 +290,7 @@
                       "zh/plugin-base/coordinate-system",
                       "zh/plugin-base/plugin-ui",
                       "zh/plugin-base/lasso",
+                      "zh/plugin-base/permission",
                       {
                         "group": "笔记功能",
                         "pages": [

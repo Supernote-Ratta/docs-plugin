@@ -409,6 +409,23 @@ Linux、macOS 运行以下命令：
 | `desc` | 插件功能描述。 |
 | `jsMainPath` | 插件入口文件名（不含扩展名），示例为 `index`，建议不要修改。 |
 | `author` | 插件作者（可选），需要手动添加，打包命令不会自动生成。 |
+| `uses-permissions` | 插件需要使用的权限声明（可选），值为权限名字符串数组，如 `["plugin.permission.FILE:WRITE", "plugin.permission.INTERNET"]`；声明后才能对该权限调用 [`hasPermission`](/zh/api-reference/supernote-plugin/plugin-manager/has-permission)/[`requestPermission`](/zh/api-reference/supernote-plugin/plugin-manager/request-permission)，否则调用会失败。详见[插件权限](/zh/plugin-base/permission)。 |
+
+`uses-permissions` 和 `author` 一样，打包命令不会自动生成，需要手动添加。手动添加 `uses-permissions` 后的 `PluginConfig.json` 示例：
+
+```json wrap
+{
+  "name": "plugin",
+  "pluginKey": "plugin",
+  "pluginID": "98blcl1mp5fxamrm",
+  "iconPath": "",
+  "desc": "",
+  "versionCode": "1",
+  "versionName": "0.0.1",
+  "jsMainPath": "index",
+  "uses-permissions": ["plugin.permission.FILE:WRITE", "plugin.permission.INTERNET"]
+}
+```
 
 打包完成后会生成 `build` 目录，结构如下：
 

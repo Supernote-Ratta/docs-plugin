@@ -1,0 +1,101 @@
+---
+title: '插件权限'
+---
+
+出于保护用户设备上文件和隐私的考虑，插件访问文件系统或发起网络请求前，需要先获得用户授权。这套权限校验发生在"插件进程访问文件系统/网络"这个边界上：无论插件代码是调用 `sn-plugin-lib` 提供的接口，还是直接使用 Android 官方文件/网络接口、RN 官方文件/网络接口，或插件自带的 C/C++ 代码做文件读写/网络访问，只要访问的是受限范围（见下方[默认可访问范围](#默认可访问范围)），都会被同一套权限体系拦截，无法绕过。
+
+本章介绍权限体系的整体设计，具体接口请参考：
+
+- 查询权限状态：[`hasPermission`](/zh/api-reference/supernote-plugin/plugin-manager/has-permission)
+- 申请权限：[`requestPermission`](/zh/api-reference/supernote-plugin/plugin-manager/request-permission)
+
+## 权限类型
+
+| 权限名 | 适用场景 |
+| --- | --- |
+| `plugin.permission.FILE:READ` | 读取 `sdcard` 下 `Document`/`EXPORT`/`INBOX`/`MyStyle`/`Note`/`SCREENSHOT` 目录（默认不具备该权限，需要显式申请） |
+| `plugin.permission.FILE:WRITE` | 写入/修改上述 6 个 `sdcard` 目录 |
+| `plugin.permission.FILE:DELETE` | 删除上述 6 个 `sdcard` 目录里的内容（`sn-plugin-lib` 目前未提供独立的"删除文件"类接口给插件；插件里能调用到的 `deleteElements`/`deletePageElements` 等"删除"方法，删除的是笔记内容里的元素，本质是对笔记文件的修改，因此按 `FILE:WRITE` 校验，见下方[权限依赖一览](#权限依赖一览)脚注） |
+| `plugin.permission.INTERNET` | 插件内发起网络请求（无论是通过 `sn-plugin-lib`、还是 RN/Android/C++ 原生网络接口） |
+
+## 如何声明权限
+
+调用 `requestPermission` 前，必须先在插件根目录的 `PluginConfig.json` 里，通过 `uses-permissions` 字段声明要使用的权限名（字符串数组）。未声明就直接调用会失败（错误码 `1500`）。
+
+字段格式参见 [`PluginConfig.json` 字段说明](/zh/first-plugin#插件打包) 中的 `uses-permissions` 一行。
+
+## 如何申请权限
+
+推荐的申请流程：
+
+1. 调用 [`hasPermission(permission)`](/zh/api-reference/supernote-plugin/plugin-manager/has-permission) 查询当前状态：返回 `1` 表示已授权，可直接调用相关接口
+2. 若返回 `0`（未授权），调用 [`requestPermission(permission, desc?)`](/zh/api-reference/supernote-plugin/plugin-manager/request-permission) 发起申请，宿主会弹出授权对话框
+3. 用户在弹框中选择（默认选中"仅本次允许"）：
+   - **仅本次允许**：返回 `1`
+   - **始终允许**：返回 `2`
+   - **不允许**：返回 `0`
+   - 直接关闭弹框（未做选择）：视为不允许，返回 `-1`
+4. 如果用户此前已经选择过"不允许"，再次调用 `requestPermission` 会弹出提示框，引导用户前往系统设置修改；该提示框关闭后仍返回 `0`，不会重新触发三选一的授权流程
+
+<Note>
+"仅本次允许"只在本次插件会话内有效：插件退出或关闭后会失效，下次重新打开插件需要重新申请；只有"始终允许"会被持久化保存，重启插件后依然有效。建议在插件正常运行期间发起文件读写等调用。
+</Note>
+
+## 默认可访问范围
+
+- 插件私有目录（`/data/data/com.ratta.supernote.pluginhost/files/plugins/<pluginID>`）：**唯一**默认免申请的路径，读取、写入、删除都不需要申请权限
+- `sdcard` 下 `Document`/`EXPORT`/`INBOX`/`MyStyle`/`Note`/`SCREENSHOT` 这 6 个目录：默认**不具备**任何权限，读/写/删要分别申请 `FILE:READ`/`FILE:WRITE`/`FILE:DELETE` 后才能使用
+- 外接 SD 卡、OTG 等外部存储设备：访问同样受 `FILE:READ`/`FILE:WRITE`/`FILE:DELETE` 权限管控，插件侧调用的是同一套 `hasPermission`/`requestPermission` 接口，不需要额外区分
+- 除上述范围外的其他路径：无法通过申请权限获得访问能力
+
+## 权限依赖一览
+
+下表只列出 `sn-plugin-lib` 提供的典型接口作为例子；如果插件代码绕开 `sn-plugin-lib`，直接使用 Android/RN/C++ 官方接口访问上述目录之外的文件或发起网络请求，同样会被这套权限体系拦截，不是只有下表列出的接口才受影响。
+
+| 权限 | 常见依赖接口（`sn-plugin-lib`） |
+| --- | --- |
+| `FILE:READ` | [`getElements`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-trails)、[`getElement`](/zh/api-reference/supernote-plugin/plugin-file-api/get-element)、[`getLastElement`](/zh/api-reference/supernote-plugin/plugin-file-api/get-last-element)、[`getLassoElements`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) 等读取类接口 |
+| `FILE:WRITE` | [`insertElements`](/zh/api-reference/supernote-plugin/plugin-file-api/insert-trails)、[`modifyElements`](/zh/api-reference/supernote-plugin/plugin-file-api/modify-trails)、[`replaceElements`](/zh/api-reference/supernote-plugin/plugin-file-api/replace-trails)、[`insertPageElements`](/zh/api-reference/supernote-plugin/plugin-comm-api/insert-page-elements) 等写入/修改/删除类接口 |
+| `INTERNET` | 插件内发起的网络请求 |
+
+`deleteElements`/`deletePageElements` 等删除元素类方法删除的是笔记内容，本质是对文件的修改，因此按 `FILE:WRITE` 校验；`FILE:DELETE` 权限用于文件级删除等其他场景。
+
+## 常见错误码
+
+| 错误码 | 触发场景 |
+| --- | --- |
+| `1500` | 调用 `requestPermission` 前，未在 `PluginConfig.json` 的 `uses-permissions` 中声明该权限 |
+| `1502` | `permission` 参数不在支持列表内 |
+| `1501` | 没有 `FILE:WRITE` 权限（未申请、被设为不允许，或"仅本次允许"已失效）时调用写入类接口 |
+| `1503` | 没有 `FILE:READ` 权限（未申请、被设为不允许，或"仅本次允许"已失效）时调用读取类接口 |
+| `1217` | 目标路径已被加密锁定，需要先解锁才能访问 |
+
+## 示例
+
+下面示例演示"查询 → 未授权则申请 → 申请通过后重试业务调用"的最小流程：
+
+```ts wrap
+import { PluginManager, PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * 读取指定笔记页内容前，确保插件已拥有 FILE:READ 权限：
+ * 已授权则直接读取；未授权先申请，用户同意后再重试。
+ */
+export async function readPageElementsWithPermission(notePath: string, page: number) {
+  const permission = 'plugin.permission.FILE:READ';
+
+  const status = await PluginManager.hasPermission(permission);
+  if (status !== 1) {
+    const result = await PluginManager.requestPermission(permission, '需要读取权限来加载文件内容。');
+    if (result !== 1 && result !== 2) {
+      throw new Error('用户未授予读取权限');
+    }
+  }
+
+  const res = await PluginFileAPI.getElements(page, notePath);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? '读取文件失败');
+  }
+  return res.result ?? [];
+}
+```

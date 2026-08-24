@@ -1,0 +1,101 @@
+---
+title: "Plugin Permissions"
+---
+
+To protect the files and privacy on a user's device, a plugin must obtain user authorization before it can access the file system or make network requests. This permission check applies at the boundary of "the plugin process accessing the file system/network": whether the plugin code calls APIs exposed by `sn-plugin-lib`, or directly uses Android's official file/network APIs, RN's official file/network APIs, or the plugin's own C/C++ code to read/write files or access the network, it will be intercepted by the same permission system as long as it targets the restricted scope (see [Default Accessible Scope](#default-accessible-scope) below). This cannot be bypassed.
+
+This chapter covers the overall design of the permission system. See the following API pages for interface details:
+
+- Check permission status: [`hasPermission`](/en/api-reference/supernote-plugin/plugin-manager/has-permission)
+- Request a permission: [`requestPermission`](/en/api-reference/supernote-plugin/plugin-manager/request-permission)
+
+## Permission Types
+
+| Permission | Applies to |
+| --- | --- |
+| `plugin.permission.FILE:READ` | Reading the `Document`, `EXPORT`, `INBOX`, `MyStyle`, `Note`, and `SCREENSHOT` directories under shared storage (`sdcard`). Not granted by default; must be explicitly requested |
+| `plugin.permission.FILE:WRITE` | Writing to/modifying the 6 shared-storage directories above |
+| `plugin.permission.FILE:DELETE` | Deleting content inside the 6 shared-storage directories above (`sn-plugin-lib` does not currently expose a dedicated "delete file" API to plugins; "delete" methods like `deleteElements`/`deletePageElements` remove elements from note content, which is essentially a file modification, so they are validated against `FILE:WRITE`; see the footnote under [Permission Dependencies](#permission-dependencies) below) |
+| `plugin.permission.INTERNET` | Making network requests from the plugin, whether via `sn-plugin-lib` or native RN/Android/C++ network APIs |
+
+## How to Declare Permissions
+
+Before calling `requestPermission`, you must first declare the permission names you intend to use in the `uses-permissions` field of `PluginConfig.json` at the plugin's root (a string array). Calling `requestPermission` without declaring the permission first will fail (error code `1500`).
+
+See the `uses-permissions` row in [`PluginConfig.json` field reference](/en/first-plugin#package-the-plugin).
+
+## How to Request Permissions
+
+Recommended flow:
+
+1. Call [`hasPermission(permission)`](/en/api-reference/supernote-plugin/plugin-manager/has-permission) to check the current status: `1` means already granted, so you can call the related APIs directly
+2. If it returns `0` (not granted), call [`requestPermission(permission, desc?)`](/en/api-reference/supernote-plugin/plugin-manager/request-permission) to trigger the authorization dialog
+3. The user chooses among (the dialog defaults to "Allow this time only"):
+   - **Allow this time only**: returns `1`
+   - **Always allow**: returns `2`
+   - **Don't allow**: returns `0`
+   - Closing the dialog without choosing: treated as "don't allow", returns `-1`
+4. If the user has previously chosen "Don't allow", calling `requestPermission` again shows a dialog that guides the user to the system settings; after that dialog is dismissed, the result is still `0` and the three-option dialog is not shown again
+
+<Note>
+"Allow this time only" is valid only for the current plugin session: it is revoked when the plugin exits or is closed, and must be requested again the next time the plugin opens. Only "Always allow" is persisted and remains valid after restarting the plugin. It's recommended to make file read/write calls while the plugin is actively running.
+</Note>
+
+## Default Accessible Scope
+
+- The plugin's private directory (`/data/data/com.ratta.supernote.pluginhost/files/plugins/<pluginID>`): the **only** path that is exempt from any permission by default — reading, writing, and deleting are all allowed without requesting anything
+- The `Document`, `EXPORT`, `INBOX`, `MyStyle`, `Note`, and `SCREENSHOT` directories under shared storage (`sdcard`): none of these permissions are granted by default; reading/writing/deleting each requires explicitly requesting `FILE:READ`/`FILE:WRITE`/`FILE:DELETE`
+- External SD cards, OTG storage, and other removable storage: access is likewise governed by `FILE:READ`/`FILE:WRITE`/`FILE:DELETE`; the plugin calls the same `hasPermission`/`requestPermission` APIs and does not need to handle this differently
+- Any other path outside the scope above: cannot be accessed by requesting a permission
+
+## Permission Dependencies
+
+The table below lists typical `sn-plugin-lib` APIs only as examples. If plugin code bypasses `sn-plugin-lib` and directly uses Android/RN/C++ official APIs to access files outside the directories above or to make network requests, it will still be intercepted by the same permission system — the APIs below are not the only ones affected.
+
+| Permission | Common dependent APIs (`sn-plugin-lib`) |
+| --- | --- |
+| `FILE:READ` | [`getElements`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-trails), [`getElement`](/en/api-reference/supernote-plugin/plugin-file-api/get-element), [`getLastElement`](/en/api-reference/supernote-plugin/plugin-file-api/get-last-element), [`getLassoElements`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data), and other read APIs |
+| `FILE:WRITE` | [`insertElements`](/en/api-reference/supernote-plugin/plugin-file-api/insert-trails), [`modifyElements`](/en/api-reference/supernote-plugin/plugin-file-api/modify-trails), [`replaceElements`](/en/api-reference/supernote-plugin/plugin-file-api/replace-trails), [`insertPageElements`](/en/api-reference/supernote-plugin/plugin-comm-api/insert-page-elements), and other write/modify/delete APIs |
+| `INTERNET` | Network requests made from the plugin |
+
+`deleteElements`/`deletePageElements` and similar "delete element" methods remove note content, which is essentially a file modification, so they are validated against `FILE:WRITE`. The `FILE:DELETE` permission is used for file-level deletion and other scenarios.
+
+## Common Error Codes
+
+| Code | When it's thrown |
+| --- | --- |
+| `1500` | `requestPermission` is called before the permission is declared in `uses-permissions` in `PluginConfig.json` |
+| `1502` | The `permission` argument is not in the supported list |
+| `1501` | A write API is called without `FILE:WRITE` access (never requested, set to "don't allow", or "allow this time only" has expired) |
+| `1503` | A read API is called without `FILE:READ` access (never requested, set to "don't allow", or "allow this time only" has expired) |
+| `1217` | The target path is encrypted and locked; it must be unlocked first |
+
+## Example
+
+The example below shows the minimal flow: check → request if not granted → retry the business call once granted.
+
+```ts wrap
+import { PluginManager, PluginFileAPI } from 'sn-plugin-lib';
+
+/**
+ * Ensure the plugin has FILE:READ before reading a note page:
+ * read directly if already granted; otherwise request it and retry after the user grants it.
+ */
+export async function readPageElementsWithPermission(notePath: string, page: number) {
+  const permission = 'plugin.permission.FILE:READ';
+
+  const status = await PluginManager.hasPermission(permission);
+  if (status !== 1) {
+    const result = await PluginManager.requestPermission(permission, 'Read access is required to load file content.');
+    if (result !== 1 && result !== 2) {
+      throw new Error('The user did not grant read permission');
+    }
+  }
+
+  const res = await PluginFileAPI.getElements(page, notePath);
+  if (!res?.success) {
+    throw new Error(res?.error?.message ?? 'Failed to read the file');
+  }
+  return res.result ?? [];
+}
+```
