@@ -1,0 +1,60 @@
+---
+title: "registerPluginLifeListener"
+description: "Listen for plugin lifecycle events."
+---
+
+```ts
+registerPluginLifeListener(listener: PluginEventListener): PluginEventSubscription;
+```
+
+Listens for plugin lifecycle changes. When the host emits a lifecycle event, it calls `listener.onMsg(msg)`, where `msg.state` is the state value.
+
+<Note>
+This API depends on the internal event channel registered by `init()`. Call `PluginManager.init()` first, then register the lifecycle listener.
+</Note>
+
+**Parameters**
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `listener` | `PluginEventListener` | Lifecycle listener that implements `onMsg(msg)`. `msg.state` is the lifecycle state value |
+
+**Returns**
+
+- `PluginEventSubscription`: subscription object. Call `remove()` to unregister the listener
+
+**Notes**
+
+- The callback receives the event `data`, not the full original message. Use `msg.state` to determine the current lifecycle state
+- If the listener is registered after the event arrives, and the most recent lifecycle event is still within 1 second, that last event is delivered immediately so the listener does not miss it
+
+## Lifecycle States
+
+| `state` | Meaning |
+| --- | --- |
+| `0` | Initialized: the plugin has completed initialization. This state fires very early, so plugins usually do not receive it |
+| `1` | Mounted: the plugin has been mounted successfully |
+| `2` | Start: the plugin is running, with its UI shown in the foreground |
+| `3` | Stop: the plugin is paused, with no UI in the foreground, but it can still run in the background |
+| `4` | Unmounted: the plugin's component has been unmounted; it cannot run in this state |
+| `5` | Destroyed: the plugin has been destroyed |
+
+## Example
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * Example: listen for plugin lifecycle events.
+ */
+export async function exampleRegisterPluginLifeListener() {
+  await PluginManager.init();
+  const sub = PluginManager.registerPluginLifeListener({
+    onMsg(msg) {
+      const state = msg?.state;
+      console.log('plugin life state:', state);
+    },
+  });
+  return sub;
+}
+```

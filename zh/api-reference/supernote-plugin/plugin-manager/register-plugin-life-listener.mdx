@@ -1,0 +1,60 @@
+---
+title: "registerPluginLifeListener"
+description: "监听插件生命周期事件。"
+---
+
+```ts
+registerPluginLifeListener(listener: PluginEventListener): PluginEventSubscription;
+```
+
+监听插件生命周期变化。宿主发出生命周期事件后，会回调 `listener.onMsg(msg)`，其中 `msg.state` 表示状态值。
+
+<Note>
+该接口依赖 `init()` 中注册的内部事件通道。请先调用 `PluginManager.init()`，再注册生命周期监听。
+</Note>
+
+**参数**
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `listener` | `PluginEventListener` | 生命周期监听器，实现 `onMsg(msg)`；`msg.state` 表示状态值 |
+
+**返回**
+
+- `PluginEventSubscription`：订阅对象，调用 `remove()` 可注销监听
+
+**说明**
+
+- 回调收到的是事件 `data`，不是完整原始消息。通过 `msg.state` 判断当前生命周期状态
+- 若注册时晚于事件到达，且距离最近一次生命周期事件不超过 1 秒，会立即补发最近一次事件，避免漏听
+
+## 生命周期状态
+
+| `state` | 含义 |
+| --- | --- |
+| `0` | 初始化：插件完成初始化。该状态触发时机较早，插件通常收不到 |
+| `1` | 挂载：插件挂载成功 |
+| `2` | 启动：插件正在运行，前台有界面显示 |
+| `3` | 暂停：插件暂停运行，前台无界面显示，仍可在后台运行 |
+| `4` | 取消挂载：插件从挂载状态解除，此状态下插件无法运行 |
+| `5` | 销毁：插件被销毁 |
+
+## 示例
+
+```ts wrap
+import { PluginManager } from 'sn-plugin-lib';
+
+/**
+ * 监听插件生命周期事件的示例。
+ */
+export async function exampleRegisterPluginLifeListener() {
+  await PluginManager.init();
+  const sub = PluginManager.registerPluginLifeListener({
+    onMsg(msg) {
+      const state = msg?.state;
+      console.log('plugin life state:', state);
+    },
+  });
+  return sub;
+}
+```

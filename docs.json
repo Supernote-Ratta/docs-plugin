@@ -203,6 +203,7 @@
                     "pages": [
                       "en/api-reference/supernote-plugin/plugin-manager/index",
                       "en/api-reference/supernote-plugin/plugin-manager/init",
+                      "en/api-reference/supernote-plugin/plugin-manager/register-plugin-life-listener",
                       "en/api-reference/supernote-plugin/plugin-manager/register-lang-listener",
                       "en/api-reference/supernote-plugin/plugin-manager/register-event-listener",
                       "en/api-reference/supernote-plugin/plugin-manager/register-motion-listener",
@@ -450,6 +451,7 @@
                     "pages": [
                       "zh/api-reference/supernote-plugin/plugin-manager/index",
                       "zh/api-reference/supernote-plugin/plugin-manager/init",
+                      "zh/api-reference/supernote-plugin/plugin-manager/register-plugin-life-listener",
                       "zh/api-reference/supernote-plugin/plugin-manager/register-lang-listener",
                       "zh/api-reference/supernote-plugin/plugin-manager/register-event-listener",
                       "zh/api-reference/supernote-plugin/plugin-manager/register-motion-listener",
