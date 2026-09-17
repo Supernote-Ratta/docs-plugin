@@ -1,7 +1,15 @@
 ---
 title: "canHandwrite"
-description: "Check whether the current view supports handwriting."
+description: "Check whether the current view supports EMR handwriting."
 ---
+
+Queries whether the currently open note or document view can accept EMR handwriting right now.
+
+Calling this API does not turn handwriting on or off. It only checks whether a pen stroke on the page will be received by the host.
+
+Call it before a flow that needs the user to write on the page. If `result === false`, tell the user handwriting is not available in the current view instead of waiting for strokes.
+
+Currently, only note content pages and document content pages support handwriting. Other views do not.
 
 ```ts
 static canHandwrite(): Promise<APIResponse<boolean>>;
@@ -10,7 +18,13 @@ static canHandwrite(): Promise<APIResponse<boolean>>;
 **Returns**
 
 - [`APIResponse<boolean>`](/en/api-reference/supernote-plugin/types/api-response):
-`result === true` means the current view supports handwriting, and `result === false` means it does not support handwriting
+  - `result === true`: the current view can accept handwriting
+  - `result === false`: the current view cannot accept handwriting
+
+**Notes**
+
+- This checks the current host view, not whether the device has a stylus
+- The result can change with UI state, so do not cache it for long. Query again after showing or closing the plugin view, or after changing pages
 
 ## Example
 
@@ -18,7 +32,7 @@ static canHandwrite(): Promise<APIResponse<boolean>>;
 import { PluginCommAPI } from 'sn-plugin-lib';
 
 /**
- * Example: check whether the current view supports handwriting.
+ * Confirm the current view can accept handwriting before starting a writing flow.
  */
 export async function exampleCanHandwrite() {
   const res = await PluginCommAPI.canHandwrite();
@@ -26,7 +40,10 @@ export async function exampleCanHandwrite() {
     console.log('canHandwrite failed', res.error);
     throw new Error(res.error?.message ?? 'canHandwrite call failed');
   }
-  console.log('canHandwrite result', res.result);
-  return res.result;
+  if (!res.result) {
+    console.log('current view cannot handwrite');
+    return false;
+  }
+  return true;
 }
 ```

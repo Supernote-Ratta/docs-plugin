@@ -1,7 +1,16 @@
 ---
 title: "canHandwrite"
-description: "检查当前视图是否支持手写。"
+description: "查询当前视图是否支持电磁笔手写。"
 ---
+
+查询当前打开的笔记或文档视图，此刻是否支持电磁笔（EMR）手写。
+
+调用本接口不会开启或关闭手写，只用于判断：用户现在在页面上落笔，笔迹会不会被宿主接收。
+
+适合在进入需要用户在页面上书写的流程前调用。若 `result === false`，应提示当前界面不可手写，而不是继续等待笔迹。
+
+目前仅笔记内容页和文档内容页支持手写，其他界面不支持。
+
 
 ```ts
 static canHandwrite(): Promise<APIResponse<boolean>>;
@@ -10,7 +19,13 @@ static canHandwrite(): Promise<APIResponse<boolean>>;
 **返回**
 
 - [`APIResponse<boolean>`](/zh/api-reference/supernote-plugin/types/api-response)：
-`result === true` 表示当前视图支持手写，`result === false` 表示当前视图不支持手写
+  - `result === true`：当前视图可手写
+  - `result === false`：当前视图不可手写
+
+**说明**
+
+- 判断对象是当前宿主视图，不是设备是否配备手写笔
+- 结果会随界面状态变化，不要长期缓存；开关插件视图或切页后应重新查询
 
 ## 示例
 
@@ -18,7 +33,7 @@ static canHandwrite(): Promise<APIResponse<boolean>>;
 import { PluginCommAPI } from 'sn-plugin-lib';
 
 /**
- * 检查当前视图是否支持手写的示例。
+ * 进入书写流程前，先确认当前视图是否可手写。
  */
 export async function exampleCanHandwrite() {
   const res = await PluginCommAPI.canHandwrite();
@@ -26,7 +41,10 @@ export async function exampleCanHandwrite() {
     console.log('canHandwrite failed', res.error);
     throw new Error(res.error?.message ?? 'canHandwrite 调用失败');
   }
-  console.log('canHandwrite result', res.result);
-  return res.result;
+  if (!res.result) {
+    console.log('current view cannot handwrite');
+    return false;
+  }
+  return true;
 }
 ```
