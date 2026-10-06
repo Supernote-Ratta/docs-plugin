@@ -40,13 +40,13 @@ description: "笔记/文档中“可见元素”的统一数据结构。"
 | `layerNum` | `number` | 图层号（笔记中常见范围为 `0..3`） |
 | `thickness` | `number` | 笔划粗细（部分元素可能无意义） |
 | `recognizeResult` | [`RecogResultData`](/zh/api-reference/supernote-plugin/types/recog-result-data) | 识别结果数据 |
-| `maxX` | `number` | EMR坐标系中X轴的最大值，EMR坐标系详见[`坐标系`](/zh/plugin-base/coordinate-system)这章 |
-| `maxY` | `number` | EMR坐标系中X轴的最大值，EMR坐标系详见[`坐标系`](/zh/plugin-base/coordinate-system)这章 |
+| `maxX` | `number` | EMR 坐标系中 X 轴的最大值，高于 `0.1.65` 时与返回的采样点不是同一尺度。最好不要使用，仅为兼容旧版本保留，详见下方提示和[`坐标系`](/zh/plugin-base/coordinate-system) |
+| `maxY` | `number` | EMR 坐标系中 Y 轴的最大值，高于 `0.1.65` 时与返回的采样点不是同一尺度。最好不要使用，仅为兼容旧版本保留，详见下方提示和[`坐标系`](/zh/plugin-base/coordinate-system) |
 | `userData` | `string` | 用于存储用户数据 |
 | `angles` | [`ElementDataAccessor<Point>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 角度点，数据量太大，RN端持有的是索引，原始数据存在Android端 |
 | `status` | `number` | 元素状态值 |
 | `numInPage` | `number` | 元素在页内的序号（从 `1` 开始） |
-| `contoursSrc` | [`ElementDataAccessor<Point[]>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 轮廓点（像素坐标），数据量太大，RN端持有的是索引，原始数据存在Android端 |
+| `contoursSrc` | [`ElementDataAccessor<Point[]>`](/zh/api-reference/supernote-plugin/types/trail-data-accessor) | 轮廓点（Android 像素坐标），数据量太大，RN端持有的是索引，原始数据存在Android端 |
 | `stroke` | [`Stroke \| null`](/zh/api-reference/supernote-plugin/types/stroke) | 笔画数据（仅 `type === 0` 时存在） |
 | `title` | [`Title \| null`](/zh/api-reference/supernote-plugin/types/title) | 标题数据（仅 `type === 100` 时存在） |
 | `textBox` | [`TextBox \| null`](/zh/api-reference/supernote-plugin/types/text-box) | 文本框数据（仅文本框相关类型时存在） |
@@ -59,13 +59,17 @@ description: "笔记/文档中“可见元素”的统一数据结构。"
 `angles` 与 `contoursSrc` 是访问器对象，不是完整数组。需要通过 `size()/get()/getRange()` 等方法异步取数，避免一次性把大规模点集传到 RN 端导致内存问题。
 </Note>
 
+<Warning>
+`maxX` 和 `maxY` 仍是 EMR 刻度，在高于 `0.1.65` 的 `sn-plugin-lib` 中与返回的 Android 采样点不是同一尺度，请勿参与坐标计算。最好不要使用，留着是为了兼容 `0.1.65` 及之前的版本。坐标以 [`getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 返回的页面实际尺寸为准。
+</Warning>
+
 ## FiveStar（五角星）
 
 当 `type === 800` 时，`fiveStar` 字段提供五角星点集。
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `points` | [`Point[]`](/zh/api-reference/supernote-plugin/types/point) | 五角星点坐标（EMR 坐标） |
+| `points` | [`Point[]`](/zh/api-reference/supernote-plugin/types/point) | 五角星点坐标（Android 像素坐标，以 [`getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 的页面实际尺寸为准） |
 
 ## 方法
 

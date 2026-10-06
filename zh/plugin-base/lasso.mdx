@@ -26,15 +26,14 @@ description: '介绍套索交互的工作流、数据模型与常用接口（获
 | 目标 | 接口 | 说明 |
 | --- | --- | --- |
 | 获取套索框位置 | [`getLassoRect()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect) | 返回套索框矩形（`Rect`） |
-| 创建套索选择 | [`lassoElements(rect)`](/zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | 通过矩形区域创建套索选择（像素坐标） |
+| 创建套索选择 | [`lassoElements(rect)`](/zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | 通过矩形区域创建套索选择（Android 像素坐标） |
 | 调整套索框大小 | [`resizeLassoRect(rect, rotationDegree?)`](/zh/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | 调整套索框矩形大小；可选旋转支持的元素 |
 | 复制并翻转套索元素 | [`duplicateFlipLassoElements(flipType)`](/zh/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements) | 复制当前套索中的支持元素后翻转新元素，`1` 为水平翻转，`2` 为垂直翻转 |
 | 获取套索元素列表 | [`getLassoElements()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | 返回 `Element[]`（成功时会补齐访问器字段） |
 | 控制套索框状态 | [`setLassoBoxState(state)`](/zh/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` 显示，`1` 隐藏，`2` 完全移除，`3` 完全隐藏（包含套索元素） |
 
 <Tip>
-套索框属于 UI 交互矩形，通常以“像素坐标系”表达；而元素点集（笔迹采样点）是 EMR 坐标系。
-需要做坐标系对齐时，先明确坐标系，再参考 [`坐标系`](/zh/plugin-base/coordinate-system) 做换算。
+`sn-plugin-lib` 高于 `0.1.65` 时，套索框和元素点（笔迹采样点）都使用 Android 像素坐标，以 [`getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 返回的页面实际尺寸为准，两者可以直接比较，不需要换算。详见 [`坐标系`](/zh/plugin-base/coordinate-system)。
 </Tip>
 
 ## 示例

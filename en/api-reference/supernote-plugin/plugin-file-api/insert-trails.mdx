@@ -1,4 +1,4 @@
----
+﻿---
 title: "insertElements"
 description: "Insert elements into a NOTE/DOC file page."
 ---
@@ -6,14 +6,14 @@ description: "Insert elements into a NOTE/DOC file page."
 The `elements` you pass in typically come from [`createElement`](/en/api-reference/supernote-plugin/plugin-comm-api/create-trail) or existing elements read from elsewhere; `uuid` stays the same before and after insertion. This API requires those elements to still be present in the native cache — if an element's `uuid` can no longer be found in the cache (e.g. already released via `recycleElement`/`clearElementCache`), that item is silently skipped instead of causing a separate error. See [Element Caching and Release](/en/plugin-base/file-op/element-op#4-element-caching-and-release) for details.
 
 ```ts wrap
-static insertElements(NOTEPath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
+static insertElements(notePath: string, page: number, elements: Element[]): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
 | `elements` | [`Element[]`](/en/api-reference/supernote-plugin/types/trail) | Element data array |
 
@@ -23,14 +23,18 @@ static insertElements(NOTEPath: string, page: number, elements: Element[]): Prom
 
 ## Example
 
+<Note>
+This example applies to `sn-plugin-lib` later than `0.1.65`. It writes Android pixel coordinates, based on the actual page size returned by `getPageSize`. In `0.1.65` and earlier, what you write is EMR coordinates, so you need to convert them with [`PointUtils`](/en/api-reference/supernote-plugin/utils/point-utils) first.
+</Note>
+
 ```ts wrap
-import { PluginFileAPI, PluginCommAPI, PointUtils, type Element } from 'sn-plugin-lib';
+import { PluginFileAPI, PluginCommAPI, type Element } from 'sn-plugin-lib';
 
 /**
  * Example: create an element and insert it into a page.
  */
 export async function exampleInsertElements() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 0;
 
  const createRes = await PluginCommAPI.createElement(0);
@@ -39,18 +43,18 @@ export async function exampleInsertElements() {
  }
 
  const element = createRes.result as Element;
- const pixelPoints = [
- { x: 100, y: 100 },
- { x: 200, y: 220 },
- { x: 300, y: 260 },
- ];
  const pressures = [800, 900, 1000];
- const pageSizeRes = await PluginFileAPI.getPageSize(NOTEPath, page);
+ const pageSizeRes = await PluginFileAPI.getPageSize(notePath, page);
  if (!pageSizeRes.success) {
  throw new Error(pageSizeRes.error?.message ?? 'getPageSize call failed');
  }
- const pageSize = pageSizeRes.result;
- const points = pixelPoints.map((p) => PointUtils.androidPoint2Emr(p, pageSize));
+ const { width, height } = pageSizeRes.result;
+ // Android pixel coordinates, within the actual page size width × height
+ const points = [
+ { x: width * 0.2, y: height * 0.2 },
+ { x: width * 0.4, y: height * 0.3 },
+ { x: width * 0.6, y: height * 0.35 },
+ ];
  element.thickness = 2;
  if (element.stroke) {
  element.stroke.penColor = 0;
@@ -58,7 +62,7 @@ export async function exampleInsertElements() {
  await element.stroke.points.setRange(0, points.length - 1, points);
  await element.stroke.pressures.setRange(0, pressures.length - 1, pressures);
  }
- const res = await PluginFileAPI.insertElements(NOTEPath, page, [element]);
+ const res = await PluginFileAPI.insertElements(notePath, page, [element]);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'insertElements call failed');
  }

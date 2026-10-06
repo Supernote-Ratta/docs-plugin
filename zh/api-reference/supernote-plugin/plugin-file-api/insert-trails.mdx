@@ -23,8 +23,12 @@ static insertElements(notePath: string, page: number, elements: Element[]): Prom
 
 ## 示例
 
+<Note>
+示例适用于 `sn-plugin-lib` 高于 `0.1.65` 的版本，写入的是 Android 像素坐标，以 `getPageSize` 返回的页面实际尺寸为准。`0.1.65` 及之前写入的是 EMR 坐标，需要先用 [`PointUtils`](/zh/api-reference/supernote-plugin/utils/point-utils) 换算。
+</Note>
+
 ```ts wrap
-import { PluginFileAPI, PluginCommAPI, PointUtils, type Element } from 'sn-plugin-lib';
+import { PluginFileAPI, PluginCommAPI, type Element } from 'sn-plugin-lib';
 
 /**
  * 创建一个 Element 并插入到指定页面的示例。
@@ -39,18 +43,18 @@ export async function exampleInsertElements() {
   }
 
   const element = createRes.result as Element;
-  const pixelPoints = [
-    { x: 100, y: 100 },
-    { x: 200, y: 220 },
-    { x: 300, y: 260 },
-  ];
   const pressures = [800, 900, 1000];
   const pageSizeRes = await PluginFileAPI.getPageSize(notePath, page);
   if (!pageSizeRes.success) {
     throw new Error(pageSizeRes.error?.message ?? 'getPageSize 调用失败');
   }
-  const pageSize = pageSizeRes.result;
-  const points = pixelPoints.map((p) => PointUtils.androidPoint2Emr(p, pageSize));
+  const { width, height } = pageSizeRes.result;
+  // Android 像素坐标，落在页面实际尺寸 width × height 之内
+  const points = [
+    { x: width * 0.2, y: height * 0.2 },
+    { x: width * 0.4, y: height * 0.3 },
+    { x: width * 0.6, y: height * 0.35 },
+  ];
   element.thickness = 2;
   if (element.stroke) {
     element.stroke.penColor = 0;

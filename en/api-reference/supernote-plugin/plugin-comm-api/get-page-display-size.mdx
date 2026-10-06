@@ -3,8 +3,12 @@ title: "getPageDisplaySize"
 description: "Get the display size of the current page."
 ---
 
+<Warning>
+In `sn-plugin-lib` later than `0.1.65`, it is best not to use this API. It is kept for compatibility with older versions. Use [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size) instead; for the current page, first use [`getCurrentFilePath`](/en/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path) and [`getCurrentPageNum`](/en/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num) to get the file path and page number.
+</Warning>
+
 <Note>
-This API returns the display size of the currently opened page and is intended for current-page element operations such as `batchUpdatePageElements`, `insertPageElements`, and `modifyPageElements`.
+`sn-plugin-lib` `0.1.65` and earlier: this API returns the display size of the currently opened page and is intended for current-page element operations such as `batchUpdatePageElements`, `insertPageElements`, and `modifyPageElements`.
 When these APIs operate on the current page, call `getPageDisplaySize` to get the current page display size instead of calling [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size), otherwise the position data may not match.
 </Note>
 

@@ -26,15 +26,14 @@ The selected element list can be obtained via [`PluginCommAPI.getLassoElements()
 | Goal | API | Description |
 | --- | --- | --- |
 | Get lasso rectangle | [`getLassoRect()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect) | Returns lasso rectangle (`Rect`) |
-| Create lasso selection | [`lassoElements(rect)`](/en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | Creates a lasso selection from a rectangle (pixel coordinates) |
+| Create lasso selection | [`lassoElements(rect)`](/en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | Creates a lasso selection from a rectangle (Android pixel coordinates) |
 | Resize lasso rectangle | [`resizeLassoRect(rect, rotationDegree?)`](/en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | Resizes the lasso rectangle and can optionally rotate supported elements |
 | Duplicate and flip selected elements | [`duplicateFlipLassoElements(flipType)`](/en/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements) | Duplicates supported elements in the current lasso selection, then flips the new elements. `1` is horizontal and `2` is vertical |
 | Get selected elements | [`getLassoElements()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | Returns `Element[]` (accessor fields are filled on success) |
 | Control lasso box | [`setLassoBoxState(state)`](/en/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` show, `1` hide, `2` remove completely, `3` fully hide (including lasso elements) |
 
 <Tip>
-The lasso rectangle is a UI interaction rectangle and is typically expressed in the pixel coordinate system, while stroke point data uses the EMR coordinate system.
-If you need to align them, confirm the coordinate systems first and convert as needed. See [Coordinate System](/en/plugin-base/coordinate-system).
+With `sn-plugin-lib` later than `0.1.65`, both the lasso rectangle and element points (stroke sample points) use Android pixel coordinates, based on the actual page size from [`getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size). You can compare them directly without conversion. See [Coordinate System](/en/plugin-base/coordinate-system).
 </Tip>
 
 ## Example

@@ -9,7 +9,7 @@ description: "TextLink data structure (used for insertTextLink)."
 | `destPage` | `number` | Destination page (only valid when `linkType === 0` or `linkType === 2`) |
 | `style` | `number` | Link style: `0` solid underline, `1` solid border, `2` dashed border |
 | `linkType` | `number` | Link type: `0` note page, `1` note file, `2` document, `3` image, `4` URL |
-| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Text region rectangle (pixel coordinates; must be non-zero area) |
+| `rect` | [`Rect`](/en/api-reference/supernote-plugin/types/rect) | Text region rectangle (Android pixel coordinates; must be non-zero area) |
 | `fontSize` | `number` | Font size (positive number) |
 | `showText` | `string` | Display text (usually a simplified version of `fullText`) |
 | `fullText` | `string` | Full text |

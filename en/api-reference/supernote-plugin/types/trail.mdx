@@ -40,13 +40,13 @@ In the table below, the `ElementType.` prefix is omitted in the Constant column.
 | `layerNum` | `number` | Layer number (common range in notes: `0..3`) |
 | `thickness` | `number` | Stroke thickness (may be meaningless for some element types) |
 | `recognizeResult` | [`RecogResultData`](/en/api-reference/supernote-plugin/types/recog-result-data) | Recognition result data |
-| `maxX` | `number` | Max X value in the EMR coordinate system. See [Coordinate System](/en/plugin-base/coordinate-system) |
-| `maxY` | `number` | Max Y value in the EMR coordinate system. See [Coordinate System](/en/plugin-base/coordinate-system) |
+| `maxX` | `number` | Max X value in the EMR coordinate system, which, in `sn-plugin-lib` later than `0.1.65`, is not on the same scale as the returned sample points. Avoid using it; it is kept only for older versions. See the warning below and [Coordinate System](/en/plugin-base/coordinate-system) |
+| `maxY` | `number` | Max Y value in the EMR coordinate system, which, in `sn-plugin-lib` later than `0.1.65`, is not on the same scale as the returned sample points. Avoid using it; it is kept only for older versions. See the warning below and [Coordinate System](/en/plugin-base/coordinate-system) |
 | `userData` | `string` | Custom user data |
 | `angles` | [`ElementDataAccessor<Point>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Angle points. The dataset can be large, so RN holds an accessor/index; raw data is on the Android side |
 | `status` | `number` | Element status |
 | `numInPage` | `number` | Index within the page (starts from `1`) |
-| `contoursSrc` | [`ElementDataAccessor<Point[]>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Contour points (pixel coordinates). RN holds an accessor/index; raw data is on the Android side |
+| `contoursSrc` | [`ElementDataAccessor<Point[]>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Contour points (Android pixel coordinates). RN holds an accessor/index; raw data is on the Android side |
 | `stroke` | [`Stroke \| null`](/en/api-reference/supernote-plugin/types/stroke) | Stroke data (only when `type === 0`) |
 | `title` | [`Title \| null`](/en/api-reference/supernote-plugin/types/title) | Title data (only when `type === 100`) |
 | `textBox` | [`TextBox \| null`](/en/api-reference/supernote-plugin/types/text-box) | TextBox data (only for TextBox-related types) |
@@ -59,13 +59,17 @@ In the table below, the `ElementType.` prefix is omitted in the Constant column.
 `angles` and `contoursSrc` are accessor objects, not full arrays. Fetch data asynchronously via `size()/get()/getRange()` to avoid JS memory issues caused by transferring large point sets at once.
 </Note>
 
+<Warning>
+`maxX` and `maxY` are still EMR-scale values. In `sn-plugin-lib` later than `0.1.65`, they are not on the same scale as the returned Android sample points, so do not use them in coordinate calculations. Avoid using them; they are kept for `0.1.65` and earlier. Coordinates are based on the actual page size from [`getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size).
+</Warning>
+
 ## FiveStar (Five-star)
 
 When `type === 800`, the `fiveStar` field provides the point set of the five-star element.
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `points` | [`Point[]`](/en/api-reference/supernote-plugin/types/point) | Five-star point coordinates (EMR) |
+| `points` | [`Point[]`](/en/api-reference/supernote-plugin/types/point) | Five-star point coordinates (Android pixel coordinates, based on the actual page size from [`getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size)) |
 
 ## Methods
 

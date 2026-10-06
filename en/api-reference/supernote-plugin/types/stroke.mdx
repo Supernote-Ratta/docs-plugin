@@ -7,12 +7,12 @@ description: "Raw stroke data (present when an Element is a stroke)."
 | --- | --- | --- |
 | `penColor` | `number` | Pen color: `0` (`0x00`) black, `157` (`0x9D`) dark gray, `201` (`0xC9`) light gray, `254` (`0xFE`) white |
 | `penType` | `number` | Pen type: `10` technical pen, `16` pressure pen, `11` marker pen, `15` calligraphy |
-| `points` | [`ElementDataAccessor<Point>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Sample points (EMR coordinates) |
+| `points` | [`ElementDataAccessor<Point>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Sample points (Android pixel coordinates, based on the actual page size from [`getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size); EMR coordinates in `sn-plugin-lib` `0.1.65` and earlier) |
 | `pressures` | [`ElementDataAccessor<number>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Pressure data (`0..4096`) |
 | `eraseLineTrailNums` | [`ElementDataAccessor<number>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Erase line data |
 | `flagDraw` | [`ElementDataAccessor<boolean>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Write flag |
 | `markPenDirection` | [`ElementDataAccessor<Point>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Marker pen direction |
-| `recognPoints` | [`ElementDataAccessor<RecognData>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Recognition point data. Can be used with MyScript and other recognition libraries to generate corresponding text (pixel coordinates) |
+| `recognPoints` | [`ElementDataAccessor<RecognData>`](/en/api-reference/supernote-plugin/types/trail-data-accessor) | Recognition point data. Can be used with MyScript and other recognition libraries to generate corresponding text (Android pixel coordinates) |
 
 <Note>
 `points/pressures/eraseLineTrailNums/flagDraw/markPenDirection/recognPoints` are all [`ElementDataAccessor`](/en/api-reference/supernote-plugin/types/trail-data-accessor) accessor objects, not full arrays. Fetch data asynchronously via `size()/get()/getRange()` to avoid JS memory issues caused by transferring large point sets at once.

@@ -24,7 +24,7 @@ async function insertCircle() {
     penType: 10,        // 绘制几何图形的笔类型
     penWidth: 200,      // 几何图形的线条粗细（最小值 100）
     type: 'GEO_circle', // 几何图形类型
-    ellipseCenterPoint: { x: 300, y: 400 }, // 椭圆的中心点位置，使用屏幕坐标系
+    ellipseCenterPoint: { x: 300, y: 400 }, // 椭圆的中心点位置，使用 Android 像素坐标
     ellipseMajorAxisRadius: 120,            // 椭圆长轴半径
     ellipseMinorAxisRadius: 120,            // 椭圆短轴半径
     ellipseAngle: 0,                        // 椭圆的旋转弧度
@@ -35,7 +35,7 @@ async function insertCircle() {
 ```
 
 <Tip>
-几何类型字段 `type` 的取值与结构见 [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry)。点坐标为屏幕像素坐标系。
+几何类型字段 `type` 的取值与结构见 [`Geometry`](/zh/api-reference/supernote-plugin/types/geometry)。点坐标为 Android 像素坐标。
 </Tip>
 
 ## 获取套索几何图形

@@ -1,121 +1,93 @@
 ---
 title: "Coordinate System"
-description: "EMR coordinate system vs pixel coordinate system: differences and conversion."
+description: "With sn-plugin-lib later than 0.1.65, plugin coordinates use Android pixels and are based on the actual page size from getPageSize."
 ---
 
-Supernote devices are e-ink devices. Compared to typical Android devices, they use two coordinate systems:
+Supernote devices are e-ink devices. With `sn-plugin-lib` later than `0.1.65`, the coordinates a plugin reads from and writes to the SDK use a single system: **Android pixel coordinates**, based on the **actual page size**.
 
-- **EMR coordinate system** (digitizer / handwriting coordinates): a hardware-defined coordinate space from the EMR (Electro-Magnetic Resonance) handwriting system. It describes the absolute position of the pen tip on the sensing surface (2D and extended dimensions).
-- **Pixel coordinate system** (screen coordinates): used to describe pixel positions in UI rendering.
+<Note>
+`sn-plugin-lib` `0.1.65` and earlier return EMR (electromagnetic digitizer) coordinates. Later versions return Android pixel coordinates only. The host decides which one to return based on the **`sn-plugin-lib` version the plugin uses**, not on the device system version.
+</Note>
 
-They coexist because they serve different hardware layers and use cases. Plugin development frequently requires converting between them.
-
-## EMR Coordinate System (Digitizer / Handwriting)
-
-**Definition**
-
-- The unit is not pixels, but the digitizer’s **hardware coordinate unit** (you can think of it as a finer grid).
-- It is typically higher precision: one screen pixel may correspond to multiple EMR units.
-- Axes and origin may differ from screen coordinates (varies by device and orientation), so conversion is required.
-
-**Characteristics**
-
-- Strongly tied to handwriting data: stroke sampling points, outline points, angle points, etc. are usually more stable in EMR coordinates and better suited for storage and computation.
-- Not equivalent to UI pixels: you cannot use EMR values as px for layout directly.
-
-**Common Use Cases**
-
-- Geometry computation for strokes/elements: move, scale, etc.
-- Working with native cached point data accessors (large point sets are better represented in EMR coordinates).
-
-## Pixel Coordinate System (Screen)
+## Android Coordinate System
 
 **Definition**
 
 - The unit is **pixels (px)**.
 - Conventionally, **top-left is the origin**: `x` increases to the right, `y` increases downward.
-- `width/height` represent the pixel dimensions of the screen/page (e.g., A5X often uses `1404×1872`, Manta often uses `1920×2560`).
+- `width/height` represent the pixel dimensions of the page (e.g., A5X often uses `1404×1872`, Manta often uses `1920×2560`).
 
-**Characteristics**
+**Where It Applies**
 
-- Strongly tied to UI rendering: layout, scaling, rotation, and page composition can change where the "same logical point" ends up in pixel space.
-- Suitable for UI interactions: tap/drag positions, view layout rectangles, screenshot pixels, etc.
+- Stroke sample points (`points` in [`Stroke`](/en/api-reference/supernote-plugin/types/stroke)) and five-star points
+- The lasso rectangle and lasso element points. See [Lasso](/en/plugin-base/lasso)
+- Positions and regions of geometry, links, titles, text boxes, and similar elements
 
-**Common Use Cases**
+You do not need to convert these coordinates to EMR. You can use them directly to draw and position React Native views, and compare them directly across APIs.
 
-- Drawing/positioning UI elements in React Native (e.g., popups, buttons, selection boxes)
-- Interactions based on touch/tap position
-- Working with API-returned page sizes (pixels), e.g. `PluginFileAPI.getPageSize(...)`
+## Use the Actual Page Size
 
-
-
-## Why Two Coordinate Systems?
-
-In short, handwriting sampling and screen rendering target different layers:
-
-- The EMR pen is sampled by digitizer hardware and produces **high-precision handwriting coordinates**. It does not depend on UI rendering and does not change with screen scaling/layout.
-- Screen rendering is driven by the display system (Android/rendering engine) and uses **pixel coordinates**. It is affected by resolution, rotation, page composition, scaling, and other display strategies.
-
-To support both "high-precision handwriting sampling" and "visual rendering/interaction", the system typically keeps both coordinate systems and connects them via conversion.
-
-## Comparison
-
-| Dimension | EMR coordinate system | pixel coordinate system |
-| --- | --- | --- |
-| Data source | Digitizer/EMR sampling | Screen rendering/layout |
-| Unit | Hardware units (not px) | Pixels (px) |
-| Precision | Usually higher | Limited by screen resolution |
-| Suitable for storing handwriting | Yes | No (affected by rendering strategies) |
-| Suitable for UI layout | Not directly | Best suited |
-| When conversion is needed | When interacting with UI | When computing strokes/elements |
-
-## Conversion in the SDK
-
-The SDK provides [`PointUtils`](/en/api-reference/supernote-plugin/utils/point-utils) for converting between these coordinate systems (it infers mapping ratio from page pixel size and applies axis transforms).
-
-<Tip>
-If you only have the page pixel size, pass `{ width, height }` as `pageSize` to the conversion functions.
-</Tip>
+Every coordinate you pass to the SDK, and every coordinate you get back, is based on the actual page size. Get that size with [`PluginFileAPI.getPageSize`](/en/api-reference/supernote-plugin/plugin-file-api/get-page-size), which returns `{ width, height }`. Coordinates should fall within `0..width` and `0..height`, regardless of the size shown on screen.
 
 ```ts wrap
-import { PluginFileAPI, PointUtils } from 'sn-plugin-lib';
+import { PluginFileAPI } from 'sn-plugin-lib';
 
 /**
- * Convert a pixel-coordinate point to an EMR-coordinate point.
+ * Read the actual page size as the baseline for the coordinate range.
  */
-export async function pixelToEmr(notePath: string, page: number, pixelPoint: { x: number; y: number }) {
+export async function exampleReadPageSize(notePath: string, page: number) {
   const res = await PluginFileAPI.getPageSize(notePath, page);
   if (!res?.success || !res.result) {
-    throw new Error('Failed to get page pixel size');
+    throw new Error(res?.error?.message ?? 'Failed to get page size');
   }
 
-  return PointUtils.androidPoint2Emr(pixelPoint, res.result);
-}
-
-/**
- * Convert an EMR-coordinate point to a pixel-coordinate point.
- */
-export async function emrToPixel(notePath: string, page: number, emrPoint: { x: number; y: number }) {
-  const res = await PluginFileAPI.getPageSize(notePath, page);
-  if (!res?.success || !res.result) {
-    throw new Error('Failed to get page pixel size');
-  }
-
-  return PointUtils.emrPoint2Android(emrPoint, res.result);
+  const { width, height } = res.result;
+  return { width, height };
 }
 ```
 
-## Mapping Range and Notes
+<Note>
+When you operate on the current page, the actual page size from `getPageSize` is still the baseline. Use [`getCurrentFilePath`](/en/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path) and [`getCurrentPageNum`](/en/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num) to get the current file path and page number, then call `getPageSize`.
+</Note>
 
-[`PointUtils`](/en/api-reference/supernote-plugin/utils/point-utils) infers EMR max coordinate ranges from `pageSize` (varies by device and orientation). Common mappings currently supported (from SDK built-in constants and tables):
-
-| Page pixel size (pageSize) | EMR max range (maxX, maxY) |
-| --- | --- |
-| `1404×1872` (A5X portrait) | `15819×11864` |
-| `1872×1404` (A5X landscape) | `11864×15819` |
-| `1920×2560` (Manta portrait) | `21632×16224` |
-| `2560×1920` (Manta landscape) | `16224×21632` |
+## EMR Coordinate System (Older Versions)
 
 <Note>
-If `pageSize` is not in the supported mapping table, conversion throws an error (`unknown pageSize`). In that case, first confirm you are using the "page pixel size" (not a scaled view size), and check whether there are special sizes caused by page composition.
+EMR coordinates are used only in `sn-plugin-lib` `0.1.65` and earlier. Converting between EMR and Android coordinates is tedious, so later versions no longer let plugins read or write EMR coordinates. The SDK APIs perform all conversions internally. Plugins pass in and get back Android pixel coordinates only, and do not need to convert anything themselves. This section is kept so you know what EMR is when you read older plugins or older docs.
 </Note>
+
+EMR (Electro-Magnetic Resonance) coordinates, also called digitizer coordinates, are defined at the hardware level by the EMR handwriting system. They describe the absolute position of the pen tip on the sensing surface.
+
+**Definition**
+
+- The unit is not pixels, but the digitizer's **hardware coordinate unit** (you can think of it as a finer grid).
+- It is typically higher precision: one screen pixel may correspond to multiple EMR units.
+- Axes and origin may differ from screen coordinates (varies by device and orientation), so conversion is required.
+
+**Characteristics**
+
+- Not equivalent to UI pixels: you cannot use EMR values as px for layout directly.
+
+**Differences from Android Pixel Coordinates**
+
+| Dimension | EMR coordinate system | Android pixel coordinate system |
+| --- | --- | --- |
+| Data source | Digitizer/EMR pen sampling | Screen rendering/layout |
+| Unit | Hardware units (not px) | Pixels (px) |
+| Precision | Usually higher | Limited by screen resolution |
+| Can be used directly for layout | No | Yes |
+| Read and written by plugins in | `sn-plugin-lib` `0.1.65` and earlier | `sn-plugin-lib` later than `0.1.65` |
+
+In older versions, use [`PointUtils`](/en/api-reference/supernote-plugin/utils/point-utils) to convert between EMR and pixel coordinates.
+
+## Compatibility APIs for Older Versions
+
+The following APIs are kept only for plugins that use `sn-plugin-lib` `0.1.65` or earlier. With later versions, avoid using them:
+
+- `androidPoint2Emr` / `emrPoint2Android` in [`PointUtils`](/en/api-reference/supernote-plugin/utils/point-utils): convert between EMR and pixel coordinates
+- [`getPageDisplaySize`](/en/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size): get the display size of the current page
+- `maxX` / `maxY` on [`Element`](/en/api-reference/supernote-plugin/types/trail): maximum values in EMR units
+
+<Warning>
+After you upgrade `sn-plugin-lib` to a version later than `0.1.65`, remove any `PointUtils` conversion. The SDK already returns and accepts Android pixel coordinates, so converting again produces wrong positions.
+</Warning>

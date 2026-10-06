@@ -9,7 +9,7 @@ description: "文字链接数据结构（用于 insertTextLink）。"
 | `destPage` | `number` | 目标页码（仅 `linkType === 0` 或 `linkType === 2` 有效） |
 | `style` | `number` | 链接样式：`0` 实下划线，`1` 实边框，`2` 虚边框 |
 | `linkType` | `number` | 链接类型：`0` 跳转笔记页，`1` 跳转笔记文件，`2` 跳转文档，`3` 跳转图片，`4` 跳转网址 |
-| `rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 文本区域矩形（像素坐标，需为非零面积） |
+| `rect` | [`Rect`](/zh/api-reference/supernote-plugin/types/rect) | 文本区域矩形（Android 像素坐标，需为非零面积） |
 | `fontSize` | `number` | 字体大小（正数） |
 | `showText` | `string` | 展示文本（通常是 `fullText` 的简化版本） |
 | `fullText` | `string` | 完整文本 |

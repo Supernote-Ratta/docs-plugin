@@ -7,6 +7,10 @@ description: "Get page size of a file (pixels)."
 static getPageSize(NOTEPath: string, page: number): Promise<APIResponse<Size>>;
 ```
 
+<Note>
+In `sn-plugin-lib` later than `0.1.65`, the coordinates a plugin passes in and gets back are all based on this actual page size, including the current-page element APIs. For the current page, first use [`getCurrentFilePath`](/en/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path) and [`getCurrentPageNum`](/en/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num) to get the file path and page number. See [Coordinate System](/en/plugin-base/coordinate-system).
+</Note>
+
 **Parameters**
 
 | Parameter | Type | Description |

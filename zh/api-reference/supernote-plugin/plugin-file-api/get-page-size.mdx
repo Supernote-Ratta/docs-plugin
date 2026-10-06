@@ -7,6 +7,10 @@ description: "获取文件指定页面的尺寸（像素）。"
 static getPageSize(notePath: string, page: number): Promise<APIResponse<Size>>;
 ```
 
+<Note>
+`sn-plugin-lib` 高于 `0.1.65` 时，插件传入和获取的坐标都以这个页面实际尺寸为准，包括当前页的元素接口。当前页可先用 [`getCurrentFilePath`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path)、[`getCurrentPageNum`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num) 得到文件路径和页码。见[坐标系](/zh/plugin-base/coordinate-system)。
+</Note>
+
 **参数**
 
 | 参数 | 类型 | 说明 |

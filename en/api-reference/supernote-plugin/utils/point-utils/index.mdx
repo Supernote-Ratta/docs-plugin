@@ -1,14 +1,18 @@
 ---
 title: "PointUtils"
-description: "Conversion utilities between the EMR coordinate system and screen pixel coordinates."
+description: "Conversion utilities between the EMR coordinate system and screen pixel coordinates. Kept only for `sn-plugin-lib` `0.1.65` and earlier; not recommended for later versions."
 ---
+
+<Warning>
+Kept only for `sn-plugin-lib` `0.1.65` and earlier. In later versions, coordinates are already Android pixels. Do not call these methods, otherwise positions will be wrong.
+</Warning>
 
 `PointUtils` converts between two coordinate systems:
 
 - **Pixel coordinate system**: screen rendering/layout coordinates (unit: px)
 - **EMR coordinate system**: digitizer/handwriting hardware coordinates (unit: hardware units)
 
-For background and differences between the two coordinate systems, see: [Coordinate System](/en/plugin-base/coordinate-system).
+For the coordinate rules in `sn-plugin-lib` later than `0.1.65`, see: [Coordinate System](/en/plugin-base/coordinate-system).
 
 ```ts
 import { PointUtils } from 'sn-plugin-lib';
@@ -37,8 +41,8 @@ import { PointUtils } from 'sn-plugin-lib';
 | `PointUtils.MACHINE_TYPE_A6` | `1` | A6 |
 | `PointUtils.MACHINE_TYPE_A6X` | `2` | A6X |
 | `PointUtils.MACHINE_TYPE_A5X` | `3` | A5X |
-| `PointUtils.MACHINE_TYPE_NOMAD` | `4` | Nomad |
-| `PointUtils.MACHINE_TYPE_MANTA` | `5` | Manta |
+| `PointUtils.MACHINE_TYPE_A6X2` | `4` | A6X2 (Nomad) |
+| `PointUtils.MACHINE_TYPE_A5X2` | `5` | A5X2 (Manta) |
 
 ### Common Page Pixel Sizes
 
@@ -46,6 +50,8 @@ import { PointUtils } from 'sn-plugin-lib';
 | --- | --- |
 | `PointUtils.NORMAL_PAGE_SIZE` | `{ width: 1404, height: 1872 }` |
 | `PointUtils.A5X2_PAGE_SIZE` | `{ width: 1920, height: 2560 }` |
+| `PointUtils.NORMAL_PAGE_MAX_SIZE` | `{ width: 1872, height: 2496 }` |
+| `PointUtils.A6X2_PAGE_MAX_SIZE` | `{ width: 2560, height: 3414 }` |
 
 ## Methods
 

@@ -1,14 +1,18 @@
 ---
 title: "PointUtils"
-description: "EMR（电磁屏）与屏幕像素坐标系的转换工具。"
+description: "EMR（电磁屏）与屏幕像素坐标系的转换工具，仅为 `sn-plugin-lib` `0.1.65` 及之前保留，更高版本最好不要使用。"
 ---
+
+<Warning>
+仅为 `sn-plugin-lib` `0.1.65` 及之前保留。更高版本的坐标已是 Android 像素，不要再调用，否则位置会错。
+</Warning>
 
 `PointUtils` 用于在两套坐标系之间做换算：
 
 - **像素坐标系**：屏幕渲染/布局使用的坐标（单位 px）
 - **EMR 坐标系**：数位板/手写硬件使用的坐标（单位为硬件刻度）
 
-两种坐标系的背景与区别可参考：[坐标系](/zh/plugin-base/coordinate-system)。
+`sn-plugin-lib` 高于 `0.1.65` 时的坐标规则见：[坐标系](/zh/plugin-base/coordinate-system)。
 
 ```ts
 import { PointUtils } from 'sn-plugin-lib';
@@ -37,8 +41,8 @@ import { PointUtils } from 'sn-plugin-lib';
 | `PointUtils.MACHINE_TYPE_A6` | `1` | A6 |
 | `PointUtils.MACHINE_TYPE_A6X` | `2` | A6X |
 | `PointUtils.MACHINE_TYPE_A5X` | `3` | A5X |
-| `PointUtils.MACHINE_TYPE_NOMAD` | `4` | Nomad |
-| `PointUtils.MACHINE_TYPE_MANTA` | `5` | Manta |
+| `PointUtils.MACHINE_TYPE_A6X2` | `4` | A6X2（Nomad） |
+| `PointUtils.MACHINE_TYPE_A5X2` | `5` | A5X2（Manta） |
 
 ### 常见页面像素尺寸
 
@@ -46,6 +50,8 @@ import { PointUtils } from 'sn-plugin-lib';
 | --- | --- |
 | `PointUtils.NORMAL_PAGE_SIZE` | `{ width: 1404, height: 1872 }` |
 | `PointUtils.A5X2_PAGE_SIZE` | `{ width: 1920, height: 2560 }` |
+| `PointUtils.NORMAL_PAGE_MAX_SIZE` | `{ width: 1872, height: 2496 }` |
+| `PointUtils.A6X2_PAGE_MAX_SIZE` | `{ width: 2560, height: 3414 }` |
 
 ## 方法
 

@@ -3,6 +3,10 @@ title: "androidPoint2Emr"
 description: "将屏幕像素点转换为 EMR 坐标点。"
 ---
 
+<Warning>
+仅为 `sn-plugin-lib` `0.1.65` 及之前保留。更高版本的坐标已是 Android 像素，不要再调用，否则位置会错。
+</Warning>
+
 ```ts
 static androidPoint2Emr(point: Point, pageSize: { width: number; height: number }): Point;
 ```

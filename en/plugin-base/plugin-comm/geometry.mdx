@@ -24,7 +24,7 @@ async function insertCircle() {
     penType: 10,        // Pen type for drawing the geometry
     penWidth: 200,      // Line width (min 100)
     type: 'GEO_circle', // Geometry type
-    ellipseCenterPoint: { x: 300, y: 400 }, // Center point (pixel coordinates)
+    ellipseCenterPoint: { x: 300, y: 400 }, // Center point (Android pixel coordinates)
     ellipseMajorAxisRadius: 120,            // Major axis radius
     ellipseMinorAxisRadius: 120,            // Minor axis radius
     ellipseAngle: 0,                        // Rotation angle (radians)
@@ -35,7 +35,7 @@ async function insertCircle() {
 ```
 
 <Tip>
-The `type` field values and data structure are defined in [`Geometry`](/en/api-reference/supernote-plugin/types/geometry). Point coordinates use pixel coordinates.
+The `type` field values and data structure are defined in [`Geometry`](/en/api-reference/supernote-plugin/types/geometry). Point coordinates use Android pixel coordinates.
 </Tip>
 
 ## Get Lasso Geometries

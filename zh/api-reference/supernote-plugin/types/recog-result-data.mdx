@@ -15,15 +15,15 @@ description: "元素识别结果数据结构。"
 - **关键点**：`key_point_*` 是一个代表性锚点（keypoint），用于后续交互或定位
 
 <Note>
-当前字段描述使用的是像素坐标，便于直接用于 UI 展示与交互定位。
+当前字段使用的是 Android 像素坐标，便于直接用于 UI 展示与交互定位。
 </Note>
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
 | `predict_name` | `string` | 识别类别名称（默认 `others`） |
-| `up_left_point_x` | `number` | 左上角 X（像素坐标） |
-| `up_left_point_y` | `number` | 左上角 Y （像素坐标）|
-| `key_point_x` | `number` | 关键点 X（像素坐标） |
-| `key_point_y` | `number` | 关键点 Y （像素坐标）|
-| `down_right_point_x` | `number` | 右下角 X（像素坐标） |
-| `down_right_point_y` | `number` | 右下角 Y（像素坐标） |
+| `up_left_point_x` | `number` | 左上角 X（Android 像素坐标） |
+| `up_left_point_y` | `number` | 左上角 Y （Android 像素坐标）|
+| `key_point_x` | `number` | 关键点 X（Android 像素坐标） |
+| `key_point_y` | `number` | 关键点 Y （Android 像素坐标）|
+| `down_right_point_x` | `number` | 右下角 X（Android 像素坐标） |
+| `down_right_point_y` | `number` | 右下角 Y（Android 像素坐标） |

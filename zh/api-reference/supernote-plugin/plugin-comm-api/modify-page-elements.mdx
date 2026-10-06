@@ -12,7 +12,7 @@ static modifyPageElements(
 ```
 
 <Note>
-当该接口操作的是当前页时，请先调用 [`getPageDisplaySize`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size) 获取当前页面显示尺寸，不要调用 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 获取文件页面尺寸，否则位置数据可能对不上。
+`sn-plugin-lib` 高于 `0.1.65` 时，当前页的页面尺寸同样通过 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 获取（可先用 [`getCurrentFilePath`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path)、[`getCurrentPageNum`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num) 得到文件路径和页码）。`0.1.65` 及之前请调用 [`getPageDisplaySize`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-page-display-size) 获取当前页面显示尺寸，不要调用 `getPageSize`，否则位置数据可能对不上。
 </Note>
 
 传入的 `elements` 通常来自 `getElements` 等接口读到的既有元素（带 `uuid`），修改前后 `uuid` 保持不变。这里同样存在两层校验：`uuid` 必须还在原生缓存中（找不到会被直接跳过，不会单独报错），并且元素必须已存在于该页面；缓存缺失会在更早阶段被跳过，不会再走到"是否已存在于页面"这一步，详见 [Element 缓存与释放](/zh/plugin-base/file-op/element-op#4-element-缓存与释放)。

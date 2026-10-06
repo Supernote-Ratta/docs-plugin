@@ -3,8 +3,12 @@ title: "getPageDisplaySize"
 description: "获取当前页面的显示尺寸。"
 ---
 
+<Warning>
+`sn-plugin-lib` 高于 `0.1.65` 时最好不要使用，留着是为了兼容旧版本。请使用 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size)；当前页可先通过 [`getCurrentFilePath`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-file-path)、[`getCurrentPageNum`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-current-page-num) 得到文件路径和页码。
+</Warning>
+
 <Note>
-该接口返回当前打开页面的显示尺寸，适用于 `batchUpdatePageElements`、`insertPageElements`、`modifyPageElements` 等当前页元素操作。
+`sn-plugin-lib` `0.1.65` 及之前：该接口返回当前打开页面的显示尺寸，适用于 `batchUpdatePageElements`、`insertPageElements`、`modifyPageElements` 等当前页元素操作。
 如果这些接口操作的是当前页，请调用 `getPageDisplaySize` 获取当前页面显示尺寸，不要调用 [`PluginFileAPI.getPageSize`](/zh/api-reference/supernote-plugin/plugin-file-api/get-page-size) 获取文件页面尺寸，否则位置数据可能对不上。
 </Note>
 

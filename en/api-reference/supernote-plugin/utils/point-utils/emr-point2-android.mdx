@@ -3,6 +3,10 @@ title: "emrPoint2Android"
 description: "Convert an EMR coordinate point to a screen pixel point."
 ---
 
+<Warning>
+Kept only for `sn-plugin-lib` `0.1.65` and earlier. In later versions, coordinates are already Android pixels. Do not call this method, otherwise positions will be wrong.
+</Warning>
+
 ```ts
 static emrPoint2Android(point: Point, pageSize: { width: number; height: number }): Point;
 ```
