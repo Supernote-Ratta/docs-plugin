@@ -5,7 +5,7 @@ description: "Generate a PNG for a note page."
 
 ```ts wrap
 static generateNotePng(params: {
- NOTEPath: string;
+ notePath: string;
  page: number;
  times: number;
  pngPath: string;
@@ -38,7 +38,7 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  */
 export async function exampleGenerateNotePng() {
  const res = await PluginFileAPI.generateNotePng({
- NOTEPath: '/storage/emulated/0/Note/demo.note',
+ notePath: '/storage/emulated/0/Note/demo.note',
  page: 1,
  times: 1,
  pngPath: '/storage/emulated/0/Note/out/page.png',

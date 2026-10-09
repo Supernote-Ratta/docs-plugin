@@ -4,14 +4,14 @@ description: "Get layer data of a note page."
 ---
 
 ```ts wrap
-static getLayers(NOTEPath: string, page: number): Promise<APIResponse<Layer[]>>;
+static getLayers(notePath: string, page: number): Promise<APIResponse<Layer[]>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
 
 **Returns**
@@ -28,9 +28,9 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: get layers of a page.
  */
 export async function exampleGetLayers() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 1;
- const res = await PluginFileAPI.getLayers(NOTEPath, page);
+ const res = await PluginFileAPI.getLayers(notePath, page);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'getLayers call failed');
  }

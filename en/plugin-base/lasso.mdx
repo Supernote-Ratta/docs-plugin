@@ -28,7 +28,7 @@ The selected element list can be obtained via [`PluginCommAPI.getLassoElements()
 | Get lasso rectangle | [`getLassoRect()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect) | Returns lasso rectangle (`Rect`) |
 | Create lasso selection | [`lassoElements(rect)`](/en/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | Creates a lasso selection from a rectangle (Android pixel coordinates) |
 | Resize lasso rectangle | [`resizeLassoRect(rect, rotationDegree?)`](/en/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | Resizes the lasso rectangle and can optionally rotate supported elements |
-| Duplicate and flip selected elements | [`duplicateFlipLassoElements(flipType)`](/en/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements) | Duplicates supported elements in the current lasso selection, then flips the new elements. `1` is horizontal and `2` is vertical |
+| Flip selected elements in place | [`flipLassoElements(flipType)`](/en/api-reference/supernote-plugin/plugin-comm-api/flip-lasso-elements) | Flips elements in the current lasso selection in place (does not create duplicates). `1` is horizontal and `2` is vertical |
 | Get selected elements | [`getLassoElements()`](/en/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | Returns `Element[]` (accessor fields are filled on success) |
 | Control lasso box | [`setLassoBoxState(state)`](/en/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` show, `1` hide, `2` remove completely, `3` fully hide (including lasso elements) |
 

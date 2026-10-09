@@ -4,14 +4,14 @@ description: "Get a note file type."
 ---
 
 ```ts wrap
-static getNoteType(NOTEPath: string): Promise<APIResponse<number>>;
+static getNoteType(notePath: string): Promise<APIResponse<number>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 
 **Returns**
 
@@ -27,8 +27,8 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: get note type.
  */
 export async function exampleGetNoteType() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
- const res = await PluginFileAPI.getNoteType(NOTEPath);
+ const notePath = '/storage/emulated/0/Note/demo.note';
+ const res = await PluginFileAPI.getNoteType(notePath);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'getNoteType call failed');
  }

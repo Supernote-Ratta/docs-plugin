@@ -4,7 +4,7 @@ description: "Get page size of a file (pixels)."
 ---
 
 ```ts wrap
-static getPageSize(NOTEPath: string, page: number): Promise<APIResponse<Size>>;
+static getPageSize(notePath: string, page: number): Promise<APIResponse<Size>>;
 ```
 
 <Note>
@@ -15,7 +15,7 @@ In `sn-plugin-lib` later than `0.1.65`, the coordinates a plugin passes in and g
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE/DOC file path |
+| `notePath` | `string` | NOTE/DOC file path |
 | `page` | `number` | Page index (starts from `0`) |
 
 **Returns**
@@ -32,10 +32,10 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: get page size in pixels.
  */
 export async function exampleGetPageSize() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 1;
 
- const res = await PluginFileAPI.getPageSize(NOTEPath, page);
+ const res = await PluginFileAPI.getPageSize(notePath, page);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'getPageSize call failed');
  }

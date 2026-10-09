@@ -4,14 +4,14 @@ description: "Get keywords from a NOTE/DOC file."
 ---
 
 ```ts wrap
-static getKeyWords(NOTEPath: string, pageList: number[]): Promise<APIResponse<KeyWord[]>>;
+static getKeyWords(notePath: string, pageList: number[]): Promise<APIResponse<KeyWord[]>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE/DOC file path |
+| `notePath` | `string` | NOTE/DOC file path |
 | `pageList` | `number[]` | Page index list (starts from `0`) |
 
 **Returns**
@@ -28,8 +28,8 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: get keywords.
  */
 export async function exampleGetKeyWords() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
- const res = await PluginFileAPI.getKeyWords(NOTEPath, [1]);
+ const notePath = '/storage/emulated/0/Note/demo.note';
+ const res = await PluginFileAPI.getKeyWords(notePath, [1]);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'getKeyWords call failed');
  }

@@ -4,14 +4,14 @@ description: "Generate a background-template PNG for a note page."
 ---
 
 ```ts wrap
-static generateNoteTemplatePng(NOTEPath: string, page: number, pngPath: string): Promise<APIResponse<boolean>>;
+static generateNoteTemplatePng(notePath: string, page: number, pngPath: string): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
 | `pngPath` | `string` | Output PNG path (must end with `.png`) |
 
@@ -29,11 +29,11 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: generate a background-template PNG.
  */
 export async function exampleGenerateNoteTemplatePng() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 1;
  const pngPath = '/storage/emulated/0/Note/out/template.png';
 
- const res = await PluginFileAPI.generateNoteTemplatePng(NOTEPath, page, pngPath);
+ const res = await PluginFileAPI.generateNoteTemplatePng(notePath, page, pngPath);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'generateNoteTemplatePng call failed');
  }

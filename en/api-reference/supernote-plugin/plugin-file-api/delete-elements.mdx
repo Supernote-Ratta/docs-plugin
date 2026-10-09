@@ -4,14 +4,14 @@ description: "Delete existing page elements (only existing elements can be delet
 ---
 
 ```ts wrap
-static deleteElements(NOTEPath: string, page: number, numsInPage: number[]): Promise<APIResponse<boolean>>;
+static deleteElements(notePath: string, page: number, numsInPage: number[]): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE/DOC file path |
+| `notePath` | `string` | NOTE/DOC file path |
 | `page` | `number` | Page index (starts from `0`) |
 | `numsInPage` | `number[]` | Element indices in the page to delete, starting from `1` |
 
@@ -25,10 +25,10 @@ static deleteElements(NOTEPath: string, page: number, numsInPage: number[]): Pro
 import { PluginFileAPI } from 'sn-plugin-lib';
 
 export async function exampleDeleteElements() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 0;
  const numsInPage = [1, 2];
- const res = await PluginFileAPI.deleteElements(NOTEPath, page, numsInPage);
+ const res = await PluginFileAPI.deleteElements(notePath, page, numsInPage);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'deleteElements call failed');
  }

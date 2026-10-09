@@ -12,7 +12,7 @@ requestPermission(permission: string, desc?: string): Promise<number>;
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `permission` | `string` | Permission name. Supported values: `plugin.permission.FILE:READ`, `plugin.permission.FILE:WRITE`, `plugin.permission.FILE:DELETE`, `plugin.permission.INTERNET` |
-| `desc` | `string` | Optional custom description. It is used only when the current permission status is "don't allow" (`0`) and the host shows that dialog. If omitted or empty, the host uses the default description. This parameter is ignored in other permission states |
+| `desc` | `string` | Optional custom description. It is used only when the user has previously chosen "Don't allow" in the three-option dialog and the host shows the prompt that guides the user to Settings. If omitted or empty, the host uses the default description. This parameter is ignored in other permission states. Note: this is not the same as [`hasPermission`](/en/api-reference/supernote-plugin/plugin-manager/has-permission) returning `0` (not granted)—the first-time request shows the three-option dialog, which does not use `desc` |
 
 <Note>
 Regarding file access permissions:
@@ -24,7 +24,7 @@ Before calling this API, you must first declare the permission in the `uses-perm
 
 **Returns**
 
-- `Promise<number>`: user choice, where `0` means "don't allow", `1` means "allow this time only", `2` means "always allow", and `-1` means the user closed the dialog without choosing (treated as "don't allow"; the dialog will show again on the next call)
+- `Promise<number>`: user choice, where `0` means "don't allow", `1` means "allow this time only", `2` means "always allow", and `-1` means the user tapped Cancel without confirming a choice: nothing is granted this time, it is not recorded as "don't allow", and the three-option dialog appears again on the next call
 
 **Description**
 

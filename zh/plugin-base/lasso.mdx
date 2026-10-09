@@ -28,7 +28,7 @@ description: '介绍套索交互的工作流、数据模型与常用接口（获
 | 获取套索框位置 | [`getLassoRect()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-rect) | 返回套索框矩形（`Rect`） |
 | 创建套索选择 | [`lassoElements(rect)`](/zh/api-reference/supernote-plugin/plugin-comm-api/lasso-elements) | 通过矩形区域创建套索选择（Android 像素坐标） |
 | 调整套索框大小 | [`resizeLassoRect(rect, rotationDegree?)`](/zh/api-reference/supernote-plugin/plugin-comm-api/resize-lasso-rect) | 调整套索框矩形大小；可选旋转支持的元素 |
-| 复制并翻转套索元素 | [`duplicateFlipLassoElements(flipType)`](/zh/api-reference/supernote-plugin/plugin-comm-api/duplicate-flip-lasso-elements) | 复制当前套索中的支持元素后翻转新元素，`1` 为水平翻转，`2` 为垂直翻转 |
+| 原地翻转套索元素 | [`flipLassoElements(flipType)`](/zh/api-reference/supernote-plugin/plugin-comm-api/flip-lasso-elements) | 对当前套索中的元素做原地翻转（不会复制出新元素），`1` 为水平翻转，`2` 为垂直翻转 |
 | 获取套索元素列表 | [`getLassoElements()`](/zh/api-reference/supernote-plugin/plugin-comm-api/get-lasso-data) | 返回 `Element[]`（成功时会补齐访问器字段） |
 | 控制套索框状态 | [`setLassoBoxState(state)`](/zh/api-reference/supernote-plugin/plugin-comm-api/set-lasso-box-state) | `0` 显示，`1` 隐藏，`2` 完全移除，`3` 完全隐藏（包含套索元素） |
 

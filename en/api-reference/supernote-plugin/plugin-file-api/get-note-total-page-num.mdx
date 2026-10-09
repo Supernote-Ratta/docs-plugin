@@ -4,14 +4,14 @@ description: "Get the total page count of a note file."
 ---
 
 ```ts wrap
-static getNoteTotalPageNum(NOTEPath: string): Promise<APIResponse<number>>;
+static getNoteTotalPageNum(notePath: string): Promise<APIResponse<number>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 
 **Returns**
 
@@ -27,8 +27,8 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: get the total page count.
  */
 export async function exampleGetNoteTotalPageNum() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
- const res = await PluginFileAPI.getNoteTotalPageNum(NOTEPath);
+ const notePath = '/storage/emulated/0/Note/demo.note';
+ const res = await PluginFileAPI.getNoteTotalPageNum(notePath);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'getNoteTotalPageNum call failed');
  }

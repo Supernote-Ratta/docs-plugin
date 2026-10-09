@@ -26,16 +26,24 @@ See the `uses-permissions` row in [`PluginConfig.json` field reference](/en/firs
 
 ## How to Request Permissions
 
-Recommended flow:
+Every time the plugin opens, and before using any feature that needs the permission, we recommend following the flow below (see [Permission Request Guidelines](#permission-request-guidelines) for details):
 
 1. Call [`hasPermission(permission)`](/en/api-reference/supernote-plugin/plugin-manager/has-permission) to check the current status: `1` means already granted, so you can call the related APIs directly
-2. If it returns `0` (not granted), call [`requestPermission(permission, desc?)`](/en/api-reference/supernote-plugin/plugin-manager/request-permission) to trigger the authorization dialog
+2. If it returns `0` (not granted), call [`requestPermission(permission, desc?)`](/en/api-reference/supernote-plugin/plugin-manager/request-permission) to request it: if the permission has not been set to "don't allow", the dialog in step 3 appears; if it has already been set to "don't allow", only the prompt in step 4 that guides the user to the system settings appears
 3. The user chooses among (the dialog defaults to "Allow this time only"):
    - **Allow this time only**: returns `1`
    - **Always allow**: returns `2`
    - **Don't allow**: returns `0`
-   - Closing the dialog without choosing: treated as "don't allow", returns `-1`
+   - Tapping Cancel without confirming a choice: nothing is granted this time, and the call returns `-1`. This is not recorded as "Don't allow". Calling `requestPermission` again shows the three-option dialog
 4. If the user has previously chosen "Don't allow", calling `requestPermission` again shows a dialog that guides the user to the system settings; after that dialog is dismissed, the result is still `0` and the three-option dialog is not shown again
+
+Step 3 shows the three-option dialog. The screenshot is the English UI for read permission (`FILE:READ`), and it defaults to "Allow this time only". The line under the title is the system default description for read permission, not `desc`. `desc` is not shown on this dialog. Write, delete, and internet permissions use different titles and default descriptions:
+
+![Three-option authorization dialog](/images/devguide/permission-request-dialog.png)
+
+Step 4, when the permission is already set to "Don't allow", shows only the prompt that guides the user to Settings. This screenshot is also the read-permission prompt. The body is the system default used when `desc` is omitted; passing `desc` replaces that body:
+
+![Prompt that guides the user to Settings](/images/devguide/permission-denied-dialog.png)
 
 <Note>
 "Allow this time only" is valid only for the current plugin session: it is revoked when the plugin exits or is closed, and must be requested again the next time the plugin opens. Only "Always allow" is persisted and remains valid after restarting the plugin. It's recommended to make file read/write calls while the plugin is actively running.
@@ -70,7 +78,12 @@ The table below lists typical `sn-plugin-lib` APIs only as examples. If plugin c
 | `1503` | A read API is called without `FILE:READ` access (never requested, set to "don't allow", or "allow this time only" has expired) |
 | `1217` | The target path is encrypted and locked; it must be unlocked first |
 
-## Example
+## Permission Request Guidelines
+
+Every time the plugin opens, and before every feature that needs a permission, follow "declare → check → request". Make sure the permission has been declared in `PluginConfig.json` as described in [How to Declare Permissions](#how-to-declare-permissions).
+
+- Before each entry into the plugin or use of a related feature, call `hasPermission` first. `1` means the permission is already granted, so call the related APIs directly without requesting again
+- If it returns `0`, call `requestPermission`. For the full flow and return values, see [How to Request Permissions](#how-to-request-permissions)
 
 The example below shows the minimal flow: check → request if not granted → retry the business call once granted.
 
@@ -99,3 +112,11 @@ export async function readPageElementsWithPermission(notePath: string, page: num
   return res.result ?? [];
 }
 ```
+
+- **Allow this time only**: for when it expires, see the note in [How to Request Permissions](#how-to-request-permissions) above. If `requestPermission` is not called again the next time the plugin opens, or the next time the feature is used, no authorization dialog appears: read and write calls fail (error codes `1503`, `1501`; see [Common Error Codes](#common-error-codes)), and network requests fail as well
+- **Always allow**: this state can only be changed under plugin management in the system settings. Once granted, `hasPermission` returns `1` and you do not need to call `requestPermission` again, so checking every time does not trigger the dialog repeatedly (the same applies once "Allow this time only" has been chosen within the current session)
+- **Don't allow**: only the prompt that guides the user to the system settings appears, and the three-option dialog is not shown again. See step 4 in [How to Request Permissions](#how-to-request-permissions)
+
+<Warning>
+If the user chose "Allow this time only" and the plugin requests the permission only once on first run, the authorization dialog does not appear the next time the plugin opens or the feature is used, and the plugin cannot work because it lacks the permission.
+</Warning>

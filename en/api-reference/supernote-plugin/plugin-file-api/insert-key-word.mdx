@@ -4,7 +4,7 @@ description: "Insert keyword."
 ---
 
 ```ts wrap
-static insertKeyWord(NOTEPath: string, page: number, keyword: string):
+static insertKeyWord(notePath: string, page: number, keyword: string):
  Promise<APIResponse<boolean>>;
 ```
 
@@ -12,7 +12,7 @@ static insertKeyWord(NOTEPath: string, page: number, keyword: string):
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE/DOC file path |
+| `notePath` | `string` | NOTE/DOC file path |
 | `page` | `number` | Page number (starts from `0`) |
 | `keyword` | `string` | Keyword content |
 
@@ -29,11 +29,11 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Insert keyword example.
  */
 export async function exampleInsertKeyWord() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 1;
  const keyword = 'TODO';
 
- const res = await PluginFileAPI.insertKeyWord(NOTEPath, page, keyword);
+ const res = await PluginFileAPI.insertKeyWord(notePath, page, keyword);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'insertKeyWord call failed');
  }

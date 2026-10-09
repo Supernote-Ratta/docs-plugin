@@ -4,14 +4,14 @@ description: "Get the template information of a note page."
 ---
 
 ```ts wrap
-static getNotePageTemplate(NOTEPath: string, page: number): Promise<APIResponse<NoteTemplateInfo>>;
+static getNotePageTemplate(notePath: string, page: number): Promise<APIResponse<NoteTemplateInfo>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
 
 **Returns**
@@ -32,9 +32,9 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: get page template information.
  */
 export async function exampleGetNotePageTemplate() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 1;
- const res = await PluginFileAPI.getNotePageTemplate(NOTEPath, page);
+ const res = await PluginFileAPI.getNotePageTemplate(notePath, page);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'getNotePageTemplate call failed');
  }

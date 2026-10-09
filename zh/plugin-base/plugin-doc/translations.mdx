@@ -12,7 +12,7 @@ description: '在 DOC 应用中实现划词翻译与整页翻译。'
 
 ## 划词翻译（选中文本）
 
-调用 [`PluginDocAPI.getSelectedText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-selected-text) 可获取“当前划词选中的文本”。
+调用 [`PluginDocAPI.getLastSelectedText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text) 可获取“最近一次划词选中的文本”。
 
 ```ts wrap
 import { PluginDocAPI } from 'sn-plugin-lib';
@@ -29,7 +29,7 @@ async function translateText(text: string, targetLang: string): Promise<string> 
  * 划词翻译：读取当前选中文本并翻译。
  */
 export async function translateSelection(targetLang: string) {
-  const res = await PluginDocAPI.getSelectedText();
+  const res = await PluginDocAPI.getLastSelectedText();
   if (!res || !res.success) {
     throw new Error(res?.error?.message ?? '获取选中文本失败');
   }
@@ -90,6 +90,6 @@ export async function translatePage(page: number, targetLang: string) {
 
 ## 相关接口
 
-- [`getSelectedText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-selected-text)
+- [`getLastSelectedText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text)
 - [`getCurrentDocText`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text)
 - [`getCurrentTotalPages`](/zh/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages)

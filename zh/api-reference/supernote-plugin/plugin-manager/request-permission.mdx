@@ -12,7 +12,7 @@ requestPermission(permission: string, desc?: string): Promise<number>;
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
 | `permission` | `string` | 权限名称，支持：`plugin.permission.FILE:READ`、`plugin.permission.FILE:WRITE`、`plugin.permission.FILE:DELETE`、`plugin.permission.INTERNET` |
-| `desc` | `string` | 可选自定义说明。仅当当前权限状态为不允许（`0`）且宿主弹出提示框时使用；未传或为空时使用宿主默认描述。其它权限状态会忽略该参数 |
+| `desc` | `string` | 可选自定义说明。仅当用户此前已在三选一中选过「不允许」、宿主弹出前往设置的提示框时使用；未传或为空时使用宿主默认描述。其它权限状态会忽略该参数。注意：这与 [`hasPermission`](/zh/api-reference/supernote-plugin/plugin-manager/has-permission) 返回 `0`（未授予）不是同一回事——首次未授权时弹出的是三选一授权框，不会用到 `desc` |
 
 <Note>
 关于文件访问权限：
@@ -24,7 +24,7 @@ requestPermission(permission: string, desc?: string): Promise<number>;
 
 **返回**
 
-- `Promise<number>`：用户授权结果，`0` 表示不允许，`1` 表示仅本次允许，`2` 表示始终允许，`-1` 表示用户直接关闭了申请弹框（未做选择，效果等同不允许，下次调用会重新弹框）
+- `Promise<number>`：用户授权结果，`0` 表示不允许，`1` 表示仅本次允许，`2` 表示始终允许，`-1` 表示点击 Cancel、未做选择：本次没有任何授权，不会记成不允许，下次调用会重新弹出三选一授权对话框
 
 **说明**
 

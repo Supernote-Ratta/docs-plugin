@@ -4,14 +4,14 @@ description: "Clear elements on a specific layer of a note page."
 ---
 
 ```ts wrap
-static clearLayerElements(NOTEPath: string, page: number, layer: number): Promise<APIResponse<boolean>>;
+static clearLayerElements(notePath: string, page: number, layer: number): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
 | `layer` | `number` | Layer ID (`0..3`) |
 
@@ -29,10 +29,10 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: clear elements on a layer.
  */
 export async function exampleClearLayerElements() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 1;
  const layer = 0;
- const res = await PluginFileAPI.clearLayerElements(NOTEPath, page, layer);
+ const res = await PluginFileAPI.clearLayerElements(notePath, page, layer);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'clearLayerElements call failed');
  }

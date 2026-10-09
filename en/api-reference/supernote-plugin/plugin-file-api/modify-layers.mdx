@@ -12,14 +12,14 @@ The main layer and background layer do not support renaming. Even if you pass a 
 </Note>
 
 ```ts wrap
-static modifyLayers(NOTEPath: string, page: number, layers: Layer[]): Promise<APIResponse<boolean>>;
+static modifyLayers(notePath: string, page: number, layers: Layer[]): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
 | `layers` | [`Layer[]`](/en/api-reference/supernote-plugin/types/layer) | Existing layer data array. The `name` of the main layer and background layer cannot be modified |
 
@@ -37,10 +37,10 @@ import { PluginFileAPI, type Layer } from 'sn-plugin-lib';
  * Example: modify page layer data.
  */
 export async function exampleModifyLayers() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 0;
 
- const listRes = await PluginFileAPI.getLayers(NOTEPath, page);
+ const listRes = await PluginFileAPI.getLayers(notePath, page);
  if (!listRes.success) {
  throw new Error(listRes.error?.message ?? 'getLayers call failed');
  }
@@ -58,7 +58,7 @@ export async function exampleModifyLayers() {
  l.isCurrentLayer = false;
  }
  });
- const res = await PluginFileAPI.modifyLayers(NOTEPath, page, layers);
+ const res = await PluginFileAPI.modifyLayers(notePath, page, layers);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'modifyLayers call failed');
  }

@@ -12,7 +12,7 @@ This chapter focuses on two `PluginDocAPI` APIs and shows how to compose them in
 
 ## Selection Translation (Selected Text)
 
-Call [`PluginDocAPI.getSelectedText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text) to get the currently selected text.
+Call [`PluginDocAPI.getLastSelectedText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text) to get the most recently selected text.
 
 ```ts wrap
 import { PluginDocAPI } from 'sn-plugin-lib';
@@ -30,7 +30,7 @@ async function translateText(text: string, targetLang: string): Promise<string> 
  * Selection translation: read the current selected text and translate it.
  */
 export async function translateSelection(targetLang: string) {
-  const res = await PluginDocAPI.getSelectedText();
+  const res = await PluginDocAPI.getLastSelectedText();
   if (!res || !res.success) {
     throw new Error(res?.error?.message ?? 'Failed to get selected text');
   }
@@ -91,6 +91,6 @@ Page text can be long. Consider splitting it before translating (e.g., by line b
 
 ## Related APIs
 
-- [`getSelectedText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-selected-text)
+- [`getLastSelectedText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-last-selected-text)
 - [`getCurrentDocText`](/en/api-reference/supernote-plugin/plugin-doc-api/get-current-doc-text)
 - [`getCurrentTotalPages`](/en/api-reference/supernote-plugin/plugin-doc-api/get-current-total-pages)

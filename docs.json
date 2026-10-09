@@ -257,6 +257,8 @@
                       "en/api-reference/supernote-plugin/types/title",
                       "en/api-reference/supernote-plugin/types/text-box",
                       "en/api-reference/supernote-plugin/types/plugin-button",
+                      "en/api-reference/supernote-plugin/types/button-listener",
+                      "en/api-reference/supernote-plugin/types/button-subscription",
                       "en/api-reference/supernote-plugin/types/motion-event"
                     ]
                   }
@@ -505,6 +507,7 @@
                       "zh/api-reference/supernote-plugin/types/lasso-link",
                       "zh/api-reference/supernote-plugin/types/title",
                       "zh/api-reference/supernote-plugin/types/text-box",
+                      "zh/api-reference/supernote-plugin/types/plugin-button",
                       "zh/api-reference/supernote-plugin/types/button-listener",
                       "zh/api-reference/supernote-plugin/types/button-subscription",
                       "zh/api-reference/supernote-plugin/types/motion-event"

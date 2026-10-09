@@ -7,14 +7,14 @@ Only NOTE files have layer data; other file types do not.
 </Note>
 
 ```ts wrap
-static sortLayers(NOTEPath: string, page: number, layerIds: number[]): Promise<APIResponse<boolean>>;
+static sortLayers(notePath: string, page: number, layerIds: number[]): Promise<APIResponse<boolean>>;
 ```
 
 **Parameters**
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `NOTEPath` | `string` | NOTE file path |
+| `notePath` | `string` | NOTE file path |
 | `page` | `number` | Page index (starts from `0`) |
 | `layerIds` | `number[]` | Layer ID order (`0..3`) |
 
@@ -32,9 +32,9 @@ import { PluginFileAPI } from 'sn-plugin-lib';
  * Example: sort layers (pass the desired layer order).
  */
 export async function exampleSortLayers() {
- const NOTEPath = '/storage/emulated/0/Note/demo.note';
+ const notePath = '/storage/emulated/0/Note/demo.note';
  const page = 1;
- const res = await PluginFileAPI.sortLayers(NOTEPath, page, [2, 1, 0]);
+ const res = await PluginFileAPI.sortLayers(notePath, page, [2, 1, 0]);
  if (!res.success) {
  throw new Error(res.error?.message ?? 'sortLayers call failed');
  }
